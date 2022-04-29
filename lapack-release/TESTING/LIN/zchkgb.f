@@ -78,7 +78,7 @@
 *>
 *> \param[in] NBVAL
 *> \verbatim
-*>          NBVAL is INTEGER array, dimension (NBVAL)
+*>          NBVAL is INTEGER array, dimension (NNB)
 *>          The values of the blocksize NB.
 *> \endverbatim
 *>
@@ -160,7 +160,7 @@
 *> \param[out] RWORK
 *> \verbatim
 *>          RWORK is DOUBLE PRECISION array, dimension
-*>                      (max(NMAX,2*NSMAX))
+*>                      (NMAX+2*NSMAX)
 *> \endverbatim
 *>
 *> \param[out] IWORK
@@ -563,7 +563,7 @@
                               END IF
 *
 *+    TEST 2:
-*                             Solve and compute residual for A * X = B.
+*                             Solve and compute residual for op(A) * X = B.
 *
                               SRNAMT = 'ZLARHS'
                               CALL ZLARHS( PATH, XTYPE, ' ', TRANS, N,
@@ -589,7 +589,7 @@
      $                                     WORK, LDB )
                               CALL ZGBT02( TRANS, M, N, KL, KU, NRHS, A,
      $                                     LDA, X, LDB, WORK, LDB,
-     $                                     RESULT( 2 ) )
+     $                                     RWORK, RESULT( 2 ) )
 *
 *+    TEST 3:
 *                             Check solution from generated exact

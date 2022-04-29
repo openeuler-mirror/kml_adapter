@@ -66,7 +66,7 @@
 *>
 *> \param[in] NBVAL
 *> \verbatim
-*>          NBVAL is INTEGER array, dimension (NBVAL)
+*>          NBVAL is INTEGER array, dimension (NNB)
 *>          The values of the blocksize NB.
 *> \endverbatim
 *>
@@ -575,6 +575,6 @@ c                  NT = 1
      $      I6 )
       RETURN
 *
-*     End of CCHKSY_AA_2STAGE
+*     End of CCHKHE_AA_2STAGE
 *
       END

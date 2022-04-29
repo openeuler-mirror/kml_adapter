@@ -76,7 +76,7 @@
 *>
 *> \param[in] NBVAL
 *> \verbatim
-*>          NBVAL is INTEGER array, dimension (NBVAL)
+*>          NBVAL is INTEGER array, dimension (NNB)
 *>          The values of the blocksize NB.
 *> \endverbatim
 *>
@@ -156,6 +156,8 @@
 *
 *     Test the error exits
 *
+      CALL XLAENV( 1, 0 )
+      CALL XLAENV( 2, 0 ) 
       IF( TSTERR ) CALL ZERRTSQR( PATH, NOUT )
       INFOT = 0
 *
@@ -249,6 +251,6 @@
      $      ', NB=', I5,' test(', I2, ')=', G12.5 )
       RETURN
 *
-*     End of ZCHKQRT
+*     End of ZCHKTSQR
 *
       END

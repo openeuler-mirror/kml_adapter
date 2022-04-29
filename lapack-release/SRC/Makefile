@@ -57,16 +57,25 @@
 TOPSRCDIR = ..
 include $(TOPSRCDIR)/make.inc
 
-.SUFFIXES: .F .o
-.F.o:
+ALLMOD = la_xisnan.mod la_constants.mod
+
+.SUFFIXES: .F .f90 .F90 .o .mod
+%.o: %.F $(ALLMOD)
 	$(FC) $(FFLAGS) -c -o $@ $<
+%.o: %.f90 $(ALLMOD)
+	$(FC) $(FFLAGS) -c -o $@ $<
+%.o: %.F90 $(ALLMOD)
+	$(FC) $(FFLAGS) -c -o $@ $<
+.o.mod:
+	@true
 
 ALLAUX = ilaenv.o ilaenv2stage.o ieeeck.o lsamen.o xerbla.o xerbla_array.o \
-   iparmq.o iparam2stage.o \
+   iparmq.o iparam2stage.o la_xisnan.o \
    ilaprec.o ilatrans.o ilauplo.o iladiag.o chla_transtype.o \
    ../INSTALL/ilaver.o ../INSTALL/lsame.o ../INSTALL/slamch.o
 
 SCLAUX = \
+   la_constants.o \
    sbdsdc.o \
    sbdsqr.o sdisna.o slabad.o slacpy.o sladiv.o slae2.o  slaebz.o \
    slaed0.o slaed1.o slaed2.o slaed3.o slaed4.o slaed5.o slaed6.o \
@@ -85,6 +94,7 @@ SCLAUX = \
    ../INSTALL/second_$(TIMER).o
 
 DZLAUX = \
+   la_constants.o \
    dbdsdc.o \
    dbdsqr.o ddisna.o dlabad.o dlacpy.o dladiv.o dlae2.o  dlaebz.o \
    dlaed0.o dlaed1.o dlaed2.o dlaed3.o dlaed4.o dlaed5.o dlaed6.o \
@@ -117,6 +127,7 @@ SLASRC = \
    sggglm.o sgghrd.o sgghd3.o sgglse.o sggqrf.o \
    sggrqf.o sggsvd3.o sggsvp3.o sgtcon.o sgtrfs.o sgtsv.o \
    sgtsvx.o sgttrf.o sgttrs.o sgtts2.o shgeqz.o \
+   slaqz0.o slaqz1.o slaqz2.o slaqz3.o slaqz4.o \
    shsein.o shseqr.o slabrd.o slacon.o slacn2.o \
    slaein.o slaexc.o slag2.o  slags2.o slagtm.o slagv2.o slahqr.o \
    slahr2.o slaic1.o slaln2.o slals0.o slalsa.o slalsd.o \
@@ -223,6 +234,7 @@ CLASRC = \
    chesv_aa.o chetrf_aa.o chetrs_aa.o clahef_aa.o \
    chesv_aa_2stage.o chetrf_aa_2stage.o chetrs_aa_2stage.o \
    chgeqz.o chpcon.o chpev.o  chpevd.o \
+   claqz0.o claqz1.o claqz2.o claqz3.o \
    chpevx.o chpgst.o chpgv.o  chpgvd.o chpgvx.o chprfs.o chpsv.o \
    chpsvx.o \
    chptrd.o chptrf.o chptri.o chptrs.o chsein.o chseqr.o clabrd.o \
@@ -317,6 +329,7 @@ DLASRC = \
    dggglm.o dgghrd.o dgghd3.o dgglse.o dggqrf.o \
    dggrqf.o dggsvd3.o dggsvp3.o dgtcon.o dgtrfs.o dgtsv.o \
    dgtsvx.o dgttrf.o dgttrs.o dgtts2.o dhgeqz.o \
+   dlaqz0.o dlaqz1.o dlaqz2.o dlaqz3.o dlaqz4.o \
    dhsein.o dhseqr.o dlabrd.o dlacon.o dlacn2.o \
    dlaein.o dlaexc.o dlag2.o  dlags2.o dlagtm.o dlagv2.o dlahqr.o \
    dlahr2.o dlaic1.o dlaln2.o dlals0.o dlalsa.o dlalsd.o \
@@ -423,6 +436,7 @@ ZLASRC = \
    zhesv_aa.o zhetrf_aa.o zhetrs_aa.o zlahef_aa.o \
    zhesv_aa_2stage.o zhetrf_aa_2stage.o zhetrs_aa_2stage.o \
    zhgeqz.o zhpcon.o zhpev.o  zhpevd.o \
+   zlaqz0.o zlaqz1.o zlaqz2.o zlaqz3.o \
    zhpevx.o zhpgst.o zhpgv.o  zhpgvd.o zhpgvx.o zhprfs.o zhpsv.o \
    zhpsvx.o \
    zhptrd.o zhptrf.o zhptri.o zhptrs.o zhsein.o zhseqr.o zlabrd.o \
@@ -608,7 +622,7 @@ endif
 .PHONY: clean cleanobj cleanlib
 clean: cleanobj cleanlib
 cleanobj:
-	rm -f *.o DEPRECATED/*.o
+	rm -f *.o *.mod DEPRECATED/*.o DEPRECATED/*.mod
 cleanlib:
 	rm -f $(LAPACKLIB)
 
@@ -618,3 +632,9 @@ sla_wwaddw.o: sla_wwaddw.f ; $(FC) $(FFLAGS_NOOPT) -c -o $@ $<
 dla_wwaddw.o: dla_wwaddw.f ; $(FC) $(FFLAGS_NOOPT) -c -o $@ $<
 cla_wwaddw.o: cla_wwaddw.f ; $(FC) $(FFLAGS_NOOPT) -c -o $@ $<
 zla_wwaddw.o: zla_wwaddw.f ; $(FC) $(FFLAGS_NOOPT) -c -o $@ $<
+
+# Modules
+la_xisnan.o: la_xisnan.F90 la_constants.mod
+	$(FC) $(FFLAGS) -c -o $@ $<
+la_constants.o: la_constants.f90
+	$(FC) $(FFLAGS) -c -o $@ $<

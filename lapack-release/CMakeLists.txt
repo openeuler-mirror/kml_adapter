@@ -3,8 +3,8 @@ cmake_minimum_required(VERSION 3.2)
 project(LAPACK Fortran C)
 
 set(LAPACK_MAJOR_VERSION 3)
-set(LAPACK_MINOR_VERSION 9)
-set(LAPACK_PATCH_VERSION 1)
+set(LAPACK_MINOR_VERSION 10)
+set(LAPACK_PATCH_VERSION 0)
 set(
   LAPACK_VERSION
   ${LAPACK_MAJOR_VERSION}.${LAPACK_MINOR_VERSION}.${LAPACK_PATCH_VERSION}
@@ -15,9 +15,6 @@ set(CMAKE_MODULE_PATH "${LAPACK_SOURCE_DIR}/CMAKE" ${CMAKE_MODULE_PATH})
 
 # Export all symbols on Windows when building shared libraries
 SET(CMAKE_WINDOWS_EXPORT_ALL_SYMBOLS TRUE)
-
-# Tell CMake that our Fortran sources are written in fixed format.
-set(CMAKE_Fortran_FORMAT FIXED)
 
 # Set a default build type if none was specified
 if(NOT CMAKE_BUILD_TYPE AND NOT CMAKE_CONFIGURATION_TYPES)
@@ -356,9 +353,27 @@ option(LAPACKE_WITH_TMG "Build LAPACKE with tmglib routines" OFF)
 if(LAPACKE_WITH_TMG)
   set(LAPACKE ON)
 endif()
-if(BUILD_TESTING OR LAPACKE_WITH_TMG) #already included, avoid double inclusion
+
+# TMGLIB
+# Cache export target
+set(LAPACK_INSTALL_EXPORT_NAME_CACHE ${LAPACK_INSTALL_EXPORT_NAME})
+if(BUILD_TESTING OR LAPACKE_WITH_TMG)
+  if(LATESTLAPACK_FOUND AND LAPACKE_WITH_TMG)
+    set(CMAKE_REQUIRED_LIBRARIES ${LAPACK_LIBRARIES})
+    # Check if dlatms (part of tmg) is found
+    CHECK_FORTRAN_FUNCTION_EXISTS("dlatms" LAPACK_WITH_TMGLIB_FOUND)
+    unset(CMAKE_REQUIRED_LIBRARIES)
+    if(NOT LAPACK_WITH_TMGLIB_FOUND)
+      # Build and install TMG as part of LAPACKE targets (as opposed to LAPACK
+      # targets)
+      set(LAPACK_INSTALL_EXPORT_NAME ${LAPACKELIB}-targets)
+    endif()
+  endif()
   add_subdirectory(TESTING/MATGEN)
 endif()
+# Reset export target
+set(LAPACK_INSTALL_EXPORT_NAME ${LAPACK_INSTALL_EXPORT_NAME_CACHE})
+unset(LAPACK_INSTALL_EXPORT_NAME_CACHE)
 
 if(LAPACKE)
   add_subdirectory(LAPACKE)
@@ -384,9 +399,8 @@ if (BLAS++)
   include(ExternalProject)
   ExternalProject_Add(blaspp
 	  URL https://bitbucket.org/icl/blaspp/downloads/blaspp-2020.10.02.tar.gz
-	  #	  CMAKE_ARGS "-DUSE_CMAKE_FIND_BLAS=ON -DLIBRARY_PATH=${CMAKE_BINARY_DIR}"
-	  CONFIGURE_COMMAND env LIBRARY_PATH=${CMAKE_BINARY_DIR}/lib LD_LIBRARY_PATH=${PROJECT_BINARY_DIR}/lib ${CMAKE_COMMAND} -DCMAKE_INSTALL_PREFIX=${PROJECT_BINARY_DIR} -DCMAKE_INSTALL_LIBDIR=lib -DBUILD_SHARED_LIBS=${BUILD_SHARED_LIBS} ${PROJECT_BINARY_DIR}/blaspp-prefix/src/blaspp
-	  BUILD_COMMAND env LIBRARY_PATH=${PROJECT_BINARY_DIR}/lib LIB_SUFFIX="" make
+	  CONFIGURE_COMMAND ${CMAKE_COMMAND} -E env LIBRARY_PATH=${CMAKE_BINARY_DIR}/lib LD_LIBRARY_PATH=${PROJECT_BINARY_DIR}/lib ${CMAKE_COMMAND} -DCMAKE_INSTALL_PREFIX=${PROJECT_BINARY_DIR} -DCMAKE_INSTALL_LIBDIR=lib -DBUILD_SHARED_LIBS=${BUILD_SHARED_LIBS} ${PROJECT_BINARY_DIR}/blaspp-prefix/src/blaspp
+	  BUILD_COMMAND ${CMAKE_COMMAND} -E env LIBRARY_PATH=${PROJECT_BINARY_DIR}/lib LIB_SUFFIX="" make
 	  INSTALL_COMMAND make PREFIX=${PROJECT_BINARY_DIR} LIB_SUFFIX="" install
 	  )
   ExternalProject_Add_StepDependencies(blaspp build ${BLAS_LIBRARIES})
@@ -398,8 +412,8 @@ if (LAPACK++)
   if (BUILD_SHARED_LIBS)
   ExternalProject_Add(lapackpp
 	  URL https://bitbucket.org/icl/lapackpp/downloads/lapackpp-2020.10.02.tar.gz
-	  CONFIGURE_COMMAND env LIBRARY_PATH=${CMAKE_BINARY_DIR}/lib LD_LIBRARY_PATH=${PROJECT_BINARY_DIR}/lib ${CMAKE_COMMAND} -DCMAKE_INSTALL_PREFIX=${PROJECT_BINARY_DIR} -DCMAKE_INSTALL_LIBDIR=lib -DLAPACK_LIBRARIES=${LAPACK_LIBRARIES} -DBUILD_SHARED_LIBS=${BUILD_SHARED_LIBS}  ${PROJECT_BINARY_DIR}/lapackpp-prefix/src/lapackpp
-	  BUILD_COMMAND env LIBRARY_PATH=${PROJECT_BINARY_DIR}/lib LIB_SUFFIX="" make
+	  CONFIGURE_COMMAND ${CMAKE_COMMAND} -E env LIBRARY_PATH=${CMAKE_BINARY_DIR}/lib LD_LIBRARY_PATH=${PROJECT_BINARY_DIR}/lib ${CMAKE_COMMAND} -DCMAKE_INSTALL_PREFIX=${PROJECT_BINARY_DIR} -DCMAKE_INSTALL_LIBDIR=lib -DLAPACK_LIBRARIES=${LAPACK_LIBRARIES} -DBUILD_SHARED_LIBS=${BUILD_SHARED_LIBS}  ${PROJECT_BINARY_DIR}/lapackpp-prefix/src/lapackpp
+	  BUILD_COMMAND ${CMAKE_COMMAND} -E env LIBRARY_PATH=${PROJECT_BINARY_DIR}/lib LIB_SUFFIX="" make
 	  INSTALL_COMMAND make PREFIX=${PROJECT_BINARY_DIR} LIB_SUFFIX="" install
 	  )
   else ()
@@ -454,10 +468,6 @@ if(NOT LATESTLAPACK_FOUND)
   set(ALL_TARGETS ${ALL_TARGETS} ${LAPACKLIB})
 endif()
 
-if(BUILD_TESTING OR LAPACKE_WITH_TMG)
-  set(ALL_TARGETS ${ALL_TARGETS} ${TMGLIB})
-endif()
-
 # Export lapack targets, not including lapacke, from the
 # install tree, if any.
 set(_lapack_config_install_guard_target "")
@@ -480,6 +490,10 @@ endif()
 # Include lapacke in targets exported from the build tree.
 if(LAPACKE)
   set(ALL_TARGETS ${ALL_TARGETS} ${LAPACKELIB})
+endif()
+
+if(NOT LAPACK_WITH_TMGLIB_FOUND AND LAPACKE_WITH_TMG)
+  set(ALL_TARGETS ${ALL_TARGETS} ${TMGLIB})
 endif()
 
 # Export lapack and lapacke targets from the build tree, if any.

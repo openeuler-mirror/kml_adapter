@@ -29,7 +29,7 @@
 *>
 *> ZGTT02 computes the residual for the solution to a tridiagonal
 *> system of equations:
-*>    RESID = norm(B - op(A)*X) / (norm(A) * norm(X) * EPS),
+*>    RESID = norm(B - op(A)*X) / (norm(op(A)) * norm(X) * EPS),
 *> where EPS is the machine epsilon.
 *> \endverbatim
 *
@@ -40,7 +40,7 @@
 *> \verbatim
 *>          TRANS is CHARACTER
 *>          Specifies the form of the residual.
-*>          = 'N':  B - A * X     (No transpose)
+*>          = 'N':  B - A    * X  (No transpose)
 *>          = 'T':  B - A**T * X  (Transpose)
 *>          = 'C':  B - A**H * X  (Conjugate transpose)
 *> \endverbatim
@@ -105,7 +105,7 @@
 *> \param[out] RESID
 *> \verbatim
 *>          RESID is DOUBLE PRECISION
-*>          norm(B - op(A)*X) / (norm(A) * norm(X) * EPS)
+*>          norm(B - op(A)*X) / (norm(op(A)) * norm(X) * EPS)
 *> \endverbatim
 *
 *  Authors:
@@ -166,7 +166,7 @@
      $   RETURN
 *
 *     Compute the maximum over the number of right hand sides of
-*        norm(B - op(A)*X) / ( norm(A) * norm(X) * EPS ).
+*        norm(B - op(A)*X) / ( norm(op(A)) * norm(X) * EPS ).
 *
       IF( LSAME( TRANS, 'N' ) ) THEN
          ANORM = ZLANGT( '1', N, DL, D, DU )
@@ -182,7 +182,7 @@
          RETURN
       END IF
 *
-*     Compute B - op(A)*X.
+*     Compute B - op(A)*X and store in B.
 *
       CALL ZLAGTM( TRANS, N, NRHS, -ONE, DL, D, DU, X, LDX, ONE, B,
      $             LDB )

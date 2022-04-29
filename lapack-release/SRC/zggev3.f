@@ -196,8 +196,8 @@
 *>                The QZ iteration failed.  No eigenvectors have been
 *>                calculated, but ALPHA(j) and BETA(j) should be
 *>                correct for j=INFO+1,...,N.
-*>          > N:  =N+1: other then QZ iteration failed in DHGEQZ,
-*>                =N+2: error return from DTGEVC.
+*>          > N:  =N+1: other then QZ iteration failed in ZHGEQZ,
+*>                =N+2: error return from ZTGEVC.
 *> \endverbatim
 *
 *  Authors:
@@ -253,7 +253,7 @@
 *     ..
 *     .. External Subroutines ..
       EXTERNAL           DLABAD, XERBLA, ZGEQRF, ZGGBAK, ZGGBAL, ZGGHD3,
-     $                   ZHGEQZ, ZLACPY, ZLASCL, ZLASET, ZTGEVC, ZUNGQR,
+     $                   ZLAQZ0, ZLACPY, ZLASCL, ZLASET, ZTGEVC, ZUNGQR,
      $                   ZUNMQR
 *     ..
 *     .. External Functions ..
@@ -335,17 +335,17 @@
             CALL ZGGHD3( JOBVL, JOBVR, N, 1, N, A, LDA, B, LDB, VL,
      $                   LDVL, VR, LDVR, WORK, -1, IERR )
             LWKOPT = MAX( LWKOPT, N+INT( WORK( 1 ) ) )
-            CALL ZHGEQZ( 'S', JOBVL, JOBVR, N, 1, N, A, LDA, B, LDB,
+            CALL ZLAQZ0( 'S', JOBVL, JOBVR, N, 1, N, A, LDA, B, LDB,
      $                   ALPHA, BETA, VL, LDVL, VR, LDVR, WORK, -1,
-     $                   RWORK, IERR )
+     $                   RWORK, 0, IERR )
             LWKOPT = MAX( LWKOPT, N+INT( WORK( 1 ) ) )
          ELSE
             CALL ZGGHD3( JOBVL, JOBVR, N, 1, N, A, LDA, B, LDB, VL,
      $                   LDVL, VR, LDVR, WORK, -1, IERR )
             LWKOPT = MAX( LWKOPT, N+INT( WORK( 1 ) ) )
-            CALL ZHGEQZ( 'E', JOBVL, JOBVR, N, 1, N, A, LDA, B, LDB,
+            CALL ZLAQZ0( 'E', JOBVL, JOBVR, N, 1, N, A, LDA, B, LDB,
      $                   ALPHA, BETA, VL, LDVL, VR, LDVR, WORK, -1,
-     $                   RWORK, IERR )
+     $                   RWORK, 0, IERR )
             LWKOPT = MAX( LWKOPT, N+INT( WORK( 1 ) ) )
          END IF
          WORK( 1 ) = DCMPLX( LWKOPT )
@@ -467,9 +467,9 @@
       ELSE
          CHTEMP = 'E'
       END IF
-      CALL ZHGEQZ( CHTEMP, JOBVL, JOBVR, N, ILO, IHI, A, LDA, B, LDB,
+      CALL ZLAQZ0( CHTEMP, JOBVL, JOBVR, N, ILO, IHI, A, LDA, B, LDB,
      $             ALPHA, BETA, VL, LDVL, VR, LDVR, WORK( IWRK ),
-     $             LWORK+1-IWRK, RWORK( IRWRK ), IERR )
+     $             LWORK+1-IWRK, RWORK( IRWRK ), 0, IERR )
       IF( IERR.NE.0 ) THEN
          IF( IERR.GT.0 .AND. IERR.LE.N ) THEN
             INFO = IERR
