@@ -1,0 +1,2701 @@
+From 23eccbdf6e2298fda64867e77976c74a88578330 Mon Sep 17 00:00:00 2001
+From: Dmitry Baksheev <bd@mail.ru>
+Date: Fri, 29 Apr 2022 15:54:37 +0700
+Subject: [PATCH] lapack: add suffix _netlib to relevant names
+
+---
+ lapack-release/SRC/cgelqf.f        | 2 +-
+ lapack-release/SRC/cgeqlf.f        | 2 +-
+ lapack-release/SRC/cgeqrf.f        | 2 +-
+ lapack-release/SRC/cgerqf.f        | 2 +-
+ lapack-release/SRC/cgesv.f         | 2 +-
+ lapack-release/SRC/cgetrf.f        | 2 +-
+ lapack-release/SRC/cgetri.f        | 2 +-
+ lapack-release/SRC/cgetrs.f        | 3 ++-
+ lapack-release/SRC/cgtsv.f         | 2 +-
+ lapack-release/SRC/cgttrf.f        | 2 +-
+ lapack-release/SRC/cgttrs.f        | 4 ++--
+ lapack-release/SRC/cgtts2.f        | 3 ++-
+ lapack-release/SRC/cheev.f         | 4 ++--
+ lapack-release/SRC/cheevd.f        | 4 ++--
+ lapack-release/SRC/chetrd.f        | 3 ++-
+ lapack-release/SRC/chetrd_2stage.f | 2 +-
+ lapack-release/SRC/chpsv.f         | 2 +-
+ lapack-release/SRC/chptrf.f        | 2 +-
+ lapack-release/SRC/clacpy.f        | 3 ++-
+ lapack-release/SRC/clange.f        | 5 +++--
+ lapack-release/SRC/claset.f        | 3 ++-
+ lapack-release/SRC/clasr.f         | 2 +-
+ lapack-release/SRC/claswp.f        | 2 +-
+ lapack-release/SRC/cposv.f         | 2 +-
+ lapack-release/SRC/cpotrf.f        | 3 ++-
+ lapack-release/SRC/cpotri.f        | 2 +-
+ lapack-release/SRC/cpotrs.f        | 2 +-
+ lapack-release/SRC/cppsv.f         | 2 +-
+ lapack-release/SRC/cpptrf.f        | 3 ++-
+ lapack-release/SRC/cpptrs.f        | 3 ++-
+ lapack-release/SRC/cptsv.f         | 2 +-
+ lapack-release/SRC/cpttrf.f        | 2 +-
+ lapack-release/SRC/cpttrs.f        | 2 +-
+ lapack-release/SRC/cptts2.f        | 2 +-
+ lapack-release/SRC/cspsv.f         | 3 ++-
+ lapack-release/SRC/csptrf.f        | 3 ++-
+ lapack-release/SRC/ctpttr.f        | 3 ++-
+ lapack-release/SRC/ctrttp.f        | 3 ++-
+ lapack-release/SRC/cunglq.f        | 3 ++-
+ lapack-release/SRC/cungql.f        | 3 ++-
+ lapack-release/SRC/cungqr.f        | 3 ++-
+ lapack-release/SRC/cungrq.f        | 3 ++-
+ lapack-release/SRC/cunmlq.f        | 3 ++-
+ lapack-release/SRC/cunmql.f        | 3 ++-
+ lapack-release/SRC/cunmqr.f        | 2 +-
+ lapack-release/SRC/cunmrq.f        | 3 ++-
+ lapack-release/SRC/dgelqf.f        | 2 +-
+ lapack-release/SRC/dgeqlf.f        | 2 +-
+ lapack-release/SRC/dgeqrf.f        | 2 +-
+ lapack-release/SRC/dgerqf.f        | 2 +-
+ lapack-release/SRC/dgesv.f         | 2 +-
+ lapack-release/SRC/dgetrf.f        | 2 +-
+ lapack-release/SRC/dgetri.f        | 2 +-
+ lapack-release/SRC/dgetrs.f        | 3 ++-
+ lapack-release/SRC/dgtsv.f         | 2 +-
+ lapack-release/SRC/dgttrf.f        | 2 +-
+ lapack-release/SRC/dgttrs.f        | 4 ++--
+ lapack-release/SRC/dgtts2.f        | 3 ++-
+ lapack-release/SRC/dlacpy.f        | 3 ++-
+ lapack-release/SRC/dlange.f        | 5 +++--
+ lapack-release/SRC/dlaset.f        | 3 ++-
+ lapack-release/SRC/dlasr.f         | 2 +-
+ lapack-release/SRC/dlaswp.f        | 2 +-
+ lapack-release/SRC/dorglq.f        | 3 ++-
+ lapack-release/SRC/dorgql.f        | 3 ++-
+ lapack-release/SRC/dorgqr.f        | 3 ++-
+ lapack-release/SRC/dorgrq.f        | 3 ++-
+ lapack-release/SRC/dormlq.f        | 3 ++-
+ lapack-release/SRC/dormql.f        | 3 ++-
+ lapack-release/SRC/dormqr.f        | 2 +-
+ lapack-release/SRC/dormrq.f        | 3 ++-
+ lapack-release/SRC/dposv.f         | 2 +-
+ lapack-release/SRC/dpotrf.f        | 3 ++-
+ lapack-release/SRC/dpotri.f        | 2 +-
+ lapack-release/SRC/dpotrs.f        | 2 +-
+ lapack-release/SRC/dppsv.f         | 2 +-
+ lapack-release/SRC/dpptrf.f        | 3 ++-
+ lapack-release/SRC/dpptrs.f        | 3 ++-
+ lapack-release/SRC/dptsv.f         | 2 +-
+ lapack-release/SRC/dpttrf.f        | 2 +-
+ lapack-release/SRC/dpttrs.f        | 2 +-
+ lapack-release/SRC/dptts2.f        | 2 +-
+ lapack-release/SRC/dspsv.f         | 3 ++-
+ lapack-release/SRC/dsptrf.f        | 3 ++-
+ lapack-release/SRC/dstedc.f        | 4 ++--
+ lapack-release/SRC/dsyev.f         | 3 ++-
+ lapack-release/SRC/dsyevd.f        | 4 ++--
+ lapack-release/SRC/dsytrd.f        | 3 ++-
+ lapack-release/SRC/dsytrd_2stage.f | 2 +-
+ lapack-release/SRC/dtpttr.f        | 3 ++-
+ lapack-release/SRC/dtrttp.f        | 3 ++-
+ lapack-release/SRC/sgelqf.f        | 2 +-
+ lapack-release/SRC/sgeqlf.f        | 2 +-
+ lapack-release/SRC/sgeqrf.f        | 2 +-
+ lapack-release/SRC/sgerqf.f        | 2 +-
+ lapack-release/SRC/sgesv.f         | 2 +-
+ lapack-release/SRC/sgetrf.f        | 2 +-
+ lapack-release/SRC/sgetri.f        | 2 +-
+ lapack-release/SRC/sgetrs.f        | 3 ++-
+ lapack-release/SRC/sgtsv.f         | 2 +-
+ lapack-release/SRC/sgttrf.f        | 2 +-
+ lapack-release/SRC/sgttrs.f        | 4 ++--
+ lapack-release/SRC/sgtts2.f        | 3 ++-
+ lapack-release/SRC/slacpy.f        | 3 ++-
+ lapack-release/SRC/slange.f        | 5 +++--
+ lapack-release/SRC/slaset.f        | 3 ++-
+ lapack-release/SRC/slasr.f         | 2 +-
+ lapack-release/SRC/slaswp.f        | 2 +-
+ lapack-release/SRC/sorglq.f        | 3 ++-
+ lapack-release/SRC/sorgql.f        | 3 ++-
+ lapack-release/SRC/sorgqr.f        | 3 ++-
+ lapack-release/SRC/sorgrq.f        | 3 ++-
+ lapack-release/SRC/sormlq.f        | 3 ++-
+ lapack-release/SRC/sormql.f        | 3 ++-
+ lapack-release/SRC/sormqr.f        | 2 +-
+ lapack-release/SRC/sormrq.f        | 3 ++-
+ lapack-release/SRC/sposv.f         | 2 +-
+ lapack-release/SRC/spotrf.f        | 3 ++-
+ lapack-release/SRC/spotri.f        | 2 +-
+ lapack-release/SRC/spotrs.f        | 2 +-
+ lapack-release/SRC/sppsv.f         | 2 +-
+ lapack-release/SRC/spptrf.f        | 3 ++-
+ lapack-release/SRC/spptrs.f        | 3 ++-
+ lapack-release/SRC/sptsv.f         | 2 +-
+ lapack-release/SRC/spttrf.f        | 2 +-
+ lapack-release/SRC/spttrs.f        | 2 +-
+ lapack-release/SRC/sptts2.f        | 2 +-
+ lapack-release/SRC/sspsv.f         | 3 ++-
+ lapack-release/SRC/ssptrf.f        | 3 ++-
+ lapack-release/SRC/sstedc.f        | 4 ++--
+ lapack-release/SRC/ssyev.f         | 3 ++-
+ lapack-release/SRC/ssyevd.f        | 4 ++--
+ lapack-release/SRC/ssytrd.f        | 3 ++-
+ lapack-release/SRC/ssytrd_2stage.f | 2 +-
+ lapack-release/SRC/stpttr.f        | 3 ++-
+ lapack-release/SRC/strttp.f        | 3 ++-
+ lapack-release/SRC/zgelqf.f        | 2 +-
+ lapack-release/SRC/zgeqlf.f        | 2 +-
+ lapack-release/SRC/zgeqrf.f        | 2 +-
+ lapack-release/SRC/zgerqf.f        | 2 +-
+ lapack-release/SRC/zgesv.f         | 2 +-
+ lapack-release/SRC/zgetrf.f        | 2 +-
+ lapack-release/SRC/zgetri.f        | 2 +-
+ lapack-release/SRC/zgetrs.f        | 3 ++-
+ lapack-release/SRC/zgtsv.f         | 2 +-
+ lapack-release/SRC/zgttrf.f        | 2 +-
+ lapack-release/SRC/zgttrs.f        | 4 ++--
+ lapack-release/SRC/zgtts2.f        | 3 ++-
+ lapack-release/SRC/zheev.f         | 4 ++--
+ lapack-release/SRC/zheevd.f        | 4 ++--
+ lapack-release/SRC/zhetrd.f        | 3 ++-
+ lapack-release/SRC/zhetrd_2stage.f | 2 +-
+ lapack-release/SRC/zhpsv.f         | 2 +-
+ lapack-release/SRC/zhptrf.f        | 2 +-
+ lapack-release/SRC/zlacpy.f        | 3 ++-
+ lapack-release/SRC/zlange.f        | 5 +++--
+ lapack-release/SRC/zlaset.f        | 3 ++-
+ lapack-release/SRC/zlasr.f         | 2 +-
+ lapack-release/SRC/zlaswp.f        | 2 +-
+ lapack-release/SRC/zposv.f         | 2 +-
+ lapack-release/SRC/zpotrf.f        | 3 ++-
+ lapack-release/SRC/zpotri.f        | 2 +-
+ lapack-release/SRC/zpotrs.f        | 2 +-
+ lapack-release/SRC/zppsv.f         | 2 +-
+ lapack-release/SRC/zpptrf.f        | 3 ++-
+ lapack-release/SRC/zpptrs.f        | 3 ++-
+ lapack-release/SRC/zptsv.f         | 2 +-
+ lapack-release/SRC/zpttrf.f        | 2 +-
+ lapack-release/SRC/zpttrs.f        | 2 +-
+ lapack-release/SRC/zptts2.f        | 2 +-
+ lapack-release/SRC/zspsv.f         | 3 ++-
+ lapack-release/SRC/zsptrf.f        | 3 ++-
+ lapack-release/SRC/ztpttr.f        | 3 ++-
+ lapack-release/SRC/ztrttp.f        | 3 ++-
+ lapack-release/SRC/zunglq.f        | 3 ++-
+ lapack-release/SRC/zungql.f        | 3 ++-
+ lapack-release/SRC/zungqr.f        | 3 ++-
+ lapack-release/SRC/zungrq.f        | 3 ++-
+ lapack-release/SRC/zunmlq.f        | 3 ++-
+ lapack-release/SRC/zunmql.f        | 3 ++-
+ lapack-release/SRC/zunmqr.f        | 2 +-
+ lapack-release/SRC/zunmrq.f        | 3 ++-
+ 182 files changed, 280 insertions(+), 198 deletions(-)
+
+diff --git a/lapack-release/SRC/cgelqf.f b/lapack-release/SRC/cgelqf.f
+index 37ef13a..e19c9e1 100644
+--- a/lapack-release/SRC/cgelqf.f
++++ b/lapack-release/SRC/cgelqf.f
+@@ -139,7 +139,7 @@
+ *> \endverbatim
+ *>
+ *  =====================================================================
+-      SUBROUTINE CGELQF( M, N, A, LDA, TAU, WORK, LWORK, INFO )
++      SUBROUTINE CGELQF_NETLIB( M, N, A, LDA, TAU, WORK, LWORK, INFO )
+ *
+ *  -- LAPACK computational routine --
+ *  -- LAPACK is a software package provided by Univ. of Tennessee,    --
+diff --git a/lapack-release/SRC/cgeqlf.f b/lapack-release/SRC/cgeqlf.f
+index d2c11c2..d6e8737 100644
+--- a/lapack-release/SRC/cgeqlf.f
++++ b/lapack-release/SRC/cgeqlf.f
+@@ -134,7 +134,7 @@
+ *> \endverbatim
+ *>
+ *  =====================================================================
+-      SUBROUTINE CGEQLF( M, N, A, LDA, TAU, WORK, LWORK, INFO )
++      SUBROUTINE CGEQLF_NETLIB( M, N, A, LDA, TAU, WORK, LWORK, INFO )
+ *
+ *  -- LAPACK computational routine --
+ *  -- LAPACK is a software package provided by Univ. of Tennessee,    --
+diff --git a/lapack-release/SRC/cgeqrf.f b/lapack-release/SRC/cgeqrf.f
+index 4b75ede..a340226 100644
+--- a/lapack-release/SRC/cgeqrf.f
++++ b/lapack-release/SRC/cgeqrf.f
+@@ -141,7 +141,7 @@
+ *> \endverbatim
+ *>
+ *  =====================================================================
+-      SUBROUTINE CGEQRF( M, N, A, LDA, TAU, WORK, LWORK, INFO )
++      SUBROUTINE CGEQRF_NETLIB( M, N, A, LDA, TAU, WORK, LWORK, INFO )
+ *
+ *  -- LAPACK computational routine --
+ *  -- LAPACK is a software package provided by Univ. of Tennessee,    --
+diff --git a/lapack-release/SRC/cgerqf.f b/lapack-release/SRC/cgerqf.f
+index 2df1936..b6153d6 100644
+--- a/lapack-release/SRC/cgerqf.f
++++ b/lapack-release/SRC/cgerqf.f
+@@ -134,7 +134,7 @@
+ *> \endverbatim
+ *>
+ *  =====================================================================
+-      SUBROUTINE CGERQF( M, N, A, LDA, TAU, WORK, LWORK, INFO )
++      SUBROUTINE CGERQF_NETLIB( M, N, A, LDA, TAU, WORK, LWORK, INFO )
+ *
+ *  -- LAPACK computational routine --
+ *  -- LAPACK is a software package provided by Univ. of Tennessee,    --
+diff --git a/lapack-release/SRC/cgesv.f b/lapack-release/SRC/cgesv.f
+index d18ed03..1655c06 100644
+--- a/lapack-release/SRC/cgesv.f
++++ b/lapack-release/SRC/cgesv.f
+@@ -118,7 +118,7 @@
+ *> \ingroup complexGEsolve
+ *
+ *  =====================================================================
+-      SUBROUTINE CGESV( N, NRHS, A, LDA, IPIV, B, LDB, INFO )
++      SUBROUTINE CGESV_NETLIB( N, NRHS, A, LDA, IPIV, B, LDB, INFO )
+ *
+ *  -- LAPACK driver routine --
+ *  -- LAPACK is a software package provided by Univ. of Tennessee,    --
+diff --git a/lapack-release/SRC/cgetrf.f b/lapack-release/SRC/cgetrf.f
+index d08e0bb..aa47397 100644
+--- a/lapack-release/SRC/cgetrf.f
++++ b/lapack-release/SRC/cgetrf.f
+@@ -104,7 +104,7 @@
+ *> \ingroup complexGEcomputational
+ *
+ *  =====================================================================
+-      SUBROUTINE CGETRF( M, N, A, LDA, IPIV, INFO )
++      SUBROUTINE CGETRF_NETLIB( M, N, A, LDA, IPIV, INFO )
+ *
+ *  -- LAPACK computational routine --
+ *  -- LAPACK is a software package provided by Univ. of Tennessee,    --
+diff --git a/lapack-release/SRC/cgetri.f b/lapack-release/SRC/cgetri.f
+index bd7fc28..ba53eda 100644
+--- a/lapack-release/SRC/cgetri.f
++++ b/lapack-release/SRC/cgetri.f
+@@ -110,7 +110,7 @@
+ *> \ingroup complexGEcomputational
+ *
+ *  =====================================================================
+-      SUBROUTINE CGETRI( N, A, LDA, IPIV, WORK, LWORK, INFO )
++      SUBROUTINE CGETRI_NETLIB( N, A, LDA, IPIV, WORK, LWORK, INFO )
+ *
+ *  -- LAPACK computational routine --
+ *  -- LAPACK is a software package provided by Univ. of Tennessee,    --
+diff --git a/lapack-release/SRC/cgetrs.f b/lapack-release/SRC/cgetrs.f
+index 187b1a6..2e3fddb 100644
+--- a/lapack-release/SRC/cgetrs.f
++++ b/lapack-release/SRC/cgetrs.f
+@@ -117,7 +117,8 @@
+ *> \ingroup complexGEcomputational
+ *
+ *  =====================================================================
+-      SUBROUTINE CGETRS( TRANS, N, NRHS, A, LDA, IPIV, B, LDB, INFO )
++      SUBROUTINE CGETRS_NETLIB( TRANS, N, NRHS, A, LDA, IPIV,
++     $                          B, LDB, INFO )
+ *
+ *  -- LAPACK computational routine --
+ *  -- LAPACK is a software package provided by Univ. of Tennessee,    --
+diff --git a/lapack-release/SRC/cgtsv.f b/lapack-release/SRC/cgtsv.f
+index a9be1b7..9243669 100644
+--- a/lapack-release/SRC/cgtsv.f
++++ b/lapack-release/SRC/cgtsv.f
+@@ -120,7 +120,7 @@
+ *> \ingroup complexGTsolve
+ *
+ *  =====================================================================
+-      SUBROUTINE CGTSV( N, NRHS, DL, D, DU, B, LDB, INFO )
++      SUBROUTINE CGTSV_NETLIB( N, NRHS, DL, D, DU, B, LDB, INFO )
+ *
+ *  -- LAPACK driver routine --
+ *  -- LAPACK is a software package provided by Univ. of Tennessee,    --
+diff --git a/lapack-release/SRC/cgttrf.f b/lapack-release/SRC/cgttrf.f
+index 35d0997..9372905 100644
+--- a/lapack-release/SRC/cgttrf.f
++++ b/lapack-release/SRC/cgttrf.f
+@@ -120,7 +120,7 @@
+ *> \ingroup complexGTcomputational
+ *
+ *  =====================================================================
+-      SUBROUTINE CGTTRF( N, DL, D, DU, DU2, IPIV, INFO )
++      SUBROUTINE CGTTRF_NETLIB( N, DL, D, DU, DU2, IPIV, INFO )
+ *
+ *  -- LAPACK computational routine --
+ *  -- LAPACK is a software package provided by Univ. of Tennessee,    --
+diff --git a/lapack-release/SRC/cgttrs.f b/lapack-release/SRC/cgttrs.f
+index a37ad73..29b3b53 100644
+--- a/lapack-release/SRC/cgttrs.f
++++ b/lapack-release/SRC/cgttrs.f
+@@ -133,8 +133,8 @@
+ *> \ingroup complexGTcomputational
+ *
+ *  =====================================================================
+-      SUBROUTINE CGTTRS( TRANS, N, NRHS, DL, D, DU, DU2, IPIV, B, LDB,
+-     $                   INFO )
++      SUBROUTINE CGTTRS_NETLIB( TRANS, N, NRHS, DL, D, DU, DU2, IPIV, B,
++     $                   LDB, INFO )
+ *
+ *  -- LAPACK computational routine --
+ *  -- LAPACK is a software package provided by Univ. of Tennessee,    --
+diff --git a/lapack-release/SRC/cgtts2.f b/lapack-release/SRC/cgtts2.f
+index 60b5af0..3a4df9e 100644
+--- a/lapack-release/SRC/cgtts2.f
++++ b/lapack-release/SRC/cgtts2.f
+@@ -124,7 +124,8 @@
+ *> \ingroup complexGTcomputational
+ *
+ *  =====================================================================
+-      SUBROUTINE CGTTS2( ITRANS, N, NRHS, DL, D, DU, DU2, IPIV, B, LDB )
++      SUBROUTINE CGTTS2_NETLIB( ITRANS, N, NRHS, DL, D, DU, DU2, IPIV,
++     $                          B, LDB )
+ *
+ *  -- LAPACK computational routine --
+ *  -- LAPACK is a software package provided by Univ. of Tennessee,    --
+diff --git a/lapack-release/SRC/cheev.f b/lapack-release/SRC/cheev.f
+index fb8e451..161fabc 100644
+--- a/lapack-release/SRC/cheev.f
++++ b/lapack-release/SRC/cheev.f
+@@ -135,8 +135,8 @@
+ *> \ingroup complexHEeigen
+ *
+ *  =====================================================================
+-      SUBROUTINE CHEEV( JOBZ, UPLO, N, A, LDA, W, WORK, LWORK, RWORK,
+-     $                  INFO )
++      SUBROUTINE CHEEV_NETLIB( JOBZ, UPLO, N, A, LDA, W, WORK, LWORK,
++     $                         RWORK, INFO )
+ *
+ *  -- LAPACK driver routine --
+ *  -- LAPACK is a software package provided by Univ. of Tennessee,    --
+diff --git a/lapack-release/SRC/cheevd.f b/lapack-release/SRC/cheevd.f
+index 9a4a1ef..f3ae93b 100644
+--- a/lapack-release/SRC/cheevd.f
++++ b/lapack-release/SRC/cheevd.f
+@@ -200,8 +200,8 @@
+ *> at Berkeley, USA
+ *>
+ *  =====================================================================
+-      SUBROUTINE CHEEVD( JOBZ, UPLO, N, A, LDA, W, WORK, LWORK, RWORK,
+-     $                   LRWORK, IWORK, LIWORK, INFO )
++      SUBROUTINE CHEEVD_NETLIB( JOBZ, UPLO, N, A, LDA, W, WORK, LWORK,
++     $                   RWORK, LRWORK, IWORK, LIWORK, INFO )
+ *
+ *  -- LAPACK driver routine --
+ *  -- LAPACK is a software package provided by Univ. of Tennessee,    --
+diff --git a/lapack-release/SRC/chetrd.f b/lapack-release/SRC/chetrd.f
+index 52b9a89..5cb3ab1 100644
+--- a/lapack-release/SRC/chetrd.f
++++ b/lapack-release/SRC/chetrd.f
+@@ -188,7 +188,8 @@
+ *> \endverbatim
+ *>
+ *  =====================================================================
+-      SUBROUTINE CHETRD( UPLO, N, A, LDA, D, E, TAU, WORK, LWORK, INFO )
++      SUBROUTINE CHETRD_NETLIB( UPLO, N, A, LDA, D, E, TAU, WORK, LWORK,
++     $                          INFO )
+ *
+ *  -- LAPACK computational routine --
+ *  -- LAPACK is a software package provided by Univ. of Tennessee,    --
+diff --git a/lapack-release/SRC/chetrd_2stage.f b/lapack-release/SRC/chetrd_2stage.f
+index f5ad35f..d0cfd08 100644
+--- a/lapack-release/SRC/chetrd_2stage.f
++++ b/lapack-release/SRC/chetrd_2stage.f
+@@ -219,7 +219,7 @@
+ *> \endverbatim
+ *>
+ *  =====================================================================
+-      SUBROUTINE CHETRD_2STAGE( VECT, UPLO, N, A, LDA, D, E, TAU, 
++      SUBROUTINE CHETRD_2STAGE_NETLIB( VECT, UPLO, N, A, LDA, D, E, TAU,
+      $                          HOUS2, LHOUS2, WORK, LWORK, INFO )
+ *
+       IMPLICIT NONE
+diff --git a/lapack-release/SRC/chpsv.f b/lapack-release/SRC/chpsv.f
+index d41c966..135220c 100644
+--- a/lapack-release/SRC/chpsv.f
++++ b/lapack-release/SRC/chpsv.f
+@@ -158,7 +158,7 @@
+ *> \endverbatim
+ *>
+ *  =====================================================================
+-      SUBROUTINE CHPSV( UPLO, N, NRHS, AP, IPIV, B, LDB, INFO )
++      SUBROUTINE CHPSV_NETLIB( UPLO, N, NRHS, AP, IPIV, B, LDB, INFO )
+ *
+ *  -- LAPACK driver routine --
+ *  -- LAPACK is a software package provided by Univ. of Tennessee,    --
+diff --git a/lapack-release/SRC/chptrf.f b/lapack-release/SRC/chptrf.f
+index d9bfffb..2261e98 100644
+--- a/lapack-release/SRC/chptrf.f
++++ b/lapack-release/SRC/chptrf.f
+@@ -155,7 +155,7 @@
+ *>  J. Lewis, Boeing Computer Services Company
+ *>
+ *  =====================================================================
+-      SUBROUTINE CHPTRF( UPLO, N, AP, IPIV, INFO )
++      SUBROUTINE CHPTRF_NETLIB( UPLO, N, AP, IPIV, INFO )
+ *
+ *  -- LAPACK computational routine --
+ *  -- LAPACK is a software package provided by Univ. of Tennessee,    --
+diff --git a/lapack-release/SRC/clacpy.f b/lapack-release/SRC/clacpy.f
+index ab4404a..1662198 100644
+--- a/lapack-release/SRC/clacpy.f
++++ b/lapack-release/SRC/clacpy.f
+@@ -99,7 +99,8 @@
+ *> \ingroup complexOTHERauxiliary
+ *
+ *  =====================================================================
+-      SUBROUTINE CLACPY( UPLO, M, N, A, LDA, B, LDB )
++      SUBROUTINE CLACPY_NETLIB(
++     $    UPLO, M, N, A, LDA, B, LDB )
+ *
+ *  -- LAPACK auxiliary routine --
+ *  -- LAPACK is a software package provided by Univ. of Tennessee,    --
+diff --git a/lapack-release/SRC/clange.f b/lapack-release/SRC/clange.f
+index 5f009e1..2bec482 100644
+--- a/lapack-release/SRC/clange.f
++++ b/lapack-release/SRC/clange.f
+@@ -111,7 +111,8 @@
+ *> \ingroup complexGEauxiliary
+ *
+ *  =====================================================================
+-      REAL             FUNCTION CLANGE( NORM, M, N, A, LDA, WORK )
++      REAL             FUNCTION CLANGE_NETLIB(
++     $    NORM, M, N, A, LDA, WORK )
+ *
+ *  -- LAPACK auxiliary routine --
+ *  -- LAPACK is a software package provided by Univ. of Tennessee,    --
+@@ -212,7 +213,7 @@
+          VALUE = SSQ( 1 )*SQRT( SSQ( 2 ) )
+       END IF
+ *
+-      CLANGE = VALUE
++      CLANGE_NETLIB = VALUE
+       RETURN
+ *
+ *     End of CLANGE
+diff --git a/lapack-release/SRC/claset.f b/lapack-release/SRC/claset.f
+index d1a6779..09c333a 100644
+--- a/lapack-release/SRC/claset.f
++++ b/lapack-release/SRC/claset.f
+@@ -102,7 +102,8 @@
+ *> \ingroup complexOTHERauxiliary
+ *
+ *  =====================================================================
+-      SUBROUTINE CLASET( UPLO, M, N, ALPHA, BETA, A, LDA )
++      SUBROUTINE CLASET_NETLIB(
++     $    UPLO, M, N, ALPHA, BETA, A, LDA )
+ *
+ *  -- LAPACK auxiliary routine --
+ *  -- LAPACK is a software package provided by Univ. of Tennessee,    --
+diff --git a/lapack-release/SRC/clasr.f b/lapack-release/SRC/clasr.f
+index 71fc752..64f610c 100644
+--- a/lapack-release/SRC/clasr.f
++++ b/lapack-release/SRC/clasr.f
+@@ -196,7 +196,7 @@
+ *> \ingroup complexOTHERauxiliary
+ *
+ *  =====================================================================
+-      SUBROUTINE CLASR( SIDE, PIVOT, DIRECT, M, N, C, S, A, LDA )
++      SUBROUTINE CLASR_NETLIB(SIDE, PIVOT, DIRECT, M, N, C, S, A, LDA)
+ *
+ *  -- LAPACK auxiliary routine --
+ *  -- LAPACK is a software package provided by Univ. of Tennessee,    --
+diff --git a/lapack-release/SRC/claswp.f b/lapack-release/SRC/claswp.f
+index 60af6f6..6d39ef9 100644
+--- a/lapack-release/SRC/claswp.f
++++ b/lapack-release/SRC/claswp.f
+@@ -111,7 +111,7 @@
+ *> \endverbatim
+ *>
+ *  =====================================================================
+-      SUBROUTINE CLASWP( N, A, LDA, K1, K2, IPIV, INCX )
++      SUBROUTINE CLASWP_NETLIB( N, A, LDA, K1, K2, IPIV, INCX )
+ *
+ *  -- LAPACK auxiliary routine --
+ *  -- LAPACK is a software package provided by Univ. of Tennessee,    --
+diff --git a/lapack-release/SRC/cposv.f b/lapack-release/SRC/cposv.f
+index f37dfa3..8e7d865 100644
+--- a/lapack-release/SRC/cposv.f
++++ b/lapack-release/SRC/cposv.f
+@@ -126,7 +126,7 @@
+ *> \ingroup complexPOsolve
+ *
+ *  =====================================================================
+-      SUBROUTINE CPOSV( UPLO, N, NRHS, A, LDA, B, LDB, INFO )
++      SUBROUTINE CPOSV_NETLIB( UPLO, N, NRHS, A, LDA, B, LDB, INFO )
+ *
+ *  -- LAPACK driver routine --
+ *  -- LAPACK is a software package provided by Univ. of Tennessee,    --
+diff --git a/lapack-release/SRC/cpotrf.f b/lapack-release/SRC/cpotrf.f
+index 6aba310..8fa5eb4 100644
+--- a/lapack-release/SRC/cpotrf.f
++++ b/lapack-release/SRC/cpotrf.f
+@@ -103,7 +103,8 @@
+ *> \ingroup complexPOcomputational
+ *
+ *  =====================================================================
+-      SUBROUTINE CPOTRF( UPLO, N, A, LDA, INFO )
++      SUBROUTINE CPOTRF_NETLIB(
++     $    UPLO, N, A, LDA, INFO )
+ *
+ *  -- LAPACK computational routine --
+ *  -- LAPACK is a software package provided by Univ. of Tennessee,    --
+diff --git a/lapack-release/SRC/cpotri.f b/lapack-release/SRC/cpotri.f
+index bf05c91..9723711 100644
+--- a/lapack-release/SRC/cpotri.f
++++ b/lapack-release/SRC/cpotri.f
+@@ -91,7 +91,7 @@
+ *> \ingroup complexPOcomputational
+ *
+ *  =====================================================================
+-      SUBROUTINE CPOTRI( UPLO, N, A, LDA, INFO )
++      SUBROUTINE CPOTRI_NETLIB( UPLO, N, A, LDA, INFO )
+ *
+ *  -- LAPACK computational routine --
+ *  -- LAPACK is a software package provided by Univ. of Tennessee,    --
+diff --git a/lapack-release/SRC/cpotrs.f b/lapack-release/SRC/cpotrs.f
+index bb08ca6..47d527e 100644
+--- a/lapack-release/SRC/cpotrs.f
++++ b/lapack-release/SRC/cpotrs.f
+@@ -106,7 +106,7 @@
+ *> \ingroup complexPOcomputational
+ *
+ *  =====================================================================
+-      SUBROUTINE CPOTRS( UPLO, N, NRHS, A, LDA, B, LDB, INFO )
++      SUBROUTINE CPOTRS_NETLIB( UPLO, N, NRHS, A, LDA, B, LDB, INFO )
+ *
+ *  -- LAPACK computational routine --
+ *  -- LAPACK is a software package provided by Univ. of Tennessee,    --
+diff --git a/lapack-release/SRC/cppsv.f b/lapack-release/SRC/cppsv.f
+index 1e6f026..320828b 100644
+--- a/lapack-release/SRC/cppsv.f
++++ b/lapack-release/SRC/cppsv.f
+@@ -140,7 +140,7 @@
+ *> \endverbatim
+ *>
+ *  =====================================================================
+-      SUBROUTINE CPPSV( UPLO, N, NRHS, AP, B, LDB, INFO )
++      SUBROUTINE CPPSV_NETLIB( UPLO, N, NRHS, AP, B, LDB, INFO )
+ *
+ *  -- LAPACK driver routine --
+ *  -- LAPACK is a software package provided by Univ. of Tennessee,    --
+diff --git a/lapack-release/SRC/cpptrf.f b/lapack-release/SRC/cpptrf.f
+index 4e81458..c56fa9f 100644
+--- a/lapack-release/SRC/cpptrf.f
++++ b/lapack-release/SRC/cpptrf.f
+@@ -115,7 +115,8 @@
+ *> \endverbatim
+ *>
+ *  =====================================================================
+-      SUBROUTINE CPPTRF( UPLO, N, AP, INFO )
++      SUBROUTINE CPPTRF_NETLIB(
++     $    UPLO, N, AP, INFO )
+ *
+ *  -- LAPACK computational routine --
+ *  -- LAPACK is a software package provided by Univ. of Tennessee,    --
+diff --git a/lapack-release/SRC/cpptrs.f b/lapack-release/SRC/cpptrs.f
+index 08bba1a..06fce01 100644
+--- a/lapack-release/SRC/cpptrs.f
++++ b/lapack-release/SRC/cpptrs.f
+@@ -104,7 +104,8 @@
+ *> \ingroup complexOTHERcomputational
+ *
+ *  =====================================================================
+-      SUBROUTINE CPPTRS( UPLO, N, NRHS, AP, B, LDB, INFO )
++      SUBROUTINE CPPTRS_NETLIB(
++     $    UPLO, N, NRHS, AP, B, LDB, INFO )
+ *
+ *  -- LAPACK computational routine --
+ *  -- LAPACK is a software package provided by Univ. of Tennessee,    --
+diff --git a/lapack-release/SRC/cptsv.f b/lapack-release/SRC/cptsv.f
+index 20ee32b..220a748 100644
+--- a/lapack-release/SRC/cptsv.f
++++ b/lapack-release/SRC/cptsv.f
+@@ -111,7 +111,7 @@
+ *> \ingroup complexPTsolve
+ *
+ *  =====================================================================
+-      SUBROUTINE CPTSV( N, NRHS, D, E, B, LDB, INFO )
++      SUBROUTINE CPTSV_NETLIB( N, NRHS, D, E, B, LDB, INFO )
+ *
+ *  -- LAPACK driver routine --
+ *  -- LAPACK is a software package provided by Univ. of Tennessee,    --
+diff --git a/lapack-release/SRC/cpttrf.f b/lapack-release/SRC/cpttrf.f
+index c6379e9..fce687b 100644
+--- a/lapack-release/SRC/cpttrf.f
++++ b/lapack-release/SRC/cpttrf.f
+@@ -88,7 +88,7 @@
+ *> \ingroup complexPTcomputational
+ *
+ *  =====================================================================
+-      SUBROUTINE CPTTRF( N, D, E, INFO )
++      SUBROUTINE CPTTRF_NETLIB( N, D, E, INFO )
+ *
+ *  -- LAPACK computational routine --
+ *  -- LAPACK is a software package provided by Univ. of Tennessee,    --
+diff --git a/lapack-release/SRC/cpttrs.f b/lapack-release/SRC/cpttrs.f
+index 636a8de..3759763 100644
+--- a/lapack-release/SRC/cpttrs.f
++++ b/lapack-release/SRC/cpttrs.f
+@@ -117,7 +117,7 @@
+ *> \ingroup complexPTcomputational
+ *
+ *  =====================================================================
+-      SUBROUTINE CPTTRS( UPLO, N, NRHS, D, E, B, LDB, INFO )
++      SUBROUTINE CPTTRS_NETLIB( UPLO, N, NRHS, D, E, B, LDB, INFO )
+ *
+ *  -- LAPACK computational routine --
+ *  -- LAPACK is a software package provided by Univ. of Tennessee,    --
+diff --git a/lapack-release/SRC/cptts2.f b/lapack-release/SRC/cptts2.f
+index 15ea7ed..cbe356e 100644
+--- a/lapack-release/SRC/cptts2.f
++++ b/lapack-release/SRC/cptts2.f
+@@ -109,7 +109,7 @@
+ *> \ingroup complexPTcomputational
+ *
+ *  =====================================================================
+-      SUBROUTINE CPTTS2( IUPLO, N, NRHS, D, E, B, LDB )
++      SUBROUTINE CPTTS2_NETLIB( IUPLO, N, NRHS, D, E, B, LDB )
+ *
+ *  -- LAPACK computational routine --
+ *  -- LAPACK is a software package provided by Univ. of Tennessee,    --
+diff --git a/lapack-release/SRC/cspsv.f b/lapack-release/SRC/cspsv.f
+index bfb5aa2..404d6fb 100644
+--- a/lapack-release/SRC/cspsv.f
++++ b/lapack-release/SRC/cspsv.f
+@@ -158,7 +158,8 @@
+ *> \endverbatim
+ *>
+ *  =====================================================================
+-      SUBROUTINE CSPSV( UPLO, N, NRHS, AP, IPIV, B, LDB, INFO )
++      SUBROUTINE CSPSV_NETLIB(
++     $    UPLO, N, NRHS, AP, IPIV, B, LDB, INFO )
+ *
+ *  -- LAPACK driver routine --
+ *  -- LAPACK is a software package provided by Univ. of Tennessee,    --
+diff --git a/lapack-release/SRC/csptrf.f b/lapack-release/SRC/csptrf.f
+index 702ed0c..d64e652 100644
+--- a/lapack-release/SRC/csptrf.f
++++ b/lapack-release/SRC/csptrf.f
+@@ -154,7 +154,8 @@
+ *> \endverbatim
+ *>
+ *  =====================================================================
+-      SUBROUTINE CSPTRF( UPLO, N, AP, IPIV, INFO )
++      SUBROUTINE CSPTRF_NETLIB(
++     $    UPLO, N, AP, IPIV, INFO )
+ *
+ *  -- LAPACK computational routine --
+ *  -- LAPACK is a software package provided by Univ. of Tennessee,    --
+diff --git a/lapack-release/SRC/ctpttr.f b/lapack-release/SRC/ctpttr.f
+index 0b9c498..d392cef 100644
+--- a/lapack-release/SRC/ctpttr.f
++++ b/lapack-release/SRC/ctpttr.f
+@@ -100,7 +100,8 @@
+ *> \ingroup complexOTHERcomputational
+ *
+ *  =====================================================================
+-      SUBROUTINE CTPTTR( UPLO, N, AP, A, LDA, INFO )
++      SUBROUTINE CTPTTR_NETLIB(
++     $    UPLO, N, AP, A, LDA, INFO )
+ *
+ *  -- LAPACK computational routine --
+ *  -- LAPACK is a software package provided by Univ. of Tennessee,    --
+diff --git a/lapack-release/SRC/ctrttp.f b/lapack-release/SRC/ctrttp.f
+index 92bdb23..c558fa3 100644
+--- a/lapack-release/SRC/ctrttp.f
++++ b/lapack-release/SRC/ctrttp.f
+@@ -100,7 +100,8 @@
+ *> \ingroup complexOTHERcomputational
+ *
+ *  =====================================================================
+-      SUBROUTINE CTRTTP( UPLO, N, A, LDA, AP, INFO )
++      SUBROUTINE CTRTTP_NETLIB(
++     $    UPLO, N, A, LDA, AP, INFO )
+ *
+ *  -- LAPACK computational routine --
+ *  -- LAPACK is a software package provided by Univ. of Tennessee,    --
+diff --git a/lapack-release/SRC/cunglq.f b/lapack-release/SRC/cunglq.f
+index e250e03..f36fc68 100644
+--- a/lapack-release/SRC/cunglq.f
++++ b/lapack-release/SRC/cunglq.f
+@@ -123,7 +123,8 @@
+ *> \ingroup complexOTHERcomputational
+ *
+ *  =====================================================================
+-      SUBROUTINE CUNGLQ( M, N, K, A, LDA, TAU, WORK, LWORK, INFO )
++      SUBROUTINE CUNGLQ_NETLIB(
++     $    M, N, K, A, LDA, TAU, WORK, LWORK, INFO )
+ *
+ *  -- LAPACK computational routine --
+ *  -- LAPACK is a software package provided by Univ. of Tennessee,    --
+diff --git a/lapack-release/SRC/cungql.f b/lapack-release/SRC/cungql.f
+index d3b812a..efcba5f 100644
+--- a/lapack-release/SRC/cungql.f
++++ b/lapack-release/SRC/cungql.f
+@@ -124,7 +124,8 @@
+ *> \ingroup complexOTHERcomputational
+ *
+ *  =====================================================================
+-      SUBROUTINE CUNGQL( M, N, K, A, LDA, TAU, WORK, LWORK, INFO )
++      SUBROUTINE CUNGQL_NETLIB(
++     $    M, N, K, A, LDA, TAU, WORK, LWORK, INFO )
+ *
+ *  -- LAPACK computational routine --
+ *  -- LAPACK is a software package provided by Univ. of Tennessee,    --
+diff --git a/lapack-release/SRC/cungqr.f b/lapack-release/SRC/cungqr.f
+index 5010ae0..b576c88 100644
+--- a/lapack-release/SRC/cungqr.f
++++ b/lapack-release/SRC/cungqr.f
+@@ -124,7 +124,8 @@
+ *> \ingroup complexOTHERcomputational
+ *
+ *  =====================================================================
+-      SUBROUTINE CUNGQR( M, N, K, A, LDA, TAU, WORK, LWORK, INFO )
++      SUBROUTINE CUNGQR_NETLIB(
++     $    M, N, K, A, LDA, TAU, WORK, LWORK, INFO )
+ *
+ *  -- LAPACK computational routine --
+ *  -- LAPACK is a software package provided by Univ. of Tennessee,    --
+diff --git a/lapack-release/SRC/cungrq.f b/lapack-release/SRC/cungrq.f
+index 1593ff9..fc3c917 100644
+--- a/lapack-release/SRC/cungrq.f
++++ b/lapack-release/SRC/cungrq.f
+@@ -124,7 +124,8 @@
+ *> \ingroup complexOTHERcomputational
+ *
+ *  =====================================================================
+-      SUBROUTINE CUNGRQ( M, N, K, A, LDA, TAU, WORK, LWORK, INFO )
++      SUBROUTINE CUNGRQ_NETLIB(
++     $    M, N, K, A, LDA, TAU, WORK, LWORK, INFO )
+ *
+ *  -- LAPACK computational routine --
+ *  -- LAPACK is a software package provided by Univ. of Tennessee,    --
+diff --git a/lapack-release/SRC/cunmlq.f b/lapack-release/SRC/cunmlq.f
+index 25a4107..8cd4043 100644
+--- a/lapack-release/SRC/cunmlq.f
++++ b/lapack-release/SRC/cunmlq.f
+@@ -163,7 +163,8 @@
+ *> \ingroup complexOTHERcomputational
+ *
+ *  =====================================================================
+-      SUBROUTINE CUNMLQ( SIDE, TRANS, M, N, K, A, LDA, TAU, C, LDC,
++      SUBROUTINE CUNMLQ_NETLIB(
++     $    SIDE, TRANS, M, N, K, A, LDA, TAU, C, LDC,
+      $                   WORK, LWORK, INFO )
+ *
+ *  -- LAPACK computational routine --
+diff --git a/lapack-release/SRC/cunmql.f b/lapack-release/SRC/cunmql.f
+index 3c71660..9ac099e 100644
+--- a/lapack-release/SRC/cunmql.f
++++ b/lapack-release/SRC/cunmql.f
+@@ -163,7 +163,8 @@
+ *> \ingroup complexOTHERcomputational
+ *
+ *  =====================================================================
+-      SUBROUTINE CUNMQL( SIDE, TRANS, M, N, K, A, LDA, TAU, C, LDC,
++      SUBROUTINE CUNMQL_NETLIB(
++     $    SIDE, TRANS, M, N, K, A, LDA, TAU, C, LDC,
+      $                   WORK, LWORK, INFO )
+ *
+ *  -- LAPACK computational routine --
+diff --git a/lapack-release/SRC/cunmqr.f b/lapack-release/SRC/cunmqr.f
+index 7e59d71..186ecdf 100644
+--- a/lapack-release/SRC/cunmqr.f
++++ b/lapack-release/SRC/cunmqr.f
+@@ -163,7 +163,7 @@
+ *> \ingroup complexOTHERcomputational
+ *
+ *  =====================================================================
+-      SUBROUTINE CUNMQR( SIDE, TRANS, M, N, K, A, LDA, TAU, C, LDC,
++      SUBROUTINE CUNMQR_NETLIB( SIDE, TRANS, M, N, K, A, LDA, TAU,C,LDC,
+      $                   WORK, LWORK, INFO )
+ *
+ *  -- LAPACK computational routine --
+diff --git a/lapack-release/SRC/cunmrq.f b/lapack-release/SRC/cunmrq.f
+index 5a233f6..6431dec 100644
+--- a/lapack-release/SRC/cunmrq.f
++++ b/lapack-release/SRC/cunmrq.f
+@@ -163,7 +163,8 @@
+ *> \ingroup complexOTHERcomputational
+ *
+ *  =====================================================================
+-      SUBROUTINE CUNMRQ( SIDE, TRANS, M, N, K, A, LDA, TAU, C, LDC,
++      SUBROUTINE CUNMRQ_NETLIB(
++     $    SIDE, TRANS, M, N, K, A, LDA, TAU, C, LDC,
+      $                   WORK, LWORK, INFO )
+ *
+ *  -- LAPACK computational routine --
+diff --git a/lapack-release/SRC/dgelqf.f b/lapack-release/SRC/dgelqf.f
+index ed3372f..9b5f966 100644
+--- a/lapack-release/SRC/dgelqf.f
++++ b/lapack-release/SRC/dgelqf.f
+@@ -139,7 +139,7 @@
+ *> \endverbatim
+ *>
+ *  =====================================================================
+-      SUBROUTINE DGELQF( M, N, A, LDA, TAU, WORK, LWORK, INFO )
++      SUBROUTINE DGELQF_NETLIB( M, N, A, LDA, TAU, WORK, LWORK, INFO )
+ *
+ *  -- LAPACK computational routine --
+ *  -- LAPACK is a software package provided by Univ. of Tennessee,    --
+diff --git a/lapack-release/SRC/dgeqlf.f b/lapack-release/SRC/dgeqlf.f
+index b8ac0b1..b53cadf 100644
+--- a/lapack-release/SRC/dgeqlf.f
++++ b/lapack-release/SRC/dgeqlf.f
+@@ -134,7 +134,7 @@
+ *> \endverbatim
+ *>
+ *  =====================================================================
+-      SUBROUTINE DGEQLF( M, N, A, LDA, TAU, WORK, LWORK, INFO )
++      SUBROUTINE DGEQLF_NETLIB( M, N, A, LDA, TAU, WORK, LWORK, INFO )
+ *
+ *  -- LAPACK computational routine --
+ *  -- LAPACK is a software package provided by Univ. of Tennessee,    --
+diff --git a/lapack-release/SRC/dgeqrf.f b/lapack-release/SRC/dgeqrf.f
+index 5d649f6..b30b08f 100644
+--- a/lapack-release/SRC/dgeqrf.f
++++ b/lapack-release/SRC/dgeqrf.f
+@@ -141,7 +141,7 @@
+ *> \endverbatim
+ *>
+ *  =====================================================================
+-      SUBROUTINE DGEQRF( M, N, A, LDA, TAU, WORK, LWORK, INFO )
++      SUBROUTINE DGEQRF_NETLIB( M, N, A, LDA, TAU, WORK, LWORK, INFO )
+ *
+ *  -- LAPACK computational routine --
+ *  -- LAPACK is a software package provided by Univ. of Tennessee,    --
+diff --git a/lapack-release/SRC/dgerqf.f b/lapack-release/SRC/dgerqf.f
+index 6381a87..7faceb6 100644
+--- a/lapack-release/SRC/dgerqf.f
++++ b/lapack-release/SRC/dgerqf.f
+@@ -134,7 +134,7 @@
+ *> \endverbatim
+ *>
+ *  =====================================================================
+-      SUBROUTINE DGERQF( M, N, A, LDA, TAU, WORK, LWORK, INFO )
++      SUBROUTINE DGERQF_NETLIB( M, N, A, LDA, TAU, WORK, LWORK, INFO )
+ *
+ *  -- LAPACK computational routine --
+ *  -- LAPACK is a software package provided by Univ. of Tennessee,    --
+diff --git a/lapack-release/SRC/dgesv.f b/lapack-release/SRC/dgesv.f
+index 3609c52..d2647e6 100644
+--- a/lapack-release/SRC/dgesv.f
++++ b/lapack-release/SRC/dgesv.f
+@@ -118,7 +118,7 @@
+ *> \ingroup doubleGEsolve
+ *
+ *  =====================================================================
+-      SUBROUTINE DGESV( N, NRHS, A, LDA, IPIV, B, LDB, INFO )
++      SUBROUTINE DGESV_NETLIB( N, NRHS, A, LDA, IPIV, B, LDB, INFO )
+ *
+ *  -- LAPACK driver routine --
+ *  -- LAPACK is a software package provided by Univ. of Tennessee,    --
+diff --git a/lapack-release/SRC/dgetrf.f b/lapack-release/SRC/dgetrf.f
+index 73d0f36..16a734e 100644
+--- a/lapack-release/SRC/dgetrf.f
++++ b/lapack-release/SRC/dgetrf.f
+@@ -104,7 +104,7 @@
+ *> \ingroup doubleGEcomputational
+ *
+ *  =====================================================================
+-      SUBROUTINE DGETRF( M, N, A, LDA, IPIV, INFO )
++      SUBROUTINE DGETRF_NETLIB( M, N, A, LDA, IPIV, INFO )
+ *
+ *  -- LAPACK computational routine --
+ *  -- LAPACK is a software package provided by Univ. of Tennessee,    --
+diff --git a/lapack-release/SRC/dgetri.f b/lapack-release/SRC/dgetri.f
+index 92ef90c..9544a90 100644
+--- a/lapack-release/SRC/dgetri.f
++++ b/lapack-release/SRC/dgetri.f
+@@ -110,7 +110,7 @@
+ *> \ingroup doubleGEcomputational
+ *
+ *  =====================================================================
+-      SUBROUTINE DGETRI( N, A, LDA, IPIV, WORK, LWORK, INFO )
++      SUBROUTINE DGETRI_NETLIB( N, A, LDA, IPIV, WORK, LWORK, INFO )
+ *
+ *  -- LAPACK computational routine --
+ *  -- LAPACK is a software package provided by Univ. of Tennessee,    --
+diff --git a/lapack-release/SRC/dgetrs.f b/lapack-release/SRC/dgetrs.f
+index d3464f6..e3f9147 100644
+--- a/lapack-release/SRC/dgetrs.f
++++ b/lapack-release/SRC/dgetrs.f
+@@ -117,7 +117,8 @@
+ *> \ingroup doubleGEcomputational
+ *
+ *  =====================================================================
+-      SUBROUTINE DGETRS( TRANS, N, NRHS, A, LDA, IPIV, B, LDB, INFO )
++      SUBROUTINE DGETRS_NETLIB( TRANS, N, NRHS, A, LDA, IPIV,
++     $                          B, LDB, INFO )
+ *
+ *  -- LAPACK computational routine --
+ *  -- LAPACK is a software package provided by Univ. of Tennessee,    --
+diff --git a/lapack-release/SRC/dgtsv.f b/lapack-release/SRC/dgtsv.f
+index 0f02201..2990818 100644
+--- a/lapack-release/SRC/dgtsv.f
++++ b/lapack-release/SRC/dgtsv.f
+@@ -123,7 +123,7 @@
+ *> \ingroup doubleGTsolve
+ *
+ *  =====================================================================
+-      SUBROUTINE DGTSV( N, NRHS, DL, D, DU, B, LDB, INFO )
++      SUBROUTINE DGTSV_NETLIB( N, NRHS, DL, D, DU, B, LDB, INFO )
+ *
+ *  -- LAPACK driver routine --
+ *  -- LAPACK is a software package provided by Univ. of Tennessee,    --
+diff --git a/lapack-release/SRC/dgttrf.f b/lapack-release/SRC/dgttrf.f
+index 061c211..522ac74 100644
+--- a/lapack-release/SRC/dgttrf.f
++++ b/lapack-release/SRC/dgttrf.f
+@@ -120,7 +120,7 @@
+ *> \ingroup doubleGTcomputational
+ *
+ *  =====================================================================
+-      SUBROUTINE DGTTRF( N, DL, D, DU, DU2, IPIV, INFO )
++      SUBROUTINE DGTTRF_NETLIB( N, DL, D, DU, DU2, IPIV, INFO )
+ *
+ *  -- LAPACK computational routine --
+ *  -- LAPACK is a software package provided by Univ. of Tennessee,    --
+diff --git a/lapack-release/SRC/dgttrs.f b/lapack-release/SRC/dgttrs.f
+index cb9a897..e98fec2 100644
+--- a/lapack-release/SRC/dgttrs.f
++++ b/lapack-release/SRC/dgttrs.f
+@@ -133,8 +133,8 @@
+ *> \ingroup doubleGTcomputational
+ *
+ *  =====================================================================
+-      SUBROUTINE DGTTRS( TRANS, N, NRHS, DL, D, DU, DU2, IPIV, B, LDB,
+-     $                   INFO )
++      SUBROUTINE DGTTRS_NETLIB( TRANS, N, NRHS, DL, D, DU, DU2, IPIV, B,
++     $                   LDB, INFO )
+ *
+ *  -- LAPACK computational routine --
+ *  -- LAPACK is a software package provided by Univ. of Tennessee,    --
+diff --git a/lapack-release/SRC/dgtts2.f b/lapack-release/SRC/dgtts2.f
+index ffa69ea..571175c 100644
+--- a/lapack-release/SRC/dgtts2.f
++++ b/lapack-release/SRC/dgtts2.f
+@@ -124,7 +124,8 @@
+ *> \ingroup doubleGTcomputational
+ *
+ *  =====================================================================
+-      SUBROUTINE DGTTS2( ITRANS, N, NRHS, DL, D, DU, DU2, IPIV, B, LDB )
++      SUBROUTINE DGTTS2_NETLIB( ITRANS, N, NRHS, DL, D, DU, DU2, IPIV,
++     $                          B, LDB )
+ *
+ *  -- LAPACK computational routine --
+ *  -- LAPACK is a software package provided by Univ. of Tennessee,    --
+diff --git a/lapack-release/SRC/dlacpy.f b/lapack-release/SRC/dlacpy.f
+index 917aa1e..768a6d6 100644
+--- a/lapack-release/SRC/dlacpy.f
++++ b/lapack-release/SRC/dlacpy.f
+@@ -99,7 +99,8 @@
+ *> \ingroup OTHERauxiliary
+ *
+ *  =====================================================================
+-      SUBROUTINE DLACPY( UPLO, M, N, A, LDA, B, LDB )
++      SUBROUTINE DLACPY_NETLIB(
++     $    UPLO, M, N, A, LDA, B, LDB )
+ *
+ *  -- LAPACK auxiliary routine --
+ *  -- LAPACK is a software package provided by Univ. of Tennessee,    --
+diff --git a/lapack-release/SRC/dlange.f b/lapack-release/SRC/dlange.f
+index ac5b140..cc9bcb0 100644
+--- a/lapack-release/SRC/dlange.f
++++ b/lapack-release/SRC/dlange.f
+@@ -110,7 +110,8 @@
+ *> \ingroup doubleGEauxiliary
+ *
+ *  =====================================================================
+-      DOUBLE PRECISION FUNCTION DLANGE( NORM, M, N, A, LDA, WORK )
++      DOUBLE PRECISION FUNCTION DLANGE_NETLIB(
++     $    NORM, M, N, A, LDA, WORK )
+ *
+ *  -- LAPACK auxiliary routine --
+ *  -- LAPACK is a software package provided by Univ. of Tennessee,    --
+@@ -210,7 +211,7 @@
+          VALUE = SSQ( 1 )*SQRT( SSQ( 2 ) )
+       END IF
+ *
+-      DLANGE = VALUE
++      DLANGE_NETLIB = VALUE
+       RETURN
+ *
+ *     End of DLANGE
+diff --git a/lapack-release/SRC/dlaset.f b/lapack-release/SRC/dlaset.f
+index 625c757..22064c7 100644
+--- a/lapack-release/SRC/dlaset.f
++++ b/lapack-release/SRC/dlaset.f
+@@ -106,7 +106,8 @@
+ *> \ingroup OTHERauxiliary
+ *
+ *  =====================================================================
+-      SUBROUTINE DLASET( UPLO, M, N, ALPHA, BETA, A, LDA )
++      SUBROUTINE DLASET_NETLIB(
++     $    UPLO, M, N, ALPHA, BETA, A, LDA )
+ *
+ *  -- LAPACK auxiliary routine --
+ *  -- LAPACK is a software package provided by Univ. of Tennessee,    --
+diff --git a/lapack-release/SRC/dlasr.f b/lapack-release/SRC/dlasr.f
+index dd0cedd..ef375f6 100644
+--- a/lapack-release/SRC/dlasr.f
++++ b/lapack-release/SRC/dlasr.f
+@@ -195,7 +195,7 @@
+ *> \ingroup OTHERauxiliary
+ *
+ *  =====================================================================
+-      SUBROUTINE DLASR( SIDE, PIVOT, DIRECT, M, N, C, S, A, LDA )
++      SUBROUTINE DLASR_NETLIB(SIDE, PIVOT, DIRECT, M, N, C, S, A, LDA)
+ *
+ *  -- LAPACK auxiliary routine --
+ *  -- LAPACK is a software package provided by Univ. of Tennessee,    --
+diff --git a/lapack-release/SRC/dlaswp.f b/lapack-release/SRC/dlaswp.f
+index b35729a..6e6b7e1 100644
+--- a/lapack-release/SRC/dlaswp.f
++++ b/lapack-release/SRC/dlaswp.f
+@@ -111,7 +111,7 @@
+ *> \endverbatim
+ *>
+ *  =====================================================================
+-      SUBROUTINE DLASWP( N, A, LDA, K1, K2, IPIV, INCX )
++      SUBROUTINE DLASWP_NETLIB( N, A, LDA, K1, K2, IPIV, INCX )
+ *
+ *  -- LAPACK auxiliary routine --
+ *  -- LAPACK is a software package provided by Univ. of Tennessee,    --
+diff --git a/lapack-release/SRC/dorglq.f b/lapack-release/SRC/dorglq.f
+index 8c37c18..1159a47 100644
+--- a/lapack-release/SRC/dorglq.f
++++ b/lapack-release/SRC/dorglq.f
+@@ -123,7 +123,8 @@
+ *> \ingroup doubleOTHERcomputational
+ *
+ *  =====================================================================
+-      SUBROUTINE DORGLQ( M, N, K, A, LDA, TAU, WORK, LWORK, INFO )
++      SUBROUTINE DORGLQ_NETLIB(
++     $    M, N, K, A, LDA, TAU, WORK, LWORK, INFO )
+ *
+ *  -- LAPACK computational routine --
+ *  -- LAPACK is a software package provided by Univ. of Tennessee,    --
+diff --git a/lapack-release/SRC/dorgql.f b/lapack-release/SRC/dorgql.f
+index 45e5bf1..41b2328 100644
+--- a/lapack-release/SRC/dorgql.f
++++ b/lapack-release/SRC/dorgql.f
+@@ -124,7 +124,8 @@
+ *> \ingroup doubleOTHERcomputational
+ *
+ *  =====================================================================
+-      SUBROUTINE DORGQL( M, N, K, A, LDA, TAU, WORK, LWORK, INFO )
++      SUBROUTINE DORGQL_NETLIB(
++     $    M, N, K, A, LDA, TAU, WORK, LWORK, INFO )
+ *
+ *  -- LAPACK computational routine --
+ *  -- LAPACK is a software package provided by Univ. of Tennessee,    --
+diff --git a/lapack-release/SRC/dorgqr.f b/lapack-release/SRC/dorgqr.f
+index a41ce7e..59ad1cb 100644
+--- a/lapack-release/SRC/dorgqr.f
++++ b/lapack-release/SRC/dorgqr.f
+@@ -124,7 +124,8 @@
+ *> \ingroup doubleOTHERcomputational
+ *
+ *  =====================================================================
+-      SUBROUTINE DORGQR( M, N, K, A, LDA, TAU, WORK, LWORK, INFO )
++      SUBROUTINE DORGQR_NETLIB(
++     $    M, N, K, A, LDA, TAU, WORK, LWORK, INFO )
+ *
+ *  -- LAPACK computational routine --
+ *  -- LAPACK is a software package provided by Univ. of Tennessee,    --
+diff --git a/lapack-release/SRC/dorgrq.f b/lapack-release/SRC/dorgrq.f
+index 7e09f94..6ad8915 100644
+--- a/lapack-release/SRC/dorgrq.f
++++ b/lapack-release/SRC/dorgrq.f
+@@ -124,7 +124,8 @@
+ *> \ingroup doubleOTHERcomputational
+ *
+ *  =====================================================================
+-      SUBROUTINE DORGRQ( M, N, K, A, LDA, TAU, WORK, LWORK, INFO )
++      SUBROUTINE DORGRQ_NETLIB(
++     $    M, N, K, A, LDA, TAU, WORK, LWORK, INFO )
+ *
+ *  -- LAPACK computational routine --
+ *  -- LAPACK is a software package provided by Univ. of Tennessee,    --
+diff --git a/lapack-release/SRC/dormlq.f b/lapack-release/SRC/dormlq.f
+index ef03928..bc5955c 100644
+--- a/lapack-release/SRC/dormlq.f
++++ b/lapack-release/SRC/dormlq.f
+@@ -162,7 +162,8 @@
+ *> \ingroup doubleOTHERcomputational
+ *
+ *  =====================================================================
+-      SUBROUTINE DORMLQ( SIDE, TRANS, M, N, K, A, LDA, TAU, C, LDC,
++      SUBROUTINE DORMLQ_NETLIB(
++     $    SIDE, TRANS, M, N, K, A, LDA, TAU, C, LDC,
+      $                   WORK, LWORK, INFO )
+ *
+ *  -- LAPACK computational routine --
+diff --git a/lapack-release/SRC/dormql.f b/lapack-release/SRC/dormql.f
+index 7c9f189..2c88d1c 100644
+--- a/lapack-release/SRC/dormql.f
++++ b/lapack-release/SRC/dormql.f
+@@ -162,7 +162,8 @@
+ *> \ingroup doubleOTHERcomputational
+ *
+ *  =====================================================================
+-      SUBROUTINE DORMQL( SIDE, TRANS, M, N, K, A, LDA, TAU, C, LDC,
++      SUBROUTINE DORMQL_NETLIB(
++     $    SIDE, TRANS, M, N, K, A, LDA, TAU, C, LDC,
+      $                   WORK, LWORK, INFO )
+ *
+ *  -- LAPACK computational routine --
+diff --git a/lapack-release/SRC/dormqr.f b/lapack-release/SRC/dormqr.f
+index 4d0bae3..02601b4 100644
+--- a/lapack-release/SRC/dormqr.f
++++ b/lapack-release/SRC/dormqr.f
+@@ -162,7 +162,7 @@
+ *> \ingroup doubleOTHERcomputational
+ *
+ *  =====================================================================
+-      SUBROUTINE DORMQR( SIDE, TRANS, M, N, K, A, LDA, TAU, C, LDC,
++      SUBROUTINE DORMQR_NETLIB( SIDE, TRANS, M, N, K, A, LDA, TAU,C,LDC,
+      $                   WORK, LWORK, INFO )
+ *
+ *  -- LAPACK computational routine --
+diff --git a/lapack-release/SRC/dormrq.f b/lapack-release/SRC/dormrq.f
+index 43422f9..f265bf2 100644
+--- a/lapack-release/SRC/dormrq.f
++++ b/lapack-release/SRC/dormrq.f
+@@ -162,7 +162,8 @@
+ *> \ingroup doubleOTHERcomputational
+ *
+ *  =====================================================================
+-      SUBROUTINE DORMRQ( SIDE, TRANS, M, N, K, A, LDA, TAU, C, LDC,
++      SUBROUTINE DORMRQ_NETLIB(
++     $    SIDE, TRANS, M, N, K, A, LDA, TAU, C, LDC,
+      $                   WORK, LWORK, INFO )
+ *
+ *  -- LAPACK computational routine --
+diff --git a/lapack-release/SRC/dposv.f b/lapack-release/SRC/dposv.f
+index ee2988e..179536e 100644
+--- a/lapack-release/SRC/dposv.f
++++ b/lapack-release/SRC/dposv.f
+@@ -126,7 +126,7 @@
+ *> \ingroup doublePOsolve
+ *
+ *  =====================================================================
+-      SUBROUTINE DPOSV( UPLO, N, NRHS, A, LDA, B, LDB, INFO )
++      SUBROUTINE DPOSV_NETLIB( UPLO, N, NRHS, A, LDA, B, LDB, INFO )
+ *
+ *  -- LAPACK driver routine --
+ *  -- LAPACK is a software package provided by Univ. of Tennessee,    --
+diff --git a/lapack-release/SRC/dpotrf.f b/lapack-release/SRC/dpotrf.f
+index 1679fc3..dc08f3f 100644
+--- a/lapack-release/SRC/dpotrf.f
++++ b/lapack-release/SRC/dpotrf.f
+@@ -103,7 +103,8 @@
+ *> \ingroup doublePOcomputational
+ *
+ *  =====================================================================
+-      SUBROUTINE DPOTRF( UPLO, N, A, LDA, INFO )
++      SUBROUTINE DPOTRF_NETLIB(
++     $    UPLO, N, A, LDA, INFO )
+ *
+ *  -- LAPACK computational routine --
+ *  -- LAPACK is a software package provided by Univ. of Tennessee,    --
+diff --git a/lapack-release/SRC/dpotri.f b/lapack-release/SRC/dpotri.f
+index 7daa0c8..5907f5e 100644
+--- a/lapack-release/SRC/dpotri.f
++++ b/lapack-release/SRC/dpotri.f
+@@ -91,7 +91,7 @@
+ *> \ingroup doublePOcomputational
+ *
+ *  =====================================================================
+-      SUBROUTINE DPOTRI( UPLO, N, A, LDA, INFO )
++      SUBROUTINE DPOTRI_NETLIB( UPLO, N, A, LDA, INFO )
+ *
+ *  -- LAPACK computational routine --
+ *  -- LAPACK is a software package provided by Univ. of Tennessee,    --
+diff --git a/lapack-release/SRC/dpotrs.f b/lapack-release/SRC/dpotrs.f
+index 862ee07..2782761 100644
+--- a/lapack-release/SRC/dpotrs.f
++++ b/lapack-release/SRC/dpotrs.f
+@@ -106,7 +106,7 @@
+ *> \ingroup doublePOcomputational
+ *
+ *  =====================================================================
+-      SUBROUTINE DPOTRS( UPLO, N, NRHS, A, LDA, B, LDB, INFO )
++      SUBROUTINE DPOTRS_NETLIB( UPLO, N, NRHS, A, LDA, B, LDB, INFO )
+ *
+ *  -- LAPACK computational routine --
+ *  -- LAPACK is a software package provided by Univ. of Tennessee,    --
+diff --git a/lapack-release/SRC/dppsv.f b/lapack-release/SRC/dppsv.f
+index 435703b..7501a00 100644
+--- a/lapack-release/SRC/dppsv.f
++++ b/lapack-release/SRC/dppsv.f
+@@ -140,7 +140,7 @@
+ *> \endverbatim
+ *>
+ *  =====================================================================
+-      SUBROUTINE DPPSV( UPLO, N, NRHS, AP, B, LDB, INFO )
++      SUBROUTINE DPPSV_NETLIB( UPLO, N, NRHS, AP, B, LDB, INFO )
+ *
+ *  -- LAPACK driver routine --
+ *  -- LAPACK is a software package provided by Univ. of Tennessee,    --
+diff --git a/lapack-release/SRC/dpptrf.f b/lapack-release/SRC/dpptrf.f
+index 2d8de51..d151f0a 100644
+--- a/lapack-release/SRC/dpptrf.f
++++ b/lapack-release/SRC/dpptrf.f
+@@ -115,7 +115,8 @@
+ *> \endverbatim
+ *>
+ *  =====================================================================
+-      SUBROUTINE DPPTRF( UPLO, N, AP, INFO )
++      SUBROUTINE DPPTRF_NETLIB(
++     $    UPLO, N, AP, INFO )
+ *
+ *  -- LAPACK computational routine --
+ *  -- LAPACK is a software package provided by Univ. of Tennessee,    --
+diff --git a/lapack-release/SRC/dpptrs.f b/lapack-release/SRC/dpptrs.f
+index c5b8eb9..45c4643 100644
+--- a/lapack-release/SRC/dpptrs.f
++++ b/lapack-release/SRC/dpptrs.f
+@@ -104,7 +104,8 @@
+ *> \ingroup doubleOTHERcomputational
+ *
+ *  =====================================================================
+-      SUBROUTINE DPPTRS( UPLO, N, NRHS, AP, B, LDB, INFO )
++      SUBROUTINE DPPTRS_NETLIB(
++     $    UPLO, N, NRHS, AP, B, LDB, INFO )
+ *
+ *  -- LAPACK computational routine --
+ *  -- LAPACK is a software package provided by Univ. of Tennessee,    --
+diff --git a/lapack-release/SRC/dptsv.f b/lapack-release/SRC/dptsv.f
+index addc34b..f6059eb 100644
+--- a/lapack-release/SRC/dptsv.f
++++ b/lapack-release/SRC/dptsv.f
+@@ -110,7 +110,7 @@
+ *> \ingroup doublePTsolve
+ *
+ *  =====================================================================
+-      SUBROUTINE DPTSV( N, NRHS, D, E, B, LDB, INFO )
++      SUBROUTINE DPTSV_NETLIB( N, NRHS, D, E, B, LDB, INFO )
+ *
+ *  -- LAPACK driver routine --
+ *  -- LAPACK is a software package provided by Univ. of Tennessee,    --
+diff --git a/lapack-release/SRC/dpttrf.f b/lapack-release/SRC/dpttrf.f
+index e0022e3..81eff5c 100644
+--- a/lapack-release/SRC/dpttrf.f
++++ b/lapack-release/SRC/dpttrf.f
+@@ -87,7 +87,7 @@
+ *> \ingroup doublePTcomputational
+ *
+ *  =====================================================================
+-      SUBROUTINE DPTTRF( N, D, E, INFO )
++      SUBROUTINE DPTTRF_NETLIB( N, D, E, INFO )
+ *
+ *  -- LAPACK computational routine --
+ *  -- LAPACK is a software package provided by Univ. of Tennessee,    --
+diff --git a/lapack-release/SRC/dpttrs.f b/lapack-release/SRC/dpttrs.f
+index c98f700..5c4cd21 100644
+--- a/lapack-release/SRC/dpttrs.f
++++ b/lapack-release/SRC/dpttrs.f
+@@ -105,7 +105,7 @@
+ *> \ingroup doublePTcomputational
+ *
+ *  =====================================================================
+-      SUBROUTINE DPTTRS( N, NRHS, D, E, B, LDB, INFO )
++      SUBROUTINE DPTTRS_NETLIB( N, NRHS, D, E, B, LDB, INFO )
+ *
+ *  -- LAPACK computational routine --
+ *  -- LAPACK is a software package provided by Univ. of Tennessee,    --
+diff --git a/lapack-release/SRC/dptts2.f b/lapack-release/SRC/dptts2.f
+index 2fec151..ec874f0 100644
+--- a/lapack-release/SRC/dptts2.f
++++ b/lapack-release/SRC/dptts2.f
+@@ -98,7 +98,7 @@
+ *> \ingroup doublePTcomputational
+ *
+ *  =====================================================================
+-      SUBROUTINE DPTTS2( N, NRHS, D, E, B, LDB )
++      SUBROUTINE DPTTS2_NETLIB( N, NRHS, D, E, B, LDB )
+ *
+ *  -- LAPACK computational routine --
+ *  -- LAPACK is a software package provided by Univ. of Tennessee,    --
+diff --git a/lapack-release/SRC/dspsv.f b/lapack-release/SRC/dspsv.f
+index 8cf1927..d88181c 100644
+--- a/lapack-release/SRC/dspsv.f
++++ b/lapack-release/SRC/dspsv.f
+@@ -158,7 +158,8 @@
+ *> \endverbatim
+ *>
+ *  =====================================================================
+-      SUBROUTINE DSPSV( UPLO, N, NRHS, AP, IPIV, B, LDB, INFO )
++      SUBROUTINE DSPSV_NETLIB(
++     $    UPLO, N, NRHS, AP, IPIV, B, LDB, INFO )
+ *
+ *  -- LAPACK driver routine --
+ *  -- LAPACK is a software package provided by Univ. of Tennessee,    --
+diff --git a/lapack-release/SRC/dsptrf.f b/lapack-release/SRC/dsptrf.f
+index c81d8bc..ad2958c 100644
+--- a/lapack-release/SRC/dsptrf.f
++++ b/lapack-release/SRC/dsptrf.f
+@@ -155,7 +155,8 @@
+ *>  J. Lewis, Boeing Computer Services Company
+ *>
+ *  =====================================================================
+-      SUBROUTINE DSPTRF( UPLO, N, AP, IPIV, INFO )
++      SUBROUTINE DSPTRF_NETLIB(
++     $    UPLO, N, AP, IPIV, INFO )
+ *
+ *  -- LAPACK computational routine --
+ *  -- LAPACK is a software package provided by Univ. of Tennessee,    --
+diff --git a/lapack-release/SRC/dstedc.f b/lapack-release/SRC/dstedc.f
+index 2ed84af..68fdf45 100644
+--- a/lapack-release/SRC/dstedc.f
++++ b/lapack-release/SRC/dstedc.f
+@@ -183,8 +183,8 @@
+ *>  Modified by Francoise Tisseur, University of Tennessee
+ *>
+ *  =====================================================================
+-      SUBROUTINE DSTEDC( COMPZ, N, D, E, Z, LDZ, WORK, LWORK, IWORK,
+-     $                   LIWORK, INFO )
++      SUBROUTINE DSTEDC_NETLIB( COMPZ, N, D, E, Z, LDZ, WORK, LWORK,
++     $                          IWORK, LIWORK, INFO )
+ *
+ *  -- LAPACK computational routine --
+ *  -- LAPACK is a software package provided by Univ. of Tennessee,    --
+diff --git a/lapack-release/SRC/dsyev.f b/lapack-release/SRC/dsyev.f
+index da7557e..e58f243 100644
+--- a/lapack-release/SRC/dsyev.f
++++ b/lapack-release/SRC/dsyev.f
+@@ -128,7 +128,8 @@
+ *> \ingroup doubleSYeigen
+ *
+ *  =====================================================================
+-      SUBROUTINE DSYEV( JOBZ, UPLO, N, A, LDA, W, WORK, LWORK, INFO )
++      SUBROUTINE DSYEV_NETLIB( JOBZ, UPLO, N, A, LDA, W, WORK, LWORK,
++     $                         INFO )
+ *
+ *  -- LAPACK driver routine --
+ *  -- LAPACK is a software package provided by Univ. of Tennessee,    --
+diff --git a/lapack-release/SRC/dsyevd.f b/lapack-release/SRC/dsyevd.f
+index edbe896..1e0c8c2 100644
+--- a/lapack-release/SRC/dsyevd.f
++++ b/lapack-release/SRC/dsyevd.f
+@@ -180,8 +180,8 @@
+ 
+ *>
+ *  =====================================================================
+-      SUBROUTINE DSYEVD( JOBZ, UPLO, N, A, LDA, W, WORK, LWORK, IWORK,
+-     $                   LIWORK, INFO )
++      SUBROUTINE DSYEVD_NETLIB( JOBZ, UPLO, N, A, LDA, W, WORK, LWORK,
++     $                   IWORK, LIWORK, INFO )
+ *
+ *  -- LAPACK driver routine --
+ *  -- LAPACK is a software package provided by Univ. of Tennessee,    --
+diff --git a/lapack-release/SRC/dsytrd.f b/lapack-release/SRC/dsytrd.f
+index 3dcfc3d..cf996c6 100644
+--- a/lapack-release/SRC/dsytrd.f
++++ b/lapack-release/SRC/dsytrd.f
+@@ -188,7 +188,8 @@
+ *> \endverbatim
+ *>
+ *  =====================================================================
+-      SUBROUTINE DSYTRD( UPLO, N, A, LDA, D, E, TAU, WORK, LWORK, INFO )
++      SUBROUTINE DSYTRD_NETLIB( UPLO, N, A, LDA, D, E, TAU, WORK, LWORK,
++     $                          INFO )
+ *
+ *  -- LAPACK computational routine --
+ *  -- LAPACK is a software package provided by Univ. of Tennessee,    --
+diff --git a/lapack-release/SRC/dsytrd_2stage.f b/lapack-release/SRC/dsytrd_2stage.f
+index 8ae77d3..8641d37 100644
+--- a/lapack-release/SRC/dsytrd_2stage.f
++++ b/lapack-release/SRC/dsytrd_2stage.f
+@@ -219,7 +219,7 @@
+ *> \endverbatim
+ *>
+ *  =====================================================================
+-      SUBROUTINE DSYTRD_2STAGE( VECT, UPLO, N, A, LDA, D, E, TAU, 
++      SUBROUTINE DSYTRD_2STAGE_NETLIB( VECT, UPLO, N, A, LDA, D, E, TAU,
+      $                          HOUS2, LHOUS2, WORK, LWORK, INFO )
+ *
+       IMPLICIT NONE
+diff --git a/lapack-release/SRC/dtpttr.f b/lapack-release/SRC/dtpttr.f
+index 2126eda..c01d89b 100644
+--- a/lapack-release/SRC/dtpttr.f
++++ b/lapack-release/SRC/dtpttr.f
+@@ -100,7 +100,8 @@
+ *> \ingroup doubleOTHERcomputational
+ *
+ *  =====================================================================
+-      SUBROUTINE DTPTTR( UPLO, N, AP, A, LDA, INFO )
++      SUBROUTINE DTPTTR_NETLIB(
++     $    UPLO, N, AP, A, LDA, INFO )
+ *
+ *  -- LAPACK computational routine --
+ *  -- LAPACK is a software package provided by Univ. of Tennessee,    --
+diff --git a/lapack-release/SRC/dtrttp.f b/lapack-release/SRC/dtrttp.f
+index 1528917..8872da3 100644
+--- a/lapack-release/SRC/dtrttp.f
++++ b/lapack-release/SRC/dtrttp.f
+@@ -100,7 +100,8 @@
+ *> \ingroup doubleOTHERcomputational
+ *
+ *  =====================================================================
+-      SUBROUTINE DTRTTP( UPLO, N, A, LDA, AP, INFO )
++      SUBROUTINE DTRTTP_NETLIB(
++     $    UPLO, N, A, LDA, AP, INFO )
+ *
+ *  -- LAPACK computational routine --
+ *  -- LAPACK is a software package provided by Univ. of Tennessee,    --
+diff --git a/lapack-release/SRC/sgelqf.f b/lapack-release/SRC/sgelqf.f
+index 24d8ab1..64c937a 100644
+--- a/lapack-release/SRC/sgelqf.f
++++ b/lapack-release/SRC/sgelqf.f
+@@ -139,7 +139,7 @@
+ *> \endverbatim
+ *>
+ *  =====================================================================
+-      SUBROUTINE SGELQF( M, N, A, LDA, TAU, WORK, LWORK, INFO )
++      SUBROUTINE SGELQF_NETLIB( M, N, A, LDA, TAU, WORK, LWORK, INFO )
+ *
+ *  -- LAPACK computational routine --
+ *  -- LAPACK is a software package provided by Univ. of Tennessee,    --
+diff --git a/lapack-release/SRC/sgeqlf.f b/lapack-release/SRC/sgeqlf.f
+index efecfbb..b6d93f7 100644
+--- a/lapack-release/SRC/sgeqlf.f
++++ b/lapack-release/SRC/sgeqlf.f
+@@ -134,7 +134,7 @@
+ *> \endverbatim
+ *>
+ *  =====================================================================
+-      SUBROUTINE SGEQLF( M, N, A, LDA, TAU, WORK, LWORK, INFO )
++      SUBROUTINE SGEQLF_NETLIB( M, N, A, LDA, TAU, WORK, LWORK, INFO )
+ *
+ *  -- LAPACK computational routine --
+ *  -- LAPACK is a software package provided by Univ. of Tennessee,    --
+diff --git a/lapack-release/SRC/sgeqrf.f b/lapack-release/SRC/sgeqrf.f
+index 0fc5ba1..2257ba5 100644
+--- a/lapack-release/SRC/sgeqrf.f
++++ b/lapack-release/SRC/sgeqrf.f
+@@ -141,7 +141,7 @@
+ *> \endverbatim
+ *>
+ *  =====================================================================
+-      SUBROUTINE SGEQRF( M, N, A, LDA, TAU, WORK, LWORK, INFO )
++      SUBROUTINE SGEQRF_NETLIB( M, N, A, LDA, TAU, WORK, LWORK, INFO )
+ *
+ *  -- LAPACK computational routine --
+ *  -- LAPACK is a software package provided by Univ. of Tennessee,    --
+diff --git a/lapack-release/SRC/sgerqf.f b/lapack-release/SRC/sgerqf.f
+index 24ff42b..ec8c274 100644
+--- a/lapack-release/SRC/sgerqf.f
++++ b/lapack-release/SRC/sgerqf.f
+@@ -134,7 +134,7 @@
+ *> \endverbatim
+ *>
+ *  =====================================================================
+-      SUBROUTINE SGERQF( M, N, A, LDA, TAU, WORK, LWORK, INFO )
++      SUBROUTINE SGERQF_NETLIB( M, N, A, LDA, TAU, WORK, LWORK, INFO )
+ *
+ *  -- LAPACK computational routine --
+ *  -- LAPACK is a software package provided by Univ. of Tennessee,    --
+diff --git a/lapack-release/SRC/sgesv.f b/lapack-release/SRC/sgesv.f
+index 4f4fe52..faf5a15 100644
+--- a/lapack-release/SRC/sgesv.f
++++ b/lapack-release/SRC/sgesv.f
+@@ -118,7 +118,7 @@
+ *> \ingroup realGEsolve
+ *
+ *  =====================================================================
+-      SUBROUTINE SGESV( N, NRHS, A, LDA, IPIV, B, LDB, INFO )
++      SUBROUTINE SGESV_NETLIB( N, NRHS, A, LDA, IPIV, B, LDB, INFO )
+ *
+ *  -- LAPACK driver routine --
+ *  -- LAPACK is a software package provided by Univ. of Tennessee,    --
+diff --git a/lapack-release/SRC/sgetrf.f b/lapack-release/SRC/sgetrf.f
+index 7a4a2aa..1f03de7 100644
+--- a/lapack-release/SRC/sgetrf.f
++++ b/lapack-release/SRC/sgetrf.f
+@@ -104,7 +104,7 @@
+ *> \ingroup realGEcomputational
+ *
+ *  =====================================================================
+-      SUBROUTINE SGETRF( M, N, A, LDA, IPIV, INFO )
++      SUBROUTINE SGETRF_NETLIB( M, N, A, LDA, IPIV, INFO )
+ *
+ *  -- LAPACK computational routine --
+ *  -- LAPACK is a software package provided by Univ. of Tennessee,    --
+diff --git a/lapack-release/SRC/sgetri.f b/lapack-release/SRC/sgetri.f
+index 749ede9..43a8634 100644
+--- a/lapack-release/SRC/sgetri.f
++++ b/lapack-release/SRC/sgetri.f
+@@ -110,7 +110,7 @@
+ *> \ingroup realGEcomputational
+ *
+ *  =====================================================================
+-      SUBROUTINE SGETRI( N, A, LDA, IPIV, WORK, LWORK, INFO )
++      SUBROUTINE SGETRI_NETLIB( N, A, LDA, IPIV, WORK, LWORK, INFO )
+ *
+ *  -- LAPACK computational routine --
+ *  -- LAPACK is a software package provided by Univ. of Tennessee,    --
+diff --git a/lapack-release/SRC/sgetrs.f b/lapack-release/SRC/sgetrs.f
+index e5f3e3a..12bfc9e 100644
+--- a/lapack-release/SRC/sgetrs.f
++++ b/lapack-release/SRC/sgetrs.f
+@@ -117,7 +117,8 @@
+ *> \ingroup realGEcomputational
+ *
+ *  =====================================================================
+-      SUBROUTINE SGETRS( TRANS, N, NRHS, A, LDA, IPIV, B, LDB, INFO )
++      SUBROUTINE SGETRS_NETLIB( TRANS, N, NRHS, A, LDA, IPIV,
++     $                          B, LDB, INFO )
+ *
+ *  -- LAPACK computational routine --
+ *  -- LAPACK is a software package provided by Univ. of Tennessee,    --
+diff --git a/lapack-release/SRC/sgtsv.f b/lapack-release/SRC/sgtsv.f
+index ac903ab..065d5f2 100644
+--- a/lapack-release/SRC/sgtsv.f
++++ b/lapack-release/SRC/sgtsv.f
+@@ -123,7 +123,7 @@
+ *> \ingroup realGTsolve
+ *
+ *  =====================================================================
+-      SUBROUTINE SGTSV( N, NRHS, DL, D, DU, B, LDB, INFO )
++      SUBROUTINE SGTSV_NETLIB( N, NRHS, DL, D, DU, B, LDB, INFO )
+ *
+ *  -- LAPACK driver routine --
+ *  -- LAPACK is a software package provided by Univ. of Tennessee,    --
+diff --git a/lapack-release/SRC/sgttrf.f b/lapack-release/SRC/sgttrf.f
+index 5df0367..25ecc2e 100644
+--- a/lapack-release/SRC/sgttrf.f
++++ b/lapack-release/SRC/sgttrf.f
+@@ -120,7 +120,7 @@
+ *> \ingroup realGTcomputational
+ *
+ *  =====================================================================
+-      SUBROUTINE SGTTRF( N, DL, D, DU, DU2, IPIV, INFO )
++      SUBROUTINE SGTTRF_NETLIB( N, DL, D, DU, DU2, IPIV, INFO )
+ *
+ *  -- LAPACK computational routine --
+ *  -- LAPACK is a software package provided by Univ. of Tennessee,    --
+diff --git a/lapack-release/SRC/sgttrs.f b/lapack-release/SRC/sgttrs.f
+index f1e47a7..211d6c5 100644
+--- a/lapack-release/SRC/sgttrs.f
++++ b/lapack-release/SRC/sgttrs.f
+@@ -133,8 +133,8 @@
+ *> \ingroup realGTcomputational
+ *
+ *  =====================================================================
+-      SUBROUTINE SGTTRS( TRANS, N, NRHS, DL, D, DU, DU2, IPIV, B, LDB,
+-     $                   INFO )
++      SUBROUTINE SGTTRS_NETLIB( TRANS, N, NRHS, DL, D, DU, DU2, IPIV, B,
++     $                   LDB, INFO )
+ *
+ *  -- LAPACK computational routine --
+ *  -- LAPACK is a software package provided by Univ. of Tennessee,    --
+diff --git a/lapack-release/SRC/sgtts2.f b/lapack-release/SRC/sgtts2.f
+index 4820487..4396785 100644
+--- a/lapack-release/SRC/sgtts2.f
++++ b/lapack-release/SRC/sgtts2.f
+@@ -124,7 +124,8 @@
+ *> \ingroup realGTcomputational
+ *
+ *  =====================================================================
+-      SUBROUTINE SGTTS2( ITRANS, N, NRHS, DL, D, DU, DU2, IPIV, B, LDB )
++      SUBROUTINE SGTTS2_NETLIB( ITRANS, N, NRHS, DL, D, DU, DU2, IPIV,
++     $                          B, LDB )
+ *
+ *  -- LAPACK computational routine --
+ *  -- LAPACK is a software package provided by Univ. of Tennessee,    --
+diff --git a/lapack-release/SRC/slacpy.f b/lapack-release/SRC/slacpy.f
+index a33a3c6..ec8697d 100644
+--- a/lapack-release/SRC/slacpy.f
++++ b/lapack-release/SRC/slacpy.f
+@@ -99,7 +99,8 @@
+ *> \ingroup OTHERauxiliary
+ *
+ *  =====================================================================
+-      SUBROUTINE SLACPY( UPLO, M, N, A, LDA, B, LDB )
++      SUBROUTINE SLACPY_NETLIB(
++     $    UPLO, M, N, A, LDA, B, LDB )
+ *
+ *  -- LAPACK auxiliary routine --
+ *  -- LAPACK is a software package provided by Univ. of Tennessee,    --
+diff --git a/lapack-release/SRC/slange.f b/lapack-release/SRC/slange.f
+index b1a864e..a4c48fa 100644
+--- a/lapack-release/SRC/slange.f
++++ b/lapack-release/SRC/slange.f
+@@ -110,7 +110,8 @@
+ *> \ingroup realGEauxiliary
+ *
+ *  =====================================================================
+-      REAL             FUNCTION SLANGE( NORM, M, N, A, LDA, WORK )
++      REAL             FUNCTION SLANGE_NETLIB(
++     $    NORM, M, N, A, LDA, WORK )
+ *
+ *  -- LAPACK auxiliary routine --
+ *  -- LAPACK is a software package provided by Univ. of Tennessee,    --
+@@ -210,7 +211,7 @@
+          VALUE = SSQ( 1 )*SQRT( SSQ( 2 ) )
+       END IF
+ *
+-      SLANGE = VALUE
++      SLANGE_NETLIB = VALUE
+       RETURN
+ *
+ *     End of SLANGE
+diff --git a/lapack-release/SRC/slaset.f b/lapack-release/SRC/slaset.f
+index c43757e..654b514 100644
+--- a/lapack-release/SRC/slaset.f
++++ b/lapack-release/SRC/slaset.f
+@@ -106,7 +106,8 @@
+ *> \ingroup OTHERauxiliary
+ *
+ *  =====================================================================
+-      SUBROUTINE SLASET( UPLO, M, N, ALPHA, BETA, A, LDA )
++      SUBROUTINE SLASET_NETLIB(
++     $    UPLO, M, N, ALPHA, BETA, A, LDA )
+ *
+ *  -- LAPACK auxiliary routine --
+ *  -- LAPACK is a software package provided by Univ. of Tennessee,    --
+diff --git a/lapack-release/SRC/slasr.f b/lapack-release/SRC/slasr.f
+index adcea12..017df81 100644
+--- a/lapack-release/SRC/slasr.f
++++ b/lapack-release/SRC/slasr.f
+@@ -195,7 +195,7 @@
+ *> \ingroup OTHERauxiliary
+ *
+ *  =====================================================================
+-      SUBROUTINE SLASR( SIDE, PIVOT, DIRECT, M, N, C, S, A, LDA )
++      SUBROUTINE SLASR_NETLIB(SIDE, PIVOT, DIRECT, M, N, C, S, A, LDA)
+ *
+ *  -- LAPACK auxiliary routine --
+ *  -- LAPACK is a software package provided by Univ. of Tennessee,    --
+diff --git a/lapack-release/SRC/slaswp.f b/lapack-release/SRC/slaswp.f
+index 20e29d6..2589b74 100644
+--- a/lapack-release/SRC/slaswp.f
++++ b/lapack-release/SRC/slaswp.f
+@@ -111,7 +111,7 @@
+ *> \endverbatim
+ *>
+ *  =====================================================================
+-      SUBROUTINE SLASWP( N, A, LDA, K1, K2, IPIV, INCX )
++      SUBROUTINE SLASWP_NETLIB( N, A, LDA, K1, K2, IPIV, INCX )
+ *
+ *  -- LAPACK auxiliary routine --
+ *  -- LAPACK is a software package provided by Univ. of Tennessee,    --
+diff --git a/lapack-release/SRC/sorglq.f b/lapack-release/SRC/sorglq.f
+index b1d1079..b28700d 100644
+--- a/lapack-release/SRC/sorglq.f
++++ b/lapack-release/SRC/sorglq.f
+@@ -123,7 +123,8 @@
+ *> \ingroup realOTHERcomputational
+ *
+ *  =====================================================================
+-      SUBROUTINE SORGLQ( M, N, K, A, LDA, TAU, WORK, LWORK, INFO )
++      SUBROUTINE SORGLQ_NETLIB(
++     $    M, N, K, A, LDA, TAU, WORK, LWORK, INFO )
+ *
+ *  -- LAPACK computational routine --
+ *  -- LAPACK is a software package provided by Univ. of Tennessee,    --
+diff --git a/lapack-release/SRC/sorgql.f b/lapack-release/SRC/sorgql.f
+index 34ab5ed..df4b62c 100644
+--- a/lapack-release/SRC/sorgql.f
++++ b/lapack-release/SRC/sorgql.f
+@@ -124,7 +124,8 @@
+ *> \ingroup realOTHERcomputational
+ *
+ *  =====================================================================
+-      SUBROUTINE SORGQL( M, N, K, A, LDA, TAU, WORK, LWORK, INFO )
++      SUBROUTINE SORGQL_NETLIB(
++     $    M, N, K, A, LDA, TAU, WORK, LWORK, INFO )
+ *
+ *  -- LAPACK computational routine --
+ *  -- LAPACK is a software package provided by Univ. of Tennessee,    --
+diff --git a/lapack-release/SRC/sorgqr.f b/lapack-release/SRC/sorgqr.f
+index 056de54..f94aea7 100644
+--- a/lapack-release/SRC/sorgqr.f
++++ b/lapack-release/SRC/sorgqr.f
+@@ -124,7 +124,8 @@
+ *> \ingroup realOTHERcomputational
+ *
+ *  =====================================================================
+-      SUBROUTINE SORGQR( M, N, K, A, LDA, TAU, WORK, LWORK, INFO )
++      SUBROUTINE SORGQR_NETLIB(
++     $    M, N, K, A, LDA, TAU, WORK, LWORK, INFO )
+ *
+ *  -- LAPACK computational routine --
+ *  -- LAPACK is a software package provided by Univ. of Tennessee,    --
+diff --git a/lapack-release/SRC/sorgrq.f b/lapack-release/SRC/sorgrq.f
+index d9b6ccb..a7838e7 100644
+--- a/lapack-release/SRC/sorgrq.f
++++ b/lapack-release/SRC/sorgrq.f
+@@ -124,7 +124,8 @@
+ *> \ingroup realOTHERcomputational
+ *
+ *  =====================================================================
+-      SUBROUTINE SORGRQ( M, N, K, A, LDA, TAU, WORK, LWORK, INFO )
++      SUBROUTINE SORGRQ_NETLIB(
++     $    M, N, K, A, LDA, TAU, WORK, LWORK, INFO )
+ *
+ *  -- LAPACK computational routine --
+ *  -- LAPACK is a software package provided by Univ. of Tennessee,    --
+diff --git a/lapack-release/SRC/sormlq.f b/lapack-release/SRC/sormlq.f
+index ee996e5..ee2c7b9 100644
+--- a/lapack-release/SRC/sormlq.f
++++ b/lapack-release/SRC/sormlq.f
+@@ -163,7 +163,8 @@
+ *> \ingroup realOTHERcomputational
+ *
+ *  =====================================================================
+-      SUBROUTINE SORMLQ( SIDE, TRANS, M, N, K, A, LDA, TAU, C, LDC,
++      SUBROUTINE SORMLQ_NETLIB(
++     $    SIDE, TRANS, M, N, K, A, LDA, TAU, C, LDC,
+      $                   WORK, LWORK, INFO )
+ *
+ *  -- LAPACK computational routine --
+diff --git a/lapack-release/SRC/sormql.f b/lapack-release/SRC/sormql.f
+index 72a8d22..4c71874 100644
+--- a/lapack-release/SRC/sormql.f
++++ b/lapack-release/SRC/sormql.f
+@@ -163,7 +163,8 @@
+ *> \ingroup realOTHERcomputational
+ *
+ *  =====================================================================
+-      SUBROUTINE SORMQL( SIDE, TRANS, M, N, K, A, LDA, TAU, C, LDC,
++      SUBROUTINE SORMQL_NETLIB(
++     $    SIDE, TRANS, M, N, K, A, LDA, TAU, C, LDC,
+      $                   WORK, LWORK, INFO )
+ *
+ *  -- LAPACK computational routine --
+diff --git a/lapack-release/SRC/sormqr.f b/lapack-release/SRC/sormqr.f
+index 5d4256f..7f6d43d 100644
+--- a/lapack-release/SRC/sormqr.f
++++ b/lapack-release/SRC/sormqr.f
+@@ -163,7 +163,7 @@
+ *> \ingroup realOTHERcomputational
+ *
+ *  =====================================================================
+-      SUBROUTINE SORMQR( SIDE, TRANS, M, N, K, A, LDA, TAU, C, LDC,
++      SUBROUTINE SORMQR_NETLIB( SIDE, TRANS, M, N, K, A, LDA, TAU,C,LDC,
+      $                   WORK, LWORK, INFO )
+ *
+ *  -- LAPACK computational routine --
+diff --git a/lapack-release/SRC/sormrq.f b/lapack-release/SRC/sormrq.f
+index 62fcdac..ab45537 100644
+--- a/lapack-release/SRC/sormrq.f
++++ b/lapack-release/SRC/sormrq.f
+@@ -163,7 +163,8 @@
+ *> \ingroup realOTHERcomputational
+ *
+ *  =====================================================================
+-      SUBROUTINE SORMRQ( SIDE, TRANS, M, N, K, A, LDA, TAU, C, LDC,
++      SUBROUTINE SORMRQ_NETLIB(
++     $    SIDE, TRANS, M, N, K, A, LDA, TAU, C, LDC,
+      $                   WORK, LWORK, INFO )
+ *
+ *  -- LAPACK computational routine --
+diff --git a/lapack-release/SRC/sposv.f b/lapack-release/SRC/sposv.f
+index fe0a35a..731ea34 100644
+--- a/lapack-release/SRC/sposv.f
++++ b/lapack-release/SRC/sposv.f
+@@ -126,7 +126,7 @@
+ *> \ingroup realPOsolve
+ *
+ *  =====================================================================
+-      SUBROUTINE SPOSV( UPLO, N, NRHS, A, LDA, B, LDB, INFO )
++      SUBROUTINE SPOSV_NETLIB( UPLO, N, NRHS, A, LDA, B, LDB, INFO )
+ *
+ *  -- LAPACK driver routine --
+ *  -- LAPACK is a software package provided by Univ. of Tennessee,    --
+diff --git a/lapack-release/SRC/spotrf.f b/lapack-release/SRC/spotrf.f
+index 5d5771c..e0c55bf 100644
+--- a/lapack-release/SRC/spotrf.f
++++ b/lapack-release/SRC/spotrf.f
+@@ -103,7 +103,8 @@
+ *> \ingroup realPOcomputational
+ *
+ *  =====================================================================
+-      SUBROUTINE SPOTRF( UPLO, N, A, LDA, INFO )
++      SUBROUTINE SPOTRF_NETLIB(
++     $    UPLO, N, A, LDA, INFO )
+ *
+ *  -- LAPACK computational routine --
+ *  -- LAPACK is a software package provided by Univ. of Tennessee,    --
+diff --git a/lapack-release/SRC/spotri.f b/lapack-release/SRC/spotri.f
+index 5e99448..fec266f 100644
+--- a/lapack-release/SRC/spotri.f
++++ b/lapack-release/SRC/spotri.f
+@@ -91,7 +91,7 @@
+ *> \ingroup realPOcomputational
+ *
+ *  =====================================================================
+-      SUBROUTINE SPOTRI( UPLO, N, A, LDA, INFO )
++      SUBROUTINE SPOTRI_NETLIB( UPLO, N, A, LDA, INFO )
+ *
+ *  -- LAPACK computational routine --
+ *  -- LAPACK is a software package provided by Univ. of Tennessee,    --
+diff --git a/lapack-release/SRC/spotrs.f b/lapack-release/SRC/spotrs.f
+index 6bd662a..0b18900 100644
+--- a/lapack-release/SRC/spotrs.f
++++ b/lapack-release/SRC/spotrs.f
+@@ -106,7 +106,7 @@
+ *> \ingroup realPOcomputational
+ *
+ *  =====================================================================
+-      SUBROUTINE SPOTRS( UPLO, N, NRHS, A, LDA, B, LDB, INFO )
++      SUBROUTINE SPOTRS_NETLIB( UPLO, N, NRHS, A, LDA, B, LDB, INFO )
+ *
+ *  -- LAPACK computational routine --
+ *  -- LAPACK is a software package provided by Univ. of Tennessee,    --
+diff --git a/lapack-release/SRC/sppsv.f b/lapack-release/SRC/sppsv.f
+index 2d3fb3d..ab77ca1 100644
+--- a/lapack-release/SRC/sppsv.f
++++ b/lapack-release/SRC/sppsv.f
+@@ -140,7 +140,7 @@
+ *> \endverbatim
+ *>
+ *  =====================================================================
+-      SUBROUTINE SPPSV( UPLO, N, NRHS, AP, B, LDB, INFO )
++      SUBROUTINE SPPSV_NETLIB( UPLO, N, NRHS, AP, B, LDB, INFO )
+ *
+ *  -- LAPACK driver routine --
+ *  -- LAPACK is a software package provided by Univ. of Tennessee,    --
+diff --git a/lapack-release/SRC/spptrf.f b/lapack-release/SRC/spptrf.f
+index 0f90399..a798288 100644
+--- a/lapack-release/SRC/spptrf.f
++++ b/lapack-release/SRC/spptrf.f
+@@ -115,7 +115,8 @@
+ *> \endverbatim
+ *>
+ *  =====================================================================
+-      SUBROUTINE SPPTRF( UPLO, N, AP, INFO )
++      SUBROUTINE SPPTRF_NETLIB(
++     $    UPLO, N, AP, INFO )
+ *
+ *  -- LAPACK computational routine --
+ *  -- LAPACK is a software package provided by Univ. of Tennessee,    --
+diff --git a/lapack-release/SRC/spptrs.f b/lapack-release/SRC/spptrs.f
+index ac33797..6d15d93 100644
+--- a/lapack-release/SRC/spptrs.f
++++ b/lapack-release/SRC/spptrs.f
+@@ -104,7 +104,8 @@
+ *> \ingroup realOTHERcomputational
+ *
+ *  =====================================================================
+-      SUBROUTINE SPPTRS( UPLO, N, NRHS, AP, B, LDB, INFO )
++      SUBROUTINE SPPTRS_NETLIB(
++     $    UPLO, N, NRHS, AP, B, LDB, INFO )
+ *
+ *  -- LAPACK computational routine --
+ *  -- LAPACK is a software package provided by Univ. of Tennessee,    --
+diff --git a/lapack-release/SRC/sptsv.f b/lapack-release/SRC/sptsv.f
+index 46aadf4..18bc666 100644
+--- a/lapack-release/SRC/sptsv.f
++++ b/lapack-release/SRC/sptsv.f
+@@ -110,7 +110,7 @@
+ *> \ingroup realPTsolve
+ *
+ *  =====================================================================
+-      SUBROUTINE SPTSV( N, NRHS, D, E, B, LDB, INFO )
++      SUBROUTINE SPTSV_NETLIB( N, NRHS, D, E, B, LDB, INFO )
+ *
+ *  -- LAPACK driver routine --
+ *  -- LAPACK is a software package provided by Univ. of Tennessee,    --
+diff --git a/lapack-release/SRC/spttrf.f b/lapack-release/SRC/spttrf.f
+index 2217a73..eb4d42b 100644
+--- a/lapack-release/SRC/spttrf.f
++++ b/lapack-release/SRC/spttrf.f
+@@ -87,7 +87,7 @@
+ *> \ingroup auxOTHERcomputational
+ *
+ *  =====================================================================
+-      SUBROUTINE SPTTRF( N, D, E, INFO )
++      SUBROUTINE SPTTRF_NETLIB( N, D, E, INFO )
+ *
+ *  -- LAPACK computational routine --
+ *  -- LAPACK is a software package provided by Univ. of Tennessee,    --
+diff --git a/lapack-release/SRC/spttrs.f b/lapack-release/SRC/spttrs.f
+index 3b53401..809ce3b 100644
+--- a/lapack-release/SRC/spttrs.f
++++ b/lapack-release/SRC/spttrs.f
+@@ -105,7 +105,7 @@
+ *> \ingroup realPTcomputational
+ *
+ *  =====================================================================
+-      SUBROUTINE SPTTRS( N, NRHS, D, E, B, LDB, INFO )
++      SUBROUTINE SPTTRS_NETLIB( N, NRHS, D, E, B, LDB, INFO )
+ *
+ *  -- LAPACK computational routine --
+ *  -- LAPACK is a software package provided by Univ. of Tennessee,    --
+diff --git a/lapack-release/SRC/sptts2.f b/lapack-release/SRC/sptts2.f
+index 93f41d1..bfc98f5 100644
+--- a/lapack-release/SRC/sptts2.f
++++ b/lapack-release/SRC/sptts2.f
+@@ -98,7 +98,7 @@
+ *> \ingroup realPTcomputational
+ *
+ *  =====================================================================
+-      SUBROUTINE SPTTS2( N, NRHS, D, E, B, LDB )
++      SUBROUTINE SPTTS2_NETLIB( N, NRHS, D, E, B, LDB )
+ *
+ *  -- LAPACK computational routine --
+ *  -- LAPACK is a software package provided by Univ. of Tennessee,    --
+diff --git a/lapack-release/SRC/sspsv.f b/lapack-release/SRC/sspsv.f
+index 7feafd3..97cd12d 100644
+--- a/lapack-release/SRC/sspsv.f
++++ b/lapack-release/SRC/sspsv.f
+@@ -158,7 +158,8 @@
+ *> \endverbatim
+ *>
+ *  =====================================================================
+-      SUBROUTINE SSPSV( UPLO, N, NRHS, AP, IPIV, B, LDB, INFO )
++      SUBROUTINE SSPSV_NETLIB(
++     $    UPLO, N, NRHS, AP, IPIV, B, LDB, INFO )
+ *
+ *  -- LAPACK driver routine --
+ *  -- LAPACK is a software package provided by Univ. of Tennessee,    --
+diff --git a/lapack-release/SRC/ssptrf.f b/lapack-release/SRC/ssptrf.f
+index 4a25e3d..fe351e7 100644
+--- a/lapack-release/SRC/ssptrf.f
++++ b/lapack-release/SRC/ssptrf.f
+@@ -153,7 +153,8 @@
+ *> \endverbatim
+ *>
+ *  =====================================================================
+-      SUBROUTINE SSPTRF( UPLO, N, AP, IPIV, INFO )
++      SUBROUTINE SSPTRF_NETLIB(
++     $    UPLO, N, AP, IPIV, INFO )
+ *
+ *  -- LAPACK computational routine --
+ *  -- LAPACK is a software package provided by Univ. of Tennessee,    --
+diff --git a/lapack-release/SRC/sstedc.f b/lapack-release/SRC/sstedc.f
+index 925b034..45da8ef 100644
+--- a/lapack-release/SRC/sstedc.f
++++ b/lapack-release/SRC/sstedc.f
+@@ -183,8 +183,8 @@
+ *>  Modified by Francoise Tisseur, University of Tennessee
+ *>
+ *  =====================================================================
+-      SUBROUTINE SSTEDC( COMPZ, N, D, E, Z, LDZ, WORK, LWORK, IWORK,
+-     $                   LIWORK, INFO )
++      SUBROUTINE SSTEDC_NETLIB( COMPZ, N, D, E, Z, LDZ, WORK, LWORK,
++     $                          IWORK, LIWORK, INFO )
+ *
+ *  -- LAPACK computational routine --
+ *  -- LAPACK is a software package provided by Univ. of Tennessee,    --
+diff --git a/lapack-release/SRC/ssyev.f b/lapack-release/SRC/ssyev.f
+index 03ed326..54967c4 100644
+--- a/lapack-release/SRC/ssyev.f
++++ b/lapack-release/SRC/ssyev.f
+@@ -128,7 +128,8 @@
+ *> \ingroup realSYeigen
+ *
+ *  =====================================================================
+-      SUBROUTINE SSYEV( JOBZ, UPLO, N, A, LDA, W, WORK, LWORK, INFO )
++      SUBROUTINE SSYEV_NETLIB( JOBZ, UPLO, N, A, LDA, W, WORK, LWORK,
++     $                         INFO )
+ *
+ *  -- LAPACK driver routine --
+ *  -- LAPACK is a software package provided by Univ. of Tennessee,    --
+diff --git a/lapack-release/SRC/ssyevd.f b/lapack-release/SRC/ssyevd.f
+index 8b90d92..d456931 100644
+--- a/lapack-release/SRC/ssyevd.f
++++ b/lapack-release/SRC/ssyevd.f
+@@ -178,8 +178,8 @@
+ *>  Modified description of INFO. Sven, 16 Feb 05. \n
+ *>
+ *  =====================================================================
+-      SUBROUTINE SSYEVD( JOBZ, UPLO, N, A, LDA, W, WORK, LWORK, IWORK,
+-     $                   LIWORK, INFO )
++      SUBROUTINE SSYEVD_NETLIB( JOBZ, UPLO, N, A, LDA, W, WORK, LWORK,
++     $                   IWORK, LIWORK, INFO )
+ *
+ *  -- LAPACK driver routine --
+ *  -- LAPACK is a software package provided by Univ. of Tennessee,    --
+diff --git a/lapack-release/SRC/ssytrd.f b/lapack-release/SRC/ssytrd.f
+index f09ad9a..1e40b33 100644
+--- a/lapack-release/SRC/ssytrd.f
++++ b/lapack-release/SRC/ssytrd.f
+@@ -188,7 +188,8 @@
+ *> \endverbatim
+ *>
+ *  =====================================================================
+-      SUBROUTINE SSYTRD( UPLO, N, A, LDA, D, E, TAU, WORK, LWORK, INFO )
++      SUBROUTINE SSYTRD_NETLIB( UPLO, N, A, LDA, D, E, TAU, WORK, LWORK,
++     $                          INFO )
+ *
+ *  -- LAPACK computational routine --
+ *  -- LAPACK is a software package provided by Univ. of Tennessee,    --
+diff --git a/lapack-release/SRC/ssytrd_2stage.f b/lapack-release/SRC/ssytrd_2stage.f
+index 5d70ae0..2b5c949 100644
+--- a/lapack-release/SRC/ssytrd_2stage.f
++++ b/lapack-release/SRC/ssytrd_2stage.f
+@@ -219,7 +219,7 @@
+ *> \endverbatim
+ *>
+ *  =====================================================================
+-      SUBROUTINE SSYTRD_2STAGE( VECT, UPLO, N, A, LDA, D, E, TAU, 
++      SUBROUTINE SSYTRD_2STAGE_NETLIB( VECT, UPLO, N, A, LDA, D, E, TAU,
+      $                          HOUS2, LHOUS2, WORK, LWORK, INFO )
+ *
+       IMPLICIT NONE
+diff --git a/lapack-release/SRC/stpttr.f b/lapack-release/SRC/stpttr.f
+index 8266a56..d4da69c 100644
+--- a/lapack-release/SRC/stpttr.f
++++ b/lapack-release/SRC/stpttr.f
+@@ -100,7 +100,8 @@
+ *> \ingroup realOTHERcomputational
+ *
+ *  =====================================================================
+-      SUBROUTINE STPTTR( UPLO, N, AP, A, LDA, INFO )
++      SUBROUTINE STPTTR_NETLIB(
++     $    UPLO, N, AP, A, LDA, INFO )
+ *
+ *  -- LAPACK computational routine --
+ *  -- LAPACK is a software package provided by Univ. of Tennessee,    --
+diff --git a/lapack-release/SRC/strttp.f b/lapack-release/SRC/strttp.f
+index 371d21b..5600324 100644
+--- a/lapack-release/SRC/strttp.f
++++ b/lapack-release/SRC/strttp.f
+@@ -100,7 +100,8 @@
+ *> \ingroup realOTHERcomputational
+ *
+ *  =====================================================================
+-      SUBROUTINE STRTTP( UPLO, N, A, LDA, AP, INFO )
++      SUBROUTINE STRTTP_NETLIB(
++     $    UPLO, N, A, LDA, AP, INFO )
+ *
+ *  -- LAPACK computational routine --
+ *  -- LAPACK is a software package provided by Univ. of Tennessee,    --
+diff --git a/lapack-release/SRC/zgelqf.f b/lapack-release/SRC/zgelqf.f
+index 6c295ee..bbba27c 100644
+--- a/lapack-release/SRC/zgelqf.f
++++ b/lapack-release/SRC/zgelqf.f
+@@ -139,7 +139,7 @@
+ *> \endverbatim
+ *>
+ *  =====================================================================
+-      SUBROUTINE ZGELQF( M, N, A, LDA, TAU, WORK, LWORK, INFO )
++      SUBROUTINE ZGELQF_NETLIB( M, N, A, LDA, TAU, WORK, LWORK, INFO )
+ *
+ *  -- LAPACK computational routine --
+ *  -- LAPACK is a software package provided by Univ. of Tennessee,    --
+diff --git a/lapack-release/SRC/zgeqlf.f b/lapack-release/SRC/zgeqlf.f
+index 9472154..2674c45 100644
+--- a/lapack-release/SRC/zgeqlf.f
++++ b/lapack-release/SRC/zgeqlf.f
+@@ -134,7 +134,7 @@
+ *> \endverbatim
+ *>
+ *  =====================================================================
+-      SUBROUTINE ZGEQLF( M, N, A, LDA, TAU, WORK, LWORK, INFO )
++      SUBROUTINE ZGEQLF_NETLIB( M, N, A, LDA, TAU, WORK, LWORK, INFO )
+ *
+ *  -- LAPACK computational routine --
+ *  -- LAPACK is a software package provided by Univ. of Tennessee,    --
+diff --git a/lapack-release/SRC/zgeqrf.f b/lapack-release/SRC/zgeqrf.f
+index dd31483..a0eb40e 100644
+--- a/lapack-release/SRC/zgeqrf.f
++++ b/lapack-release/SRC/zgeqrf.f
+@@ -141,7 +141,7 @@
+ *> \endverbatim
+ *>
+ *  =====================================================================
+-      SUBROUTINE ZGEQRF( M, N, A, LDA, TAU, WORK, LWORK, INFO )
++      SUBROUTINE ZGEQRF_NETLIB( M, N, A, LDA, TAU, WORK, LWORK, INFO )
+ *
+ *  -- LAPACK computational routine --
+ *  -- LAPACK is a software package provided by Univ. of Tennessee,    --
+diff --git a/lapack-release/SRC/zgerqf.f b/lapack-release/SRC/zgerqf.f
+index 22bd5b9..a319cc3 100644
+--- a/lapack-release/SRC/zgerqf.f
++++ b/lapack-release/SRC/zgerqf.f
+@@ -134,7 +134,7 @@
+ *> \endverbatim
+ *>
+ *  =====================================================================
+-      SUBROUTINE ZGERQF( M, N, A, LDA, TAU, WORK, LWORK, INFO )
++      SUBROUTINE ZGERQF_NETLIB( M, N, A, LDA, TAU, WORK, LWORK, INFO )
+ *
+ *  -- LAPACK computational routine --
+ *  -- LAPACK is a software package provided by Univ. of Tennessee,    --
+diff --git a/lapack-release/SRC/zgesv.f b/lapack-release/SRC/zgesv.f
+index abb9a42..01606ac 100644
+--- a/lapack-release/SRC/zgesv.f
++++ b/lapack-release/SRC/zgesv.f
+@@ -118,7 +118,7 @@
+ *> \ingroup complex16GEsolve
+ *
+ *  =====================================================================
+-      SUBROUTINE ZGESV( N, NRHS, A, LDA, IPIV, B, LDB, INFO )
++      SUBROUTINE ZGESV_NETLIB( N, NRHS, A, LDA, IPIV, B, LDB, INFO )
+ *
+ *  -- LAPACK driver routine --
+ *  -- LAPACK is a software package provided by Univ. of Tennessee,    --
+diff --git a/lapack-release/SRC/zgetrf.f b/lapack-release/SRC/zgetrf.f
+index f3c3b39..815f079 100644
+--- a/lapack-release/SRC/zgetrf.f
++++ b/lapack-release/SRC/zgetrf.f
+@@ -104,7 +104,7 @@
+ *> \ingroup complex16GEcomputational
+ *
+ *  =====================================================================
+-      SUBROUTINE ZGETRF( M, N, A, LDA, IPIV, INFO )
++      SUBROUTINE ZGETRF_NETLIB( M, N, A, LDA, IPIV, INFO )
+ *
+ *  -- LAPACK computational routine --
+ *  -- LAPACK is a software package provided by Univ. of Tennessee,    --
+diff --git a/lapack-release/SRC/zgetri.f b/lapack-release/SRC/zgetri.f
+index 4178284..f25c488 100644
+--- a/lapack-release/SRC/zgetri.f
++++ b/lapack-release/SRC/zgetri.f
+@@ -110,7 +110,7 @@
+ *> \ingroup complex16GEcomputational
+ *
+ *  =====================================================================
+-      SUBROUTINE ZGETRI( N, A, LDA, IPIV, WORK, LWORK, INFO )
++      SUBROUTINE ZGETRI_NETLIB( N, A, LDA, IPIV, WORK, LWORK, INFO )
+ *
+ *  -- LAPACK computational routine --
+ *  -- LAPACK is a software package provided by Univ. of Tennessee,    --
+diff --git a/lapack-release/SRC/zgetrs.f b/lapack-release/SRC/zgetrs.f
+index 53f1bc3..31faa00 100644
+--- a/lapack-release/SRC/zgetrs.f
++++ b/lapack-release/SRC/zgetrs.f
+@@ -117,7 +117,8 @@
+ *> \ingroup complex16GEcomputational
+ *
+ *  =====================================================================
+-      SUBROUTINE ZGETRS( TRANS, N, NRHS, A, LDA, IPIV, B, LDB, INFO )
++      SUBROUTINE ZGETRS_NETLIB( TRANS, N, NRHS, A, LDA, IPIV,
++     $                          B, LDB, INFO )
+ *
+ *  -- LAPACK computational routine --
+ *  -- LAPACK is a software package provided by Univ. of Tennessee,    --
+diff --git a/lapack-release/SRC/zgtsv.f b/lapack-release/SRC/zgtsv.f
+index fbd583d..7ce8085 100644
+--- a/lapack-release/SRC/zgtsv.f
++++ b/lapack-release/SRC/zgtsv.f
+@@ -120,7 +120,7 @@
+ *> \ingroup complex16GTsolve
+ *
+ *  =====================================================================
+-      SUBROUTINE ZGTSV( N, NRHS, DL, D, DU, B, LDB, INFO )
++      SUBROUTINE ZGTSV_NETLIB( N, NRHS, DL, D, DU, B, LDB, INFO )
+ *
+ *  -- LAPACK driver routine --
+ *  -- LAPACK is a software package provided by Univ. of Tennessee,    --
+diff --git a/lapack-release/SRC/zgttrf.f b/lapack-release/SRC/zgttrf.f
+index 411233e..09ce890 100644
+--- a/lapack-release/SRC/zgttrf.f
++++ b/lapack-release/SRC/zgttrf.f
+@@ -120,7 +120,7 @@
+ *> \ingroup complex16GTcomputational
+ *
+ *  =====================================================================
+-      SUBROUTINE ZGTTRF( N, DL, D, DU, DU2, IPIV, INFO )
++      SUBROUTINE ZGTTRF_NETLIB( N, DL, D, DU, DU2, IPIV, INFO )
+ *
+ *  -- LAPACK computational routine --
+ *  -- LAPACK is a software package provided by Univ. of Tennessee,    --
+diff --git a/lapack-release/SRC/zgttrs.f b/lapack-release/SRC/zgttrs.f
+index d36d010..d3de5d1 100644
+--- a/lapack-release/SRC/zgttrs.f
++++ b/lapack-release/SRC/zgttrs.f
+@@ -133,8 +133,8 @@
+ *> \ingroup complex16GTcomputational
+ *
+ *  =====================================================================
+-      SUBROUTINE ZGTTRS( TRANS, N, NRHS, DL, D, DU, DU2, IPIV, B, LDB,
+-     $                   INFO )
++      SUBROUTINE ZGTTRS_NETLIB( TRANS, N, NRHS, DL, D, DU, DU2, IPIV, B,
++     $                   LDB, INFO )
+ *
+ *  -- LAPACK computational routine --
+ *  -- LAPACK is a software package provided by Univ. of Tennessee,    --
+diff --git a/lapack-release/SRC/zgtts2.f b/lapack-release/SRC/zgtts2.f
+index 83ca50c..ce041e7 100644
+--- a/lapack-release/SRC/zgtts2.f
++++ b/lapack-release/SRC/zgtts2.f
+@@ -124,7 +124,8 @@
+ *> \ingroup complex16GTcomputational
+ *
+ *  =====================================================================
+-      SUBROUTINE ZGTTS2( ITRANS, N, NRHS, DL, D, DU, DU2, IPIV, B, LDB )
++      SUBROUTINE ZGTTS2_NETLIB( ITRANS, N, NRHS, DL, D, DU, DU2, IPIV,
++     $                          B, LDB )
+ *
+ *  -- LAPACK computational routine --
+ *  -- LAPACK is a software package provided by Univ. of Tennessee,    --
+diff --git a/lapack-release/SRC/zheev.f b/lapack-release/SRC/zheev.f
+index 59af34a..501bcd5 100644
+--- a/lapack-release/SRC/zheev.f
++++ b/lapack-release/SRC/zheev.f
+@@ -135,8 +135,8 @@
+ *> \ingroup complex16HEeigen
+ *
+ *  =====================================================================
+-      SUBROUTINE ZHEEV( JOBZ, UPLO, N, A, LDA, W, WORK, LWORK, RWORK,
+-     $                  INFO )
++      SUBROUTINE ZHEEV_NETLIB( JOBZ, UPLO, N, A, LDA, W, WORK, LWORK,
++     $                         RWORK, INFO )
+ *
+ *  -- LAPACK driver routine --
+ *  -- LAPACK is a software package provided by Univ. of Tennessee,    --
+diff --git a/lapack-release/SRC/zheevd.f b/lapack-release/SRC/zheevd.f
+index a6484eb..d5c92f2 100644
+--- a/lapack-release/SRC/zheevd.f
++++ b/lapack-release/SRC/zheevd.f
+@@ -200,8 +200,8 @@
+ *> at Berkeley, USA
+ *>
+ *  =====================================================================
+-      SUBROUTINE ZHEEVD( JOBZ, UPLO, N, A, LDA, W, WORK, LWORK, RWORK,
+-     $                   LRWORK, IWORK, LIWORK, INFO )
++      SUBROUTINE ZHEEVD_NETLIB( JOBZ, UPLO, N, A, LDA, W, WORK, LWORK,
++     $                   RWORK, LRWORK, IWORK, LIWORK, INFO )
+ *
+ *  -- LAPACK driver routine --
+ *  -- LAPACK is a software package provided by Univ. of Tennessee,    --
+diff --git a/lapack-release/SRC/zhetrd.f b/lapack-release/SRC/zhetrd.f
+index 5b7d654..228ed3d 100644
+--- a/lapack-release/SRC/zhetrd.f
++++ b/lapack-release/SRC/zhetrd.f
+@@ -188,7 +188,8 @@
+ *> \endverbatim
+ *>
+ *  =====================================================================
+-      SUBROUTINE ZHETRD( UPLO, N, A, LDA, D, E, TAU, WORK, LWORK, INFO )
++      SUBROUTINE ZHETRD_NETLIB( UPLO, N, A, LDA, D, E, TAU, WORK, LWORK,
++     $                          INFO )
+ *
+ *  -- LAPACK computational routine --
+ *  -- LAPACK is a software package provided by Univ. of Tennessee,    --
+diff --git a/lapack-release/SRC/zhetrd_2stage.f b/lapack-release/SRC/zhetrd_2stage.f
+index b9d2f0e..5fc69b0 100644
+--- a/lapack-release/SRC/zhetrd_2stage.f
++++ b/lapack-release/SRC/zhetrd_2stage.f
+@@ -219,7 +219,7 @@
+ *> \endverbatim
+ *>
+ *  =====================================================================
+-      SUBROUTINE ZHETRD_2STAGE( VECT, UPLO, N, A, LDA, D, E, TAU, 
++      SUBROUTINE ZHETRD_2STAGE_NETLIB( VECT, UPLO, N, A, LDA, D, E, TAU,
+      $                          HOUS2, LHOUS2, WORK, LWORK, INFO )
+ *
+       IMPLICIT NONE
+diff --git a/lapack-release/SRC/zhpsv.f b/lapack-release/SRC/zhpsv.f
+index 671eac6..a8eea51 100644
+--- a/lapack-release/SRC/zhpsv.f
++++ b/lapack-release/SRC/zhpsv.f
+@@ -158,7 +158,7 @@
+ *> \endverbatim
+ *>
+ *  =====================================================================
+-      SUBROUTINE ZHPSV( UPLO, N, NRHS, AP, IPIV, B, LDB, INFO )
++      SUBROUTINE ZHPSV_NETLIB( UPLO, N, NRHS, AP, IPIV, B, LDB, INFO )
+ *
+ *  -- LAPACK driver routine --
+ *  -- LAPACK is a software package provided by Univ. of Tennessee,    --
+diff --git a/lapack-release/SRC/zhptrf.f b/lapack-release/SRC/zhptrf.f
+index 9c736f3..1a94215 100644
+--- a/lapack-release/SRC/zhptrf.f
++++ b/lapack-release/SRC/zhptrf.f
+@@ -155,7 +155,7 @@
+ *>  J. Lewis, Boeing Computer Services Company
+ *
+ *  =====================================================================
+-      SUBROUTINE ZHPTRF( UPLO, N, AP, IPIV, INFO )
++      SUBROUTINE ZHPTRF_NETLIB( UPLO, N, AP, IPIV, INFO )
+ *
+ *  -- LAPACK computational routine --
+ *  -- LAPACK is a software package provided by Univ. of Tennessee,    --
+diff --git a/lapack-release/SRC/zlacpy.f b/lapack-release/SRC/zlacpy.f
+index 0601750..e9165f7 100644
+--- a/lapack-release/SRC/zlacpy.f
++++ b/lapack-release/SRC/zlacpy.f
+@@ -99,7 +99,8 @@
+ *> \ingroup complex16OTHERauxiliary
+ *
+ *  =====================================================================
+-      SUBROUTINE ZLACPY( UPLO, M, N, A, LDA, B, LDB )
++      SUBROUTINE ZLACPY_NETLIB(
++     $    UPLO, M, N, A, LDA, B, LDB )
+ *
+ *  -- LAPACK auxiliary routine --
+ *  -- LAPACK is a software package provided by Univ. of Tennessee,    --
+diff --git a/lapack-release/SRC/zlange.f b/lapack-release/SRC/zlange.f
+index ab76455..76ffd71 100644
+--- a/lapack-release/SRC/zlange.f
++++ b/lapack-release/SRC/zlange.f
+@@ -111,7 +111,8 @@
+ *> \ingroup complex16GEauxiliary
+ *
+ *  =====================================================================
+-      DOUBLE PRECISION FUNCTION ZLANGE( NORM, M, N, A, LDA, WORK )
++      DOUBLE PRECISION FUNCTION ZLANGE_NETLIB(
++     $    NORM, M, N, A, LDA, WORK )
+ *
+ *  -- LAPACK auxiliary routine --
+ *  -- LAPACK is a software package provided by Univ. of Tennessee,    --
+@@ -212,7 +213,7 @@
+          VALUE = SSQ( 1 )*SQRT( SSQ( 2 ) )
+       END IF
+ *
+-      ZLANGE = VALUE
++      ZLANGE_NETLIB = VALUE
+       RETURN
+ *
+ *     End of ZLANGE
+diff --git a/lapack-release/SRC/zlaset.f b/lapack-release/SRC/zlaset.f
+index 00f5f59..eb30d19 100644
+--- a/lapack-release/SRC/zlaset.f
++++ b/lapack-release/SRC/zlaset.f
+@@ -102,7 +102,8 @@
+ *> \ingroup complex16OTHERauxiliary
+ *
+ *  =====================================================================
+-      SUBROUTINE ZLASET( UPLO, M, N, ALPHA, BETA, A, LDA )
++      SUBROUTINE ZLASET_NETLIB(
++     $    UPLO, M, N, ALPHA, BETA, A, LDA )
+ *
+ *  -- LAPACK auxiliary routine --
+ *  -- LAPACK is a software package provided by Univ. of Tennessee,    --
+diff --git a/lapack-release/SRC/zlasr.f b/lapack-release/SRC/zlasr.f
+index 07c9132..4d1ac35 100644
+--- a/lapack-release/SRC/zlasr.f
++++ b/lapack-release/SRC/zlasr.f
+@@ -196,7 +196,7 @@
+ *> \ingroup complex16OTHERauxiliary
+ *
+ *  =====================================================================
+-      SUBROUTINE ZLASR( SIDE, PIVOT, DIRECT, M, N, C, S, A, LDA )
++      SUBROUTINE ZLASR_NETLIB(SIDE, PIVOT, DIRECT, M, N, C, S, A, LDA)
+ *
+ *  -- LAPACK auxiliary routine --
+ *  -- LAPACK is a software package provided by Univ. of Tennessee,    --
+diff --git a/lapack-release/SRC/zlaswp.f b/lapack-release/SRC/zlaswp.f
+index 13fa864..cd1609a 100644
+--- a/lapack-release/SRC/zlaswp.f
++++ b/lapack-release/SRC/zlaswp.f
+@@ -111,7 +111,7 @@
+ *> \endverbatim
+ *>
+ *  =====================================================================
+-      SUBROUTINE ZLASWP( N, A, LDA, K1, K2, IPIV, INCX )
++      SUBROUTINE ZLASWP_NETLIB( N, A, LDA, K1, K2, IPIV, INCX )
+ *
+ *  -- LAPACK auxiliary routine --
+ *  -- LAPACK is a software package provided by Univ. of Tennessee,    --
+diff --git a/lapack-release/SRC/zposv.f b/lapack-release/SRC/zposv.f
+index 3bb6258..139c178 100644
+--- a/lapack-release/SRC/zposv.f
++++ b/lapack-release/SRC/zposv.f
+@@ -126,7 +126,7 @@
+ *> \ingroup complex16POsolve
+ *
+ *  =====================================================================
+-      SUBROUTINE ZPOSV( UPLO, N, NRHS, A, LDA, B, LDB, INFO )
++      SUBROUTINE ZPOSV_NETLIB( UPLO, N, NRHS, A, LDA, B, LDB, INFO )
+ *
+ *  -- LAPACK driver routine --
+ *  -- LAPACK is a software package provided by Univ. of Tennessee,    --
+diff --git a/lapack-release/SRC/zpotrf.f b/lapack-release/SRC/zpotrf.f
+index 3b70182..46df5ab 100644
+--- a/lapack-release/SRC/zpotrf.f
++++ b/lapack-release/SRC/zpotrf.f
+@@ -103,7 +103,8 @@
+ *> \ingroup complex16POcomputational
+ *
+ *  =====================================================================
+-      SUBROUTINE ZPOTRF( UPLO, N, A, LDA, INFO )
++      SUBROUTINE ZPOTRF_NETLIB(
++     $    UPLO, N, A, LDA, INFO )
+ *
+ *  -- LAPACK computational routine --
+ *  -- LAPACK is a software package provided by Univ. of Tennessee,    --
+diff --git a/lapack-release/SRC/zpotri.f b/lapack-release/SRC/zpotri.f
+index 8c94ead..578786f 100644
+--- a/lapack-release/SRC/zpotri.f
++++ b/lapack-release/SRC/zpotri.f
+@@ -91,7 +91,7 @@
+ *> \ingroup complex16POcomputational
+ *
+ *  =====================================================================
+-      SUBROUTINE ZPOTRI( UPLO, N, A, LDA, INFO )
++      SUBROUTINE ZPOTRI_NETLIB( UPLO, N, A, LDA, INFO )
+ *
+ *  -- LAPACK computational routine --
+ *  -- LAPACK is a software package provided by Univ. of Tennessee,    --
+diff --git a/lapack-release/SRC/zpotrs.f b/lapack-release/SRC/zpotrs.f
+index 78a1c32..b343f21 100644
+--- a/lapack-release/SRC/zpotrs.f
++++ b/lapack-release/SRC/zpotrs.f
+@@ -106,7 +106,7 @@
+ *> \ingroup complex16POcomputational
+ *
+ *  =====================================================================
+-      SUBROUTINE ZPOTRS( UPLO, N, NRHS, A, LDA, B, LDB, INFO )
++      SUBROUTINE ZPOTRS_NETLIB( UPLO, N, NRHS, A, LDA, B, LDB, INFO )
+ *
+ *  -- LAPACK computational routine --
+ *  -- LAPACK is a software package provided by Univ. of Tennessee,    --
+diff --git a/lapack-release/SRC/zppsv.f b/lapack-release/SRC/zppsv.f
+index 19536e2..5ee6db6 100644
+--- a/lapack-release/SRC/zppsv.f
++++ b/lapack-release/SRC/zppsv.f
+@@ -140,7 +140,7 @@
+ *> \endverbatim
+ *>
+ *  =====================================================================
+-      SUBROUTINE ZPPSV( UPLO, N, NRHS, AP, B, LDB, INFO )
++      SUBROUTINE ZPPSV_NETLIB( UPLO, N, NRHS, AP, B, LDB, INFO )
+ *
+ *  -- LAPACK driver routine --
+ *  -- LAPACK is a software package provided by Univ. of Tennessee,    --
+diff --git a/lapack-release/SRC/zpptrf.f b/lapack-release/SRC/zpptrf.f
+index a34d639..d894788 100644
+--- a/lapack-release/SRC/zpptrf.f
++++ b/lapack-release/SRC/zpptrf.f
+@@ -115,7 +115,8 @@
+ *> \endverbatim
+ *>
+ *  =====================================================================
+-      SUBROUTINE ZPPTRF( UPLO, N, AP, INFO )
++      SUBROUTINE ZPPTRF_NETLIB(
++     $    UPLO, N, AP, INFO )
+ *
+ *  -- LAPACK computational routine --
+ *  -- LAPACK is a software package provided by Univ. of Tennessee,    --
+diff --git a/lapack-release/SRC/zpptrs.f b/lapack-release/SRC/zpptrs.f
+index 433213d..092cd31 100644
+--- a/lapack-release/SRC/zpptrs.f
++++ b/lapack-release/SRC/zpptrs.f
+@@ -104,7 +104,8 @@
+ *> \ingroup complex16OTHERcomputational
+ *
+ *  =====================================================================
+-      SUBROUTINE ZPPTRS( UPLO, N, NRHS, AP, B, LDB, INFO )
++      SUBROUTINE ZPPTRS_NETLIB(
++     $    UPLO, N, NRHS, AP, B, LDB, INFO )
+ *
+ *  -- LAPACK computational routine --
+ *  -- LAPACK is a software package provided by Univ. of Tennessee,    --
+diff --git a/lapack-release/SRC/zptsv.f b/lapack-release/SRC/zptsv.f
+index d53e17a..172fe9a 100644
+--- a/lapack-release/SRC/zptsv.f
++++ b/lapack-release/SRC/zptsv.f
+@@ -111,7 +111,7 @@
+ *> \ingroup complex16PTsolve
+ *
+ *  =====================================================================
+-      SUBROUTINE ZPTSV( N, NRHS, D, E, B, LDB, INFO )
++      SUBROUTINE ZPTSV_NETLIB( N, NRHS, D, E, B, LDB, INFO )
+ *
+ *  -- LAPACK driver routine --
+ *  -- LAPACK is a software package provided by Univ. of Tennessee,    --
+diff --git a/lapack-release/SRC/zpttrf.f b/lapack-release/SRC/zpttrf.f
+index a106ec4..c5aafd9 100644
+--- a/lapack-release/SRC/zpttrf.f
++++ b/lapack-release/SRC/zpttrf.f
+@@ -88,7 +88,7 @@
+ *> \ingroup complex16PTcomputational
+ *
+ *  =====================================================================
+-      SUBROUTINE ZPTTRF( N, D, E, INFO )
++      SUBROUTINE ZPTTRF_NETLIB( N, D, E, INFO )
+ *
+ *  -- LAPACK computational routine --
+ *  -- LAPACK is a software package provided by Univ. of Tennessee,    --
+diff --git a/lapack-release/SRC/zpttrs.f b/lapack-release/SRC/zpttrs.f
+index 41c7c9b..3de8f72 100644
+--- a/lapack-release/SRC/zpttrs.f
++++ b/lapack-release/SRC/zpttrs.f
+@@ -117,7 +117,7 @@
+ *> \ingroup complex16PTcomputational
+ *
+ *  =====================================================================
+-      SUBROUTINE ZPTTRS( UPLO, N, NRHS, D, E, B, LDB, INFO )
++      SUBROUTINE ZPTTRS_NETLIB( UPLO, N, NRHS, D, E, B, LDB, INFO )
+ *
+ *  -- LAPACK computational routine --
+ *  -- LAPACK is a software package provided by Univ. of Tennessee,    --
+diff --git a/lapack-release/SRC/zptts2.f b/lapack-release/SRC/zptts2.f
+index 8ff6b1f..9466e6b 100644
+--- a/lapack-release/SRC/zptts2.f
++++ b/lapack-release/SRC/zptts2.f
+@@ -109,7 +109,7 @@
+ *> \ingroup complex16PTcomputational
+ *
+ *  =====================================================================
+-      SUBROUTINE ZPTTS2( IUPLO, N, NRHS, D, E, B, LDB )
++      SUBROUTINE ZPTTS2_NETLIB( IUPLO, N, NRHS, D, E, B, LDB )
+ *
+ *  -- LAPACK computational routine --
+ *  -- LAPACK is a software package provided by Univ. of Tennessee,    --
+diff --git a/lapack-release/SRC/zspsv.f b/lapack-release/SRC/zspsv.f
+index a1c1302..90539f8 100644
+--- a/lapack-release/SRC/zspsv.f
++++ b/lapack-release/SRC/zspsv.f
+@@ -158,7 +158,8 @@
+ *> \endverbatim
+ *>
+ *  =====================================================================
+-      SUBROUTINE ZSPSV( UPLO, N, NRHS, AP, IPIV, B, LDB, INFO )
++      SUBROUTINE ZSPSV_NETLIB(
++     $    UPLO, N, NRHS, AP, IPIV, B, LDB, INFO )
+ *
+ *  -- LAPACK driver routine --
+ *  -- LAPACK is a software package provided by Univ. of Tennessee,    --
+diff --git a/lapack-release/SRC/zsptrf.f b/lapack-release/SRC/zsptrf.f
+index bad30b7..7ec25f3 100644
+--- a/lapack-release/SRC/zsptrf.f
++++ b/lapack-release/SRC/zsptrf.f
+@@ -154,7 +154,8 @@
+ *> \endverbatim
+ *>
+ *  =====================================================================
+-      SUBROUTINE ZSPTRF( UPLO, N, AP, IPIV, INFO )
++      SUBROUTINE ZSPTRF_NETLIB(
++     $    UPLO, N, AP, IPIV, INFO )
+ *
+ *  -- LAPACK computational routine --
+ *  -- LAPACK is a software package provided by Univ. of Tennessee,    --
+diff --git a/lapack-release/SRC/ztpttr.f b/lapack-release/SRC/ztpttr.f
+index 1529e02..0cdf1fe 100644
+--- a/lapack-release/SRC/ztpttr.f
++++ b/lapack-release/SRC/ztpttr.f
+@@ -100,7 +100,8 @@
+ *> \ingroup complex16OTHERcomputational
+ *
+ *  =====================================================================
+-      SUBROUTINE ZTPTTR( UPLO, N, AP, A, LDA, INFO )
++      SUBROUTINE ZTPTTR_NETLIB(
++     $    UPLO, N, AP, A, LDA, INFO )
+ *
+ *  -- LAPACK computational routine --
+ *  -- LAPACK is a software package provided by Univ. of Tennessee,    --
+diff --git a/lapack-release/SRC/ztrttp.f b/lapack-release/SRC/ztrttp.f
+index ba9e8ce..c80244a 100644
+--- a/lapack-release/SRC/ztrttp.f
++++ b/lapack-release/SRC/ztrttp.f
+@@ -100,7 +100,8 @@
+ *> \ingroup complex16OTHERcomputational
+ *
+ *  =====================================================================
+-      SUBROUTINE ZTRTTP( UPLO, N, A, LDA, AP, INFO )
++      SUBROUTINE ZTRTTP_NETLIB(
++     $    UPLO, N, A, LDA, AP, INFO )
+ *
+ *  -- LAPACK computational routine --
+ *  -- LAPACK is a software package provided by Univ. of Tennessee,    --
+diff --git a/lapack-release/SRC/zunglq.f b/lapack-release/SRC/zunglq.f
+index aca6bc6..abbc6d5 100644
+--- a/lapack-release/SRC/zunglq.f
++++ b/lapack-release/SRC/zunglq.f
+@@ -123,7 +123,8 @@
+ *> \ingroup complex16OTHERcomputational
+ *
+ *  =====================================================================
+-      SUBROUTINE ZUNGLQ( M, N, K, A, LDA, TAU, WORK, LWORK, INFO )
++      SUBROUTINE ZUNGLQ_NETLIB(
++     $    M, N, K, A, LDA, TAU, WORK, LWORK, INFO )
+ *
+ *  -- LAPACK computational routine --
+ *  -- LAPACK is a software package provided by Univ. of Tennessee,    --
+diff --git a/lapack-release/SRC/zungql.f b/lapack-release/SRC/zungql.f
+index 1804ca6..974c4b9 100644
+--- a/lapack-release/SRC/zungql.f
++++ b/lapack-release/SRC/zungql.f
+@@ -124,7 +124,8 @@
+ *> \ingroup complex16OTHERcomputational
+ *
+ *  =====================================================================
+-      SUBROUTINE ZUNGQL( M, N, K, A, LDA, TAU, WORK, LWORK, INFO )
++      SUBROUTINE ZUNGQL_NETLIB(
++     $    M, N, K, A, LDA, TAU, WORK, LWORK, INFO )
+ *
+ *  -- LAPACK computational routine --
+ *  -- LAPACK is a software package provided by Univ. of Tennessee,    --
+diff --git a/lapack-release/SRC/zungqr.f b/lapack-release/SRC/zungqr.f
+index b3f2c45..e3ac885 100644
+--- a/lapack-release/SRC/zungqr.f
++++ b/lapack-release/SRC/zungqr.f
+@@ -124,7 +124,8 @@
+ *> \ingroup complex16OTHERcomputational
+ *
+ *  =====================================================================
+-      SUBROUTINE ZUNGQR( M, N, K, A, LDA, TAU, WORK, LWORK, INFO )
++      SUBROUTINE ZUNGQR_NETLIB(
++     $    M, N, K, A, LDA, TAU, WORK, LWORK, INFO )
+ *
+ *  -- LAPACK computational routine --
+ *  -- LAPACK is a software package provided by Univ. of Tennessee,    --
+diff --git a/lapack-release/SRC/zungrq.f b/lapack-release/SRC/zungrq.f
+index 40b3b23..30d312e 100644
+--- a/lapack-release/SRC/zungrq.f
++++ b/lapack-release/SRC/zungrq.f
+@@ -124,7 +124,8 @@
+ *> \ingroup complex16OTHERcomputational
+ *
+ *  =====================================================================
+-      SUBROUTINE ZUNGRQ( M, N, K, A, LDA, TAU, WORK, LWORK, INFO )
++      SUBROUTINE ZUNGRQ_NETLIB(
++     $    M, N, K, A, LDA, TAU, WORK, LWORK, INFO )
+ *
+ *  -- LAPACK computational routine --
+ *  -- LAPACK is a software package provided by Univ. of Tennessee,    --
+diff --git a/lapack-release/SRC/zunmlq.f b/lapack-release/SRC/zunmlq.f
+index f2fb315..44697dd 100644
+--- a/lapack-release/SRC/zunmlq.f
++++ b/lapack-release/SRC/zunmlq.f
+@@ -162,7 +162,8 @@
+ *> \ingroup complex16OTHERcomputational
+ *
+ *  =====================================================================
+-      SUBROUTINE ZUNMLQ( SIDE, TRANS, M, N, K, A, LDA, TAU, C, LDC,
++      SUBROUTINE ZUNMLQ_NETLIB(
++     $    SIDE, TRANS, M, N, K, A, LDA, TAU, C, LDC,
+      $                   WORK, LWORK, INFO )
+ *
+ *  -- LAPACK computational routine --
+diff --git a/lapack-release/SRC/zunmql.f b/lapack-release/SRC/zunmql.f
+index 06353a0..61c320c 100644
+--- a/lapack-release/SRC/zunmql.f
++++ b/lapack-release/SRC/zunmql.f
+@@ -162,7 +162,8 @@
+ *> \ingroup complex16OTHERcomputational
+ *
+ *  =====================================================================
+-      SUBROUTINE ZUNMQL( SIDE, TRANS, M, N, K, A, LDA, TAU, C, LDC,
++      SUBROUTINE ZUNMQL_NETLIB(
++     $    SIDE, TRANS, M, N, K, A, LDA, TAU, C, LDC,
+      $                   WORK, LWORK, INFO )
+ *
+ *  -- LAPACK computational routine --
+diff --git a/lapack-release/SRC/zunmqr.f b/lapack-release/SRC/zunmqr.f
+index 2ae205f..71c12e8 100644
+--- a/lapack-release/SRC/zunmqr.f
++++ b/lapack-release/SRC/zunmqr.f
+@@ -162,7 +162,7 @@
+ *> \ingroup complex16OTHERcomputational
+ *
+ *  =====================================================================
+-      SUBROUTINE ZUNMQR( SIDE, TRANS, M, N, K, A, LDA, TAU, C, LDC,
++      SUBROUTINE ZUNMQR_NETLIB( SIDE, TRANS, M, N, K, A, LDA, TAU,C,LDC,
+      $                   WORK, LWORK, INFO )
+ *
+ *  -- LAPACK computational routine --
+diff --git a/lapack-release/SRC/zunmrq.f b/lapack-release/SRC/zunmrq.f
+index e14e93b..419fcfb 100644
+--- a/lapack-release/SRC/zunmrq.f
++++ b/lapack-release/SRC/zunmrq.f
+@@ -162,7 +162,8 @@
+ *> \ingroup complex16OTHERcomputational
+ *
+ *  =====================================================================
+-      SUBROUTINE ZUNMRQ( SIDE, TRANS, M, N, K, A, LDA, TAU, C, LDC,
++      SUBROUTINE ZUNMRQ_NETLIB(
++     $    SIDE, TRANS, M, N, K, A, LDA, TAU, C, LDC,
+      $                   WORK, LWORK, INFO )
+ *
+ *  -- LAPACK computational routine --
+-- 
+2.17.2 (Apple Git-113)
+
