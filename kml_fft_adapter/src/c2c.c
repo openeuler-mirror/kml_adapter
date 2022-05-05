@@ -65,3 +65,5 @@ FFTW(plan) FFTW(plan_many_dft)(int rank, const int *n, int howmany, FFTW(complex
     return (FFTW(plan))KML(plan_many_dft)(rank, n, howmany, (KML(complex) *)in, inembed,
         istride, idist, (KML(complex) *)out, onembed, ostride, odist, sign, flags);
 }
+
+//test
