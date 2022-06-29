@@ -111,7 +111,7 @@ function add_suffix_netlib {
     fi
     if grep -Ei "^ {6,}.*FUNCTION +${name} *\(" ${src} >/dev/null ; then
         sed -Ee 's:^( {6,}.*FUNCTION +'${name}') *\(:\1_NETLIB\n     +    (:i' \
-            -Ee 's:^(.* '${name}') *=:\1_NETLIB\n     +    =:i' \
+            -Ee 's:^([^*c!].* '${name}') *=:\1_NETLIB\n     +    =:i' \
         ${src} >${src}.tmp
     fi
     if grep -iw ${name}_NETLIB ${src} >/dev/null ; then
