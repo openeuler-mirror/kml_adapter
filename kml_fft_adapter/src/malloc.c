@@ -7,7 +7,7 @@ void *FFTW(malloc)(size_t n)
 
 void FFTW(free)(void *p)
 {
-    return KML(destroy_plan)(p);
+    return KML(free)(p);
 }
 
 void FFTW(destroy_plan)(FFTW(plan) plan)
