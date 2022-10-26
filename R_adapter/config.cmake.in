@@ -1,0 +1,9 @@
+# --------------------------------------------------------------------
+# cmake options
+# --------------------------------------------------------------------
+
+list(APPEND CFLAGS "-fPIC" "-std=c99" "-pipe" "-O3" "-Wall" "-Wextra" "-funroll-loops" "-Wno-missing-braces")
+
+set(LINK_CFLAGS "-s -Wl,-z,relro -Wl,-z,now -Wl,-z,noexecstack" )
+
+list(APPEND MATH_CFLAGS "-fstack-protector-all" "-ffp-contract=fast" "-fno-math-errno" "-flax-vector-conversions")
