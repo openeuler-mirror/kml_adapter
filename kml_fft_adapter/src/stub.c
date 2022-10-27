@@ -8,6 +8,10 @@
 
 #define ALGN 16
 
+const char FFTW(version)[] = "kfft-x.x.x";
+const char FFTW(cc)[] = "gcc";
+const char FFTW(codelet_optim)[] = "";
+
 void FFTW(cleanup)(void)
 {
 }
@@ -50,6 +54,12 @@ void FFTW(flops)(const FFTW(plan) p, double *add, double *mul, double *fmas)
     return;
 }
 
+double FFTW(estimate_cost)(const FFTW(plan) p)
+{
+    UNUSED(p);
+    return 0.0f;
+}
+
 double FFTW(cost)(const FFTW(plan) p)
 {
     UNUSED(p);
@@ -80,5 +90,17 @@ void FFTW(forget_wisdom)(void)
 }
 
 void install_hook(void) {
+    return;
+}
+
+void uninstall_hook(void) {
+    return;
+}
+
+void * FFTW(the_planner)(void) {
+    return (void *)malloc(KML_FFT_CACHELINE_SIZE);
+}
+
+void FFTW(make_planner_thread_safe)(void) {
     return;
 }
