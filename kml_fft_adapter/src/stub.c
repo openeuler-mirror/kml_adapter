@@ -9,7 +9,7 @@
 #define ALGN 16
 
 const char FFTW(version)[] = "kfft-x.x.x";
-const char FFTW(constructor)[] = "gcc";
+const char FFTW(cc)[] = "gcc";
 const char FFTW(codelet_optim)[] = "";
 
 void FFTW(cleanup)(void)
