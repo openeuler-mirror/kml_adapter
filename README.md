@@ -1,23 +1,22 @@
 # kml_adapter
 
+This document in [English](README.en.md)
+
 #### 介绍
 Adapter for Kunpeng Math Library
 
 #### 软件架构
-软件架构说明
+kml_fft_adapter 为kml_fft 的fftw适配层，即安装了kml_fft后再安装adapter，可以直接当作fftw使用
 
 
 #### 安装教程
 
-1.  xxxx
-2.  xxxx
-3.  xxxx
+1.  cd kml_fft_adapter
+2.  sh build.sh
 
 #### 使用说明
 
-1.  xxxx
-2.  xxxx
-3.  xxxx
+1.  直接链接编译后的文件kml_fft_adapter/build/下的libfftw3f.so 或libfftw3.so用于替换原先的fftw
 
 #### 参与贡献
 
