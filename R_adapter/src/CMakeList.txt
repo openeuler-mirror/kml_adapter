@@ -7,9 +7,8 @@ list(APPEND CFLAGS "-DPACKAGE=\"boostkit-kml-vsl\"")
 file(GLOB vsl_math_source_list src "${CMAKE_CURRENT_SOURCE_DIR}/*.c")
 add_library(${MATHLIB_OBJECT_VSL} OBJECT ${vsl_math_source_list} ${common_source_list} ${vector_source_list})
 
-link_directories(../../../../output/lib/)
+link_directories(/usr/local/kml/lib)
 link_libraries("libkvsl.so")
-link_directories(../../../../)
 link_libraries("libksvml.so")
 link_libraries("libkm.so")
 target_include_directories(${MATHLIB_OBJECT_VSL} PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/../include)
@@ -24,7 +23,7 @@ add_library(${MATHLIB_NAME_VSL}_static STATIC $<TARGET_OBJECTS:${MATHLIB_OBJECT_
 
 set_target_properties(${MATHLIB_NAME_VSL} PROPERTIES LINK_FLAGS ${LINK_CFLAGS} )
 
-set_target_properties(${MATHLIB_NAME_VSL} PROPERTIES VERSION "${KML_VERSION}")
+set_target_properties(${MATHLIB_NAME_VSL} PROPERTIES VERSION "1.0.0")
 set_target_properties(${MATHLIB_NAME_VSL}_static PROPERTIES OUTPUT_NAME ${MATHLIB_NAME_VSL} )
 set_target_properties(${MATHLIB_NAME_VSL} PROPERTIES CLEAN_DIRECT_OUTPUT 1)
 set_target_properties(${MATHLIB_NAME_VSL}_static PROPERTIES CLEAN_DIRECT_OUTPUT 1)
