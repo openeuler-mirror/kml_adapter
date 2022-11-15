@@ -1,4 +1,4 @@
-dyn.load("Rwrapper/output/lib/libvsl_wrapper.so")
+dyn.load("build/lib/libvsl_wrapper.so")
 kml_runif<-function(len, min, max, kind) {
     y<-.C("kml_runif", as.integer(len), res=as.double(1:len), as.double(min), as.double(max),as.integer(kind))$res
     return(y)
