@@ -52,7 +52,9 @@ WE HAVE BUILT "ADAPTED" LAPACK and FULL LAPACK LIBRARIES:
 -rwxr-xr-x 1 user group 8888888 Jun  6 12:48 /home/user/kml_adapter/tmp-build/lib/libklapack_full.so
 --------------------------------------------------------------------------------
 ```
-5. Copy the abovementtioned created libraries to your preferred location
+5. To build library and test its functionality, run `./lapack-adapt/build.sh test`
+
+6. Copy the abovementtioned created libraries to your preferred location
    for linking with
 
 
