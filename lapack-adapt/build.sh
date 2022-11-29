@@ -192,10 +192,15 @@ function tests {
 #-------------------------------------------------------------------------------
 ANNOUNCE "Run tests with libklapack + liblapack1"
 
+if [ $1 == "test" ]; then
 tests tmp-1 "${libklapack_so};${liblapack1_a};${libkservice_so};${libkblas_so};-fopenmp"
 tests tmp-2 "${libklapack_so};${liblapack1_so};${libkservice_so};${libkblas_so};-fopenmp"
-
+fi
 #-------------------------------------------------------------------------------
+ANNOUNCE "Create libklapack_full.so"
+libkservice1_a=${tmp_build_dir}/lib/libkservice1.a
+( set -x ; cp -p ${libkservice_a} ${libkservice1_a})
+( set -x ; ar d ${libkservice1_a} timer.c.o)
 ANNOUNCE "Create libklapack_full.so"
 
 ld_group=(
@@ -203,6 +208,7 @@ ld_group=(
     -Wl,--start-group
     ${libklapack_a}
     ${liblapack1_a}
+    ${libkservice1_a}
     -Wl,--end-group
     -Wl,--no-whole-archive
 )
@@ -210,8 +216,9 @@ ld_group=(
 
 #-------------------------------------------------------------------------------
 ANNOUNCE "Run tests with libklapack_full.so"
-
+if [ $1 == "test" ]; then
 tests tmp-3 "${libklapack_full_so};${libkservice_so};${libkblas_so};-fopenmp"
+fi
 
 # Report build results ---------------------------------------------------------
 
