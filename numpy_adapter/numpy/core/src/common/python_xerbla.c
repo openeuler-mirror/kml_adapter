@@ -2,7 +2,11 @@
 #include <Python.h>
 
 #include "numpy/npy_common.h"
+#ifdef HAVE_HUAWEI_KML
+#include "kblas.h"
+#else
 #include "npy_cblas.h"
+#endif
 
 /*
   From the original manpage:
@@ -20,8 +24,12 @@
           Spaces at the end are skipped.
   info: Number of the invalid parameter.
 */
-
-CBLAS_INT BLAS_FUNC(xerbla)(char *srname, CBLAS_INT *info)
+#ifdef HAVE_HUAWEI_KML
+CBLAS_INT xerbla
+#else
+CBLAS_INT BLAS_FUNC(xerbla)
+#endif
+        (char *srname, CBLAS_INT *info)
 {
         static const char format[] = "On entry to %.*s" \
                 " parameter number %d had an illegal value";

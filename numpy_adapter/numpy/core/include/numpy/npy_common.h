@@ -1,3 +1,5 @@
+#pragma once
+
 #ifndef NUMPY_CORE_INCLUDE_NUMPY_NPY_COMMON_H_
 #define NUMPY_CORE_INCLUDE_NUMPY_NPY_COMMON_H_
 
@@ -1119,3 +1121,39 @@ typedef npy_int64 npy_datetime;
 /* End of typedefs for numarray style bit-width names */
 
 #endif  /* NUMPY_CORE_INCLUDE_NUMPY_NPY_COMMON_H_ */
+
+#ifdef __cplusplus
+extern "C"
+{
+#endif
+
+#if defined(HAVE_HUAWEI_KML) || defined(HAVE_CBLAS)
+
+#ifdef HAVE_BLAS_ILP64
+#define CBLAS_INT npy_int64
+#define CBLAS_INT_MAX NPY_MAX_INT64
+#else
+#define CBLAS_INT int
+#define CBLAS_INT_MAX INT_MAX
+#endif
+/*
+ * -1 to be conservative, in case blas internally uses a for loop with an
+ * inclusive upper bound
+ */
+#ifndef HAVE_BLAS_ILP64
+#define BLAS_MAXSIZE (NPY_MAX_INT - 1)
+#else
+#define BLAS_MAXSIZE (NPY_MAX_INT64 - 1)
+#endif
+
+#if (NPY_MAX_INTP > CBLAS_INT_MAX)
+# define NPY_CBLAS_CHUNK  (CBLAS_INT_MAX / 2 + 1)
+#else
+# define NPY_CBLAS_CHUNK  NPY_MAX_INTP
+#endif
+
+#endif
+
+#ifdef __cplusplus
+}
+#endif

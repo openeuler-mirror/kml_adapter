@@ -382,4 +382,28 @@ new_array_for_sum(PyArrayObject *ap1, PyArrayObject *ap2, PyArrayObject* out,
  */
 #define NPY_ITER_REDUCTION_AXIS(axis) (axis + (1 << (NPY_BITSOF_INT - 2)))
 
+#if defined(HAVE_HUAWEI_KML)
+/*
+ * Convert NumPy stride to BLAS stride. Returns 0 if conversion cannot be done
+ * (BLAS won't handle negative or zero strides the way we want).
+ */
+static NPY_INLINE CBLAS_INT
+blas_stride(npy_intp stride, unsigned itemsize)
+{
+    /*
+     * Should probably check pointer alignment also, but this may cause
+     * problems if we require complex to be 16 byte aligned.
+     */
+    if (stride > 0 && (stride % itemsize) == 0) {
+        stride /= itemsize;
+        if (stride <= CBLAS_INT_MAX) {
+            return stride;
+        }
+    }
+    return 0;
+}
+
+
+#endif
+
 #endif  /* NUMPY_CORE_SRC_MULTIARRAY_COMMON_H_ */

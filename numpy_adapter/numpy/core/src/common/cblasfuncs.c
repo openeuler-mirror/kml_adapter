@@ -9,7 +9,13 @@
 #include <Python.h>
 
 #include "numpy/arrayobject.h"
+
+#ifdef HAVE_HUAWEI_KML
+#include "kblas.h"
+#else
 #include "npy_cblas.h"
+#endif
+
 #include "arraytypes.h"
 #include "common.h"
 
@@ -35,19 +41,39 @@ gemm(int typenum, enum CBLAS_ORDER order,
 
     switch (typenum) {
         case NPY_DOUBLE:
-            CBLAS_FUNC(cblas_dgemm)(order, transA, transB, m, n, k, 1.,
+#ifdef HAVE_HUAWEI_KML
+            cblas_dgemm
+#else
+            CBLAS_FUNC(cblas_dgemm)
+#endif
+                (order, transA, transB, m, n, k, 1.,
                         Adata, lda, Bdata, ldb, 0., Rdata, ldc);
             break;
         case NPY_FLOAT:
-            CBLAS_FUNC(cblas_sgemm)(order, transA, transB, m, n, k, 1.f,
+#ifdef HAVE_HUAWEI_KML
+            cblas_sgemm
+#else
+            CBLAS_FUNC(cblas_sgemm)
+#endif
+                (order, transA, transB, m, n, k, 1.f,
                         Adata, lda, Bdata, ldb, 0.f, Rdata, ldc);
             break;
         case NPY_CDOUBLE:
-            CBLAS_FUNC(cblas_zgemm)(order, transA, transB, m, n, k, oneD,
+#ifdef HAVE_HUAWEI_KML
+            cblas_zgemm
+#else    
+            CBLAS_FUNC(cblas_zgemm)
+#endif
+                (order, transA, transB, m, n, k, oneD,
                         Adata, lda, Bdata, ldb, zeroD, Rdata, ldc);
             break;
         case NPY_CFLOAT:
-            CBLAS_FUNC(cblas_cgemm)(order, transA, transB, m, n, k, oneF,
+#ifdef HAVE_HUAWEI_KML
+            cblas_cgemm
+#else
+            CBLAS_FUNC(cblas_cgemm)
+#endif
+                (order, transA, transB, m, n, k, oneF,
                         Adata, lda, Bdata, ldb, zeroF, Rdata, ldc);
             break;
     }
@@ -69,19 +95,39 @@ gemv(int typenum, enum CBLAS_ORDER order, enum CBLAS_TRANSPOSE trans,
 
     switch (typenum) {
         case NPY_DOUBLE:
-            CBLAS_FUNC(cblas_dgemv)(order, trans, m, n, 1., Adata, lda, Xdata, incX,
+#ifdef HAVE_HUAWEI_KML
+            cblas_dgemv
+#else
+            CBLAS_FUNC(cblas_dgemv)
+#endif
+                (order, trans, m, n, 1., Adata, lda, Xdata, incX,
                         0., Rdata, 1);
             break;
         case NPY_FLOAT:
-            CBLAS_FUNC(cblas_sgemv)(order, trans, m, n, 1.f, Adata, lda, Xdata, incX,
+#ifdef HAVE_HUAWEI_KML
+            cblas_sgemv
+#else
+            CBLAS_FUNC(cblas_sgemv)
+#endif
+                (order, trans, m, n, 1.f, Adata, lda, Xdata, incX,
                         0.f, Rdata, 1);
             break;
         case NPY_CDOUBLE:
-            CBLAS_FUNC(cblas_zgemv)(order, trans, m, n, oneD, Adata, lda, Xdata, incX,
+#ifdef HAVE_HUAWEI_KML
+            cblas_zgemv
+#else
+            CBLAS_FUNC(cblas_zgemv)
+#endif
+                (order, trans, m, n, oneD, Adata, lda, Xdata, incX,
                         zeroD, Rdata, 1);
             break;
         case NPY_CFLOAT:
-            CBLAS_FUNC(cblas_cgemv)(order, trans, m, n, oneF, Adata, lda, Xdata, incX,
+#ifdef HAVE_HUAWEI_KML
+            cblas_cgemv
+#else
+            CBLAS_FUNC(cblas_cgemv)
+#endif
+                (order, trans, m, n, oneF, Adata, lda, Xdata, incX,
                         zeroF, Rdata, 1);
             break;
     }
@@ -105,7 +151,12 @@ syrk(int typenum, enum CBLAS_ORDER order, enum CBLAS_TRANSPOSE trans,
 
     switch (typenum) {
         case NPY_DOUBLE:
-            CBLAS_FUNC(cblas_dsyrk)(order, CblasUpper, trans, n, k, 1.,
+#ifdef HAVE_HUAWEI_KML
+            cblas_dsyrk
+#else
+            CBLAS_FUNC(cblas_dsyrk)
+#endif
+                (order, CblasUpper, trans, n, k, 1.,
                         Adata, lda, 0., Rdata, ldc);
 
             for (i = 0; i < n; i++) {
@@ -116,7 +167,12 @@ syrk(int typenum, enum CBLAS_ORDER order, enum CBLAS_TRANSPOSE trans,
             }
             break;
         case NPY_FLOAT:
-            CBLAS_FUNC(cblas_ssyrk)(order, CblasUpper, trans, n, k, 1.f,
+#ifdef HAVE_HUAWEI_KML
+            cblas_ssyrk
+#else
+            CBLAS_FUNC(cblas_ssyrk)
+#endif
+                (order, CblasUpper, trans, n, k, 1.f,
                         Adata, lda, 0.f, Rdata, ldc);
 
             for (i = 0; i < n; i++) {
@@ -127,7 +183,12 @@ syrk(int typenum, enum CBLAS_ORDER order, enum CBLAS_TRANSPOSE trans,
             }
             break;
         case NPY_CDOUBLE:
-            CBLAS_FUNC(cblas_zsyrk)(order, CblasUpper, trans, n, k, oneD,
+#ifdef HAVE_HUAWEI_KML
+            cblas_zsyrk
+#else
+            CBLAS_FUNC(cblas_zsyrk)
+#endif
+                (order, CblasUpper, trans, n, k, oneD,
                         Adata, lda, zeroD, Rdata, ldc);
 
             for (i = 0; i < n; i++) {
@@ -138,7 +199,12 @@ syrk(int typenum, enum CBLAS_ORDER order, enum CBLAS_TRANSPOSE trans,
             }
             break;
         case NPY_CFLOAT:
-            CBLAS_FUNC(cblas_csyrk)(order, CblasUpper, trans, n, k, oneF,
+#ifdef HAVE_HUAWEI_KML
+            cblas_csyrk
+#else
+            CBLAS_FUNC(cblas_csyrk)
+#endif
+                (order, CblasUpper, trans, n, k, oneF,
                         Adata, lda, zeroF, Rdata, ldc);
 
             for (i = 0; i < n; i++) {
@@ -387,7 +453,12 @@ cblas_matrixproduct(int typenum, PyArrayObject *ap1, PyArrayObject *ap2,
                                                  *((double *)PyArray_DATA(ap1));
             }
             else if (ap1shape != _matrix) {
-                CBLAS_FUNC(cblas_daxpy)(l,
+#ifdef HAVE_HUAWEI_KML
+                cblas_daxpy
+#else
+                CBLAS_FUNC(cblas_daxpy)
+#endif
+                            (l,
                             *((double *)PyArray_DATA(ap2)),
                             (double *)PyArray_DATA(ap1),
                             ap1stride/sizeof(double),
@@ -408,7 +479,12 @@ cblas_matrixproduct(int typenum, PyArrayObject *ap1, PyArrayObject *ap2,
                 a1s = PyArray_STRIDE(ap1, maxind) / sizeof(double);
                 outs = PyArray_STRIDE(out_buf, maxind) / sizeof(double);
                 for (i = 0; i < PyArray_DIM(ap1, oind); i++) {
-                    CBLAS_FUNC(cblas_daxpy)(l, val, (double *)ptr, a1s,
+#ifdef HAVE_HUAWEI_KML                
+                    cblas_daxpy
+#else
+                    CBLAS_FUNC(cblas_daxpy)
+#endif
+                        (l, val, (double *)ptr, a1s,
                                 (double *)optr, outs);
                     ptr += PyArray_STRIDE(ap1, oind);
                     optr += PyArray_STRIDE(out_buf, oind);
@@ -426,7 +502,12 @@ cblas_matrixproduct(int typenum, PyArrayObject *ap1, PyArrayObject *ap2,
                 res->imag = ptr1->real * ptr2->imag + ptr1->imag * ptr2->real;
             }
             else if (ap1shape != _matrix) {
-                CBLAS_FUNC(cblas_zaxpy)(l,
+#ifdef HAVE_HUAWEI_KML
+                cblas_zaxpy
+#else
+                CBLAS_FUNC(cblas_zaxpy)
+#endif
+                            (l,
                             (double *)PyArray_DATA(ap2),
                             (double *)PyArray_DATA(ap1),
                             ap1stride/sizeof(npy_cdouble),
@@ -447,7 +528,12 @@ cblas_matrixproduct(int typenum, PyArrayObject *ap1, PyArrayObject *ap2,
                 a1s = PyArray_STRIDE(ap1, maxind) / sizeof(npy_cdouble);
                 outs = PyArray_STRIDE(out_buf, maxind) / sizeof(npy_cdouble);
                 for (i = 0; i < PyArray_DIM(ap1, oind); i++) {
-                    CBLAS_FUNC(cblas_zaxpy)(l, pval, (double *)ptr, a1s,
+#ifdef HAVE_HUAWEI_KML
+                    cblas_zaxpy
+#else
+                    CBLAS_FUNC(cblas_zaxpy)
+#endif
+                        (l, pval, (double *)ptr, a1s,
                                 (double *)optr, outs);
                     ptr += PyArray_STRIDE(ap1, oind);
                     optr += PyArray_STRIDE(out_buf, oind);
@@ -460,7 +546,12 @@ cblas_matrixproduct(int typenum, PyArrayObject *ap1, PyArrayObject *ap2,
                     *((float *)PyArray_DATA(ap1));
             }
             else if (ap1shape != _matrix) {
-                CBLAS_FUNC(cblas_saxpy)(l,
+#ifdef HAVE_HUAWEI_KML
+                cblas_saxpy
+#else
+                CBLAS_FUNC(cblas_saxpy)
+#endif
+                            (l,
                             *((float *)PyArray_DATA(ap2)),
                             (float *)PyArray_DATA(ap1),
                             ap1stride/sizeof(float),
@@ -481,7 +572,12 @@ cblas_matrixproduct(int typenum, PyArrayObject *ap1, PyArrayObject *ap2,
                 a1s = PyArray_STRIDE(ap1, maxind) / sizeof(float);
                 outs = PyArray_STRIDE(out_buf, maxind) / sizeof(float);
                 for (i = 0; i < PyArray_DIM(ap1, oind); i++) {
-                    CBLAS_FUNC(cblas_saxpy)(l, val, (float *)ptr, a1s,
+#ifdef HAVE_HUAWEI_KML
+                    cblas_saxpy
+#else
+                    CBLAS_FUNC(cblas_saxpy)
+#endif
+                        (l, val, (float *)ptr, a1s,
                                 (float *)optr, outs);
                     ptr += PyArray_STRIDE(ap1, oind);
                     optr += PyArray_STRIDE(out_buf, oind);
@@ -499,7 +595,12 @@ cblas_matrixproduct(int typenum, PyArrayObject *ap1, PyArrayObject *ap2,
                 res->imag = ptr1->real * ptr2->imag + ptr1->imag * ptr2->real;
             }
             else if (ap1shape != _matrix) {
-                CBLAS_FUNC(cblas_caxpy)(l,
+#ifdef HAVE_HUAWEI_KML
+                cblas_caxpy
+#else
+                CBLAS_FUNC(cblas_caxpy)
+#endif
+                            (l,
                             (float *)PyArray_DATA(ap2),
                             (float *)PyArray_DATA(ap1),
                             ap1stride/sizeof(npy_cfloat),
@@ -520,7 +621,12 @@ cblas_matrixproduct(int typenum, PyArrayObject *ap1, PyArrayObject *ap2,
                 a1s = PyArray_STRIDE(ap1, maxind) / sizeof(npy_cfloat);
                 outs = PyArray_STRIDE(out_buf, maxind) / sizeof(npy_cfloat);
                 for (i = 0; i < PyArray_DIM(ap1, oind); i++) {
-                    CBLAS_FUNC(cblas_caxpy)(l, pval, (float *)ptr, a1s,
+#ifdef HAVE_HUAWEI_KML
+                    cblas_caxpy
+#else
+                    CBLAS_FUNC(cblas_caxpy)
+#endif
+                        (l, pval, (float *)ptr, a1s,
                                 (float *)optr, outs);
                     ptr += PyArray_STRIDE(ap1, oind);
                     optr += PyArray_STRIDE(out_buf, oind);

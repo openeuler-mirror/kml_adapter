@@ -22,10 +22,8 @@
 #include <string.h>
 #include <stdlib.h>
 
-#if defined(HAVE_HUAWEI_KML)
 #include "kfft.h"
 #include "kvml.h"
-#endif
 
 #define restrict NPY_RESTRICT
 
@@ -304,8 +302,8 @@ typedef struct cfftp_plan_i * cfftp_plan;
 #define ROTM90(a) { float tmp_=-a.r; a.r=a.i; a.i=tmp_; }
 #define CH(a,b,c) ch[(a)+ido*((b)+l1*(c))]
 #define CHa(a,b,c) ch+(a)+ido*((b)+l1*(c))
-#define CC(a,b,c) cc[(a)+ido*((b)+cdim*(c))]
-#define CCa(a,b,c) cc+(a)+ido*((b)+cdim*(c))
+#define  CC(a,b,c) cc[(a)+ido*((b)+cdim*(c))]
+#define  CCa(a,b,c) cc+(a)+ido*((b)+cdim*(c))
 #define WA(x,i) wa[(i)-1+(x)*(ido-1)]
 /* a = b*c */
 #define A_EQ_B_MUL_C(a,b,c) { a.r=b.r*c.r-b.i*c.i; a.i=b.r*c.i+b.i*c.r; }
@@ -458,49 +456,61 @@ NOINLINE static void pass4b (size_t ido, size_t l1, const cmplx * restrict cc,
   if (ido!=1)
     for (size_t k=0; k<l1; ++k)
       {
+
       cmplx t1, t2, t3, t4;
       PMC(t2,t1,CC(0,0,k),CC(0,2,k))
       PMC(t3,t4,CC(0,1,k),CC(0,3,k))
+
       ROT90(t4)
+
       PMC(CH(0,k,0),CH(0,k,2),t2,t3)
       PMC(CH(0,k,1),CH(0,k,3),t1,t4)
 
-      const cmplx *cca0_ = CCa(1,0,k), *cca1_ = CCa(1,1,k), *cca2_ = CCa(1,2,k), *cca3_ = CCa(1,3,k);
-      cmplx *cch0_ = CHa(1,k,0), *cch1_ = CHa(1,k,1), *cch2_ = CHa(1,k,2), *cch3_ = CHa(1,k,3);
-      for (size_t i = 1; i < ido; ++i, ++cca0_, ++cca1_, ++cca2_, ++cca3_, ++cch0_, ++cch1_, ++cch2_, ++cch3_) {
-        __builtin_prefetch(cca0_ + 3, 0, 0);
-        __builtin_prefetch(cca1_ + 3, 0, 0);
-        __builtin_prefetch(cca2_ + 3, 0, 0);
-        __builtin_prefetch(cca3_ + 3, 0, 0);
-        __builtin_prefetch(&WA(0, i+3), 0, 0);
-        __builtin_prefetch(cch0_ + 3, 0, 0);
-        __builtin_prefetch(cch1_ + 3, 0, 0);
-        __builtin_prefetch(cch2_ + 3, 0, 0);
-        __builtin_prefetch(cch3_ + 3, 0, 0);
+      cmplx* cca0_=CCa(1,0,k), *cca1_=CCa(1,1,k), *cca2_=CCa(1,2,k), *cca3_=CCa(1,3,k);
+      cmplx* cch0_=CHa(1,k,0), * cch1_=CHa(1,k,1),* cch2_=CHa(1,k,2),* cch3_=CHa(1,k,3);
+      for (size_t i=1; i<ido; ++i, cca0_ ++, cca1_ ++, cca2_ ++, cca3_ ++, cch0_++, cch1_++, cch2_++, cch3_++)
+        {
+        __builtin_prefetch(cca0_+3, 0, 0);
+        __builtin_prefetch(cca1_+3, 0, 0);
+        __builtin_prefetch(cca2_+3, 0, 0);
+        __builtin_prefetch(cca3_+3, 0, 0);
+        __builtin_prefetch(&WA(0,i+3), 0, 0);
+        __builtin_prefetch(cch0_+3, 1, 0);
+        __builtin_prefetch(cch1_+3, 1, 0);
+        __builtin_prefetch(cch2_+3, 1, 0);
+        __builtin_prefetch(cch3_+3, 1, 0);
 
-        cmplx c2, c3, c4, t01, t02, t03, t04;
-        cmplx wa0 = WA(0, i), wa1 = WA(1, i), wa2 = WA(2, i);
-        PMC(t02, t01, (*cca0_), (*cca2_))
-        PMC(t03, t04, (*cca1_), (*cca3_))
-        ROT90(t04)
-        PMC((*cch0_), c3, t02, t03)
-        PMC(c2, c4, t01, t04)
+        cmplx c2, c3, c4, t1, t2, t3, t4;
+        cmplx wa0=WA(0,i), wa1=WA(1,i),wa2=WA(2,i);
+        PMC(t2,t1,(*cca0_),(*cca2_))
+        PMC(t3,t4,(*cca1_),(*cca3_))
 
-        A_EQ_B_MUL_C((*cch1_), wa0, c2)
-        A_EQ_B_MUL_C((*cch2_), wa1, c3)
-        A_EQ_B_MUL_C((*cch3_), wa2, c4)
+        ROT90(t4)
+
+        PMC((*cch0_),c3,t2,t3)
+        PMC(c2,c4,t1,t4)
+
+        A_EQ_B_MUL_C ((*cch1_),wa0,c2)
+
+        A_EQ_B_MUL_C ((*cch2_),wa1,c3)
+        
+        A_EQ_B_MUL_C ((*cch3_),wa2,c4)
+        
+        }
       }
-      }
+    
   else
     for (size_t k=0; k<l1; ++k)
       {
-        cmplx t1, t2, t3, t4;
-        cmplx cc0=CC(0,0,k), cc1=CC(0,1,k),cc2=CC(0,2,k),cc3=CC(0,3,k);
-        PMC(t2,t1,cc0,cc2)
-        PMC(t3,t4,cc1,cc3)
-        ROT90(t4)
-        PMC(CH(0,k,0), CH(0,k,2), t2, t3)
-        PMC(CH(0,k,1), CH(0,k,3), t1, t4)
+      cmplx t1, t2, t3, t4;
+      cmplx cc0=CC(0,0,k),cc1=CC(0,1,k),cc2=CC(0,2,k),cc3=CC(0,3,k);
+      PMC(t2,t1,cc0,cc2)
+      PMC(t3,t4,cc1,cc3)
+
+      ROT90(t4)
+
+      PMC(CH(0,k,0),CH(0,k,2),t2,t3)
+      PMC(CH(0,k,1),CH(0,k,3),t1,t4)      
       }
   }
 NOINLINE static void pass4f (size_t ido, size_t l1, const cmplx * restrict cc,
@@ -529,31 +539,34 @@ NOINLINE static void pass4f (size_t ido, size_t l1, const cmplx * restrict cc,
       PMC(CH(0,k,0),CH(0,k,2),t2,t3)
       PMC (CH(0,k,1),CH(0,k,3),t1,t4)
       }
-
-      const cmplx *cca0_ = CCa(1,0,k), *cca1_ = CCa(1,1,k), *cca2_ = CCa(1,2,k), *cca3_ = CCa(1,3,k);
-      cmplx *cch0_ = CHa(1,k,0), *cch1_ = CHa(1,k,1), *cch2_ = CHa(1,k,2), *cch3_ = CHa(1,k,3);
-      for (size_t i=1; i<ido; ++i)
+      cmplx* cca0_=CCa(1,0,k), *cca1_=CCa(1,1,k), *cca2_=CCa(1,2,k), *cca3_=CCa(1,3,k);
+      cmplx* cch0_=CHa(1,k,0), * cch1_=CHa(1,k,1),* cch2_=CHa(1,k,2),* cch3_=CHa(1,k,3);
+      for (size_t i=1; i<ido; ++i, cca0_ ++, cca1_ ++, cca2_ ++, cca3_ ++, cch0_++, cch1_++, cch2_++, cch3_++)
         {
-        __builtin_prefetch(cca0_ + 3, 0, 0);
-        __builtin_prefetch(cca1_ + 3, 0, 0);
-        __builtin_prefetch(cca2_ + 3, 0, 0);
-        __builtin_prefetch(cca3_ + 3, 0, 0);
-        __builtin_prefetch(&WA(0, i+3), 0, 0);
-        __builtin_prefetch(cch0_ + 3, 0, 0);
-        __builtin_prefetch(cch1_ + 3, 0, 0);
-        __builtin_prefetch(cch2_ + 3, 0, 0);
-        __builtin_prefetch(cch3_ + 3, 0, 0);
-
+        __builtin_prefetch(cca0_+3, 0, 0);
+        __builtin_prefetch(cca1_+3, 0, 0);
+        __builtin_prefetch(cca2_+3, 0, 0);
+        __builtin_prefetch(cca3_+3, 0, 0);
+        __builtin_prefetch(&WA(0,i+3), 0, 0);
+        __builtin_prefetch(cch0_+3, 1, 0);
+        __builtin_prefetch(cch1_+3, 1, 0);
+        __builtin_prefetch(cch2_+3, 1, 0);
+        __builtin_prefetch(cch3_+3, 1, 0);
 
         cmplx c2, c3, c4, t1, t2, t3, t4;
-        cmplx wa0 = WA(0, i), wa1 = WA(1, i), wa2 = WA(2, i);
-        PMC(t2, t1, (*cca0_), (*cca2_))
-        PMC(t3, t4, (*cca1_), (*cca3_))
+        cmplx wa0=WA(0,i), wa1=WA(1,i),wa2=WA(2,i);
+        PMC(t2,t1,(*cca0_),(*cca2_))
+        PMC(t3,t4,(*cca1_),(*cca3_))
+
+        ROTM90(t4)
 
         PMC((*cch0_),c3,t2,t3)
+        PMC(c2,c4,t1,t4)
+
         A_EQ_CB_MUL_C ((*cch1_),wa0,c2)
-        A_EQ_CB_MUL_C ((*cch2_),wa1,c3)
+        A_EQ_CB_MUL_C ((*cch2_),wa1,c3)       
         A_EQ_CB_MUL_C ((*cch3_),wa2,c4)
+        
         }
       }
   }
@@ -920,7 +933,7 @@ NOINLINE WARN_UNUSED_RESULT static int pass_all(cfftp_plan plan, cmplx c[], floa
   size_t l1=1, nf=plan->nfct;
   cmplx *ch = RALLOC(cmplx, len);
   if (!ch) return -1;
-  cmplx *p1=c, *p2=ch;
+  cmplx *p1=c, *p2=ch; //p1 in, p2 out
 
   for(size_t k1=0; k1<nf; k1++)
     {
@@ -928,8 +941,11 @@ NOINLINE WARN_UNUSED_RESULT static int pass_all(cfftp_plan plan, cmplx c[], floa
     size_t l2=ip*l1;
     size_t ido = len/l2;
     if     (ip==4)
+    {
       sign>0 ? pass4b (ido, l1, p1, p2, plan->fct[k1].tw)
              : pass4f (ido, l1, p1, p2, plan->fct[k1].tw);
+    }
+      
     else if(ip==2)
       sign>0 ? pass2b (ido, l1, p1, p2, plan->fct[k1].tw)
              : pass2f (ido, l1, p1, p2, plan->fct[k1].tw);
@@ -950,24 +966,27 @@ NOINLINE WARN_UNUSED_RESULT static int pass_all(cfftp_plan plan, cmplx c[], floa
     SWAP(p1,p2,cmplx *);
     l1=l2;
     }
+
   if (p1!=c)
     {
-    if (fct!=1.)
+    if (fct!=1.){
       for (size_t i=0; i<len; ++i)
         {
         c[i].r = ch[i].r*fct;
         c[i].i = ch[i].i*fct;
         }
+    }
     else
       memcpy (c,p1,len*sizeof(cmplx));
     }
   else
-    if (fct!=1.)
+    if (fct!=1.){
       for (size_t i=0; i<len; ++i)
         {
         c[i].r *= fct;
         c[i].i *= fct;
         }
+    }
   DEALLOC(ch);
   return 0;
   }
@@ -2236,51 +2255,75 @@ execute_complex(PyObject *a1, int is_forward, float fct)
     int nrepeats = PyArray_SIZE(data)/npts;
     float *dptr = (float *)PyArray_DATA(data);
     int fail=0;
-    int runKML = 0;
-    if (nrepeats >= 256) {
-#if defined(HAVE_HUAWEI_KML)
-      kml_fftf_plan plan;
-      plan = is_forward ?
-        kml_fftf_plan_dft_1d(npts, (kml_fftf_complex*)dptr, (kml_fftf_complex*)dptr, KML_FFT_FORWARD, KML_FFT_ESTIMATE) :
-        kml_fftf_plan_dft_1d(npts, (kml_fftf_complex*)dptr, (kml_fftf_complex*)dptr, KML_FFT_BACKWARD, KML_FFT_ESTIMATE);
-
-        for (int i = 0; i < nrepeats; ++i) {
-          kml_fftf_execute_dft(plan, (kml_fftf_complex*)dptr, (kml_fftf_complex*)dptr);
-          if (is_forward == 0) {
-            int idx;
-            for (idx = 0; idx < npts*2 - 3; idx += 4) {
-              dptr[idx] /= npts;
-              dptr[idx+1] /= npts;
-              dptr[idx+2] /= npts;
-              dptr[idx+3] /= npts;
-            }
-            for (; i < npts * 2; ++idx) {
-              dptr[idx] /= npts;
-            }
-          }
-          dptr += npts * 2;
-        }
-        kml_fftf_destroy_plan(plan);
-        runKML = 9527;
-#endif 
-    } 
-
-    if (!runKML) {
-      cfft_plan plan0 = NULL;
+    if(nrepeats == 1){
+      cfft_plan plan=NULL;
       Py_BEGIN_ALLOW_THREADS;
-      plan0 = make_cfft_plan(npts);
-      if (!plan0) fail=1;
+      plan = make_cfft_plan(npts);
+      if (!plan) fail=1;
       if (!fail)
         for (int i = 0; i < nrepeats; i++) {
             int res = is_forward ?
-              cfft_forward(plan0, dptr, fct) : cfft_backward(plan0, dptr, fct);
+              cfft_forward(plan, dptr, fct) : cfft_backward(plan, dptr, fct);
             if (res!=0) { fail=1; break; }
             dptr += npts*2;
         }
-      if (plan0) destroy_cfft_plan(plan0);
+      if (plan) destroy_cfft_plan(plan);
       Py_END_ALLOW_THREADS;
     }
+    else{
 
+#ifndef HAVE_HUAWEI_KML
+
+    cfft_plan plan=NULL;
+    Py_BEGIN_ALLOW_THREADS;
+    plan = make_cfft_plan(npts);
+
+    if (!plan) fail=1;
+    if (!fail)
+      for (int i = 0; i < nrepeats; i++) {
+          int res = is_forward ?
+            cfft_forward(plan, dptr, fct) : cfft_backward(plan, dptr, fct);
+          if (res!=0) { fail=1; break; }
+          dptr += npts*2;
+      }
+    if (plan) destroy_cfft_plan(plan);
+    Py_END_ALLOW_THREADS;
+    
+#else
+
+    kml_fftf_plan plan; 
+
+    plan = is_forward?
+    kml_fftf_plan_dft_1d(npts, dptr , dptr, KML_FFT_FORWARD, KML_FFT_ESTIMATE) :
+    kml_fftf_plan_dft_1d(npts, dptr , dptr, KML_FFT_BACKWARD, KML_FFT_ESTIMATE);
+
+    for (int i = 0; i < nrepeats; i++) {
+
+      kml_fftf_execute_dft(plan, dptr, dptr); 
+      // ifft normalization
+      if(is_forward == 0){
+        int i;
+        for (i = 0; i < npts*2 - 3; i+=4){ 
+          dptr[i] /= npts;
+          dptr[i+1] /= npts;
+          dptr[i+2] /= npts;
+          dptr[i+3] /= npts;
+          
+        }
+        for(;i < npts*2; ++i) {
+          dptr[i] /= npts;
+        }
+      }      
+
+      dptr += npts*2;
+    }
+ 
+    kml_fftf_destroy_plan(plan); 
+    //kml_end
+
+#endif
+
+    }
 
     if (fail) {
       Py_XDECREF(data);

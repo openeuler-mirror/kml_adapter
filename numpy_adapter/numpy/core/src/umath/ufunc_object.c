@@ -28,6 +28,11 @@
 #define _UMATHMODULE
 
 #define PY_SSIZE_T_CLEAN
+/* Add neon opt macro */
+#ifdef HAVE_NEON_NPY
+#include "neon_opt.h"
+#endif
+
 #include <Python.h>
 
 #include <stddef.h>
@@ -4054,7 +4059,7 @@ PyUFunc_GenericReduction(PyUFuncObject *ufunc,
     if (mp == NULL) {
         goto fail;
     }
-
+    
     ndim = PyArray_NDIM(mp);
 
     /* Convert the 'axis' parameter into a list of axes */
@@ -4152,8 +4157,130 @@ PyUFunc_GenericReduction(PyUFuncObject *ufunc,
 
     switch(operation) {
     case UFUNC_REDUCE:
+        #if defined(HAVE_NEON_NPY)
+        /* Optimization for 1-D LONG, FLOAT and DOUBLE data of reduce */
+        if(ndim == 1 && (axes_obj == NULL || axes_obj == Py_None) && (PyArray_TYPE(mp) == NPY_LONG||PyArray_TYPE(mp) == NPY_FLOAT||PyArray_TYPE(mp) == NPY_DOUBLE)
+            && ((strcmp(ufunc->name, "add") == 0)||(strcmp(ufunc->name, "maximum") == 0)||(strcmp(ufunc->name, "minimum") == 0)))
+        {
+            /* Optimization for add reduce, including sum, mean, std, var, average */
+            if(strcmp(ufunc->name, "add") == 0)
+            {
+                /* Processing 1-D data */
+                npy_intp Dims[1];
+                Dims[0] = 1;
+                /* Optimization for LONG */
+                if(PyArray_TYPE(mp) == NPY_LONG)
+                {
+                    long tmp[1];
+                    double tmp2[1];
+                    long* myDataPtr=(long*)(PyArray_DATA(mp));
+                    long myDataLength=(long)(PyArray_SIZE(mp));
+                    tmp[0]=NeonSumi(myDataPtr,myDataLength);
+                    /* Judge the return value type for mean, std and so on*/
+                    int dtypeSig=signature[0]->type_num;
+                    if(dtypeSig == NPY_LONG)
+                        ret=(PyArrayObject *)PyArray_SimpleNewFromData(0,Dims,NPY_LONG,tmp);
+                    else if(dtypeSig == NPY_DOUBLE)
+                    {
+                        tmp2[0]=(double)(tmp[0]*1.0);
+                        ret=(PyArrayObject *)PyArray_SimpleNewFromData(0,Dims,NPY_DOUBLE,tmp2);
+                    }
+                }
+                /* Optimization for FLOAT */
+                else if(PyArray_TYPE(mp) == NPY_FLOAT)
+                {
+                    float tmp[1];
+                    float* myDataPtr=(float*)(PyArray_DATA(mp));
+                    long myDataLength=(long)(PyArray_SIZE(mp)); 
+                    tmp[0]=NeonSumf(myDataPtr,myDataLength);
+                    ret=(PyArrayObject *)PyArray_SimpleNewFromData(0,Dims,NPY_FLOAT,tmp);
+                }
+                /* Optimization for DOUBLE */
+                else if(PyArray_TYPE(mp) == NPY_DOUBLE)
+                {
+                    double tmp[1];
+                    double* myDataPtr=(double*)(PyArray_DATA(mp));
+                    long myDataLength=(long)(PyArray_SIZE(mp)); 
+                    tmp[0]=NeonSumd(myDataPtr,myDataLength);
+                    ret=(PyArrayObject *)PyArray_SimpleNewFromData(0,Dims,NPY_DOUBLE,tmp);
+                }
+            }
+            /* Optimization for maximum reduce, including amax, max, ptp*/
+            else if(strcmp(ufunc->name, "maximum") == 0)
+            {
+                /* Processing 1-D data */
+                npy_intp Dims[1];
+                Dims[0] = 1;
+                /* Optimization for LONG */
+                if(PyArray_TYPE(mp) == NPY_LONG)
+                {
+                    long tmp[1];
+                    long* myDataPtr=(long*)(PyArray_DATA(mp));
+                    long myDataLength=(long)(PyArray_SIZE(mp));
+                    tmp[0]=NeonMaxi(myDataPtr,myDataLength);
+                    ret=(PyArrayObject *)PyArray_SimpleNewFromData(0,Dims,NPY_LONG,tmp);
+                }
+                /* Optimization for FLOAT */
+                else if(PyArray_TYPE(mp) == NPY_FLOAT)
+                {
+                    float tmp[1];
+                    float* myDataPtr=(float*)(PyArray_DATA(mp));
+                    long myDataLength=(long)(PyArray_SIZE(mp)); 
+                    tmp[0]=NeonMaxf(myDataPtr,myDataLength);
+                    ret=(PyArrayObject *)PyArray_SimpleNewFromData(0,Dims,NPY_FLOAT,tmp);
+                }
+                /* Optimization for DOUBLE */
+                else if(PyArray_TYPE(mp) == NPY_DOUBLE)
+                {
+                    double tmp[1];
+                    double* myDataPtr=(double*)(PyArray_DATA(mp));
+                    long myDataLength=(long)(PyArray_SIZE(mp)); 
+                    tmp[0]=NeonMaxd(myDataPtr,myDataLength);
+                    ret=(PyArrayObject *)PyArray_SimpleNewFromData(0,Dims,NPY_DOUBLE,tmp);
+                }
+            }
+            /* Optimization for maximum reduce, including amin, min, ptp*/
+            else if(strcmp(ufunc->name, "minimum") == 0)
+            {
+                /* Processing 1-D data */
+                npy_intp Dims[1];
+                Dims[0] = 1;
+                /* Optimization for LONG */
+                if(PyArray_TYPE(mp) == NPY_LONG)
+                {
+                    long tmp[1];
+                    long* myDataPtr=(long*)(PyArray_DATA(mp));
+                    long myDataLength=(long)(PyArray_SIZE(mp));
+                    tmp[0]=NeonMini(myDataPtr,myDataLength);
+                    ret=(PyArrayObject *)PyArray_SimpleNewFromData(0,Dims,NPY_LONG,tmp);
+                }
+                /* Optimization for FLOAT */
+                else if(PyArray_TYPE(mp) == NPY_FLOAT)
+                {
+                    float tmp[1];
+                    float* myDataPtr=(float*)(PyArray_DATA(mp));
+                    long myDataLength=(long)(PyArray_SIZE(mp)); 
+                    tmp[0]=NeonMinf(myDataPtr,myDataLength);
+                    ret=(PyArrayObject *)PyArray_SimpleNewFromData(0,Dims,NPY_FLOAT,tmp);
+                }
+                /* Optimization for DOUBLE */
+                else if(PyArray_TYPE(mp) == NPY_DOUBLE)
+                {
+                    double tmp[1];
+                    double* myDataPtr=(double*)(PyArray_DATA(mp));
+                    long myDataLength=(long)(PyArray_SIZE(mp)); 
+                    tmp[0]=NeonMind(myDataPtr,myDataLength);
+                    ret=(PyArrayObject *)PyArray_SimpleNewFromData(0,Dims,NPY_DOUBLE,tmp);
+                }
+            }
+        }
+        else
+        #endif
+        /* Original implementation of reduce */
+        {
         ret = PyUFunc_Reduce(ufunc,
                 mp, out, naxes, axes, signature, keepdims, initial, wheremask);
+        }
         Py_XSETREF(wheremask, NULL);
         break;
     case UFUNC_ACCUMULATE:
@@ -4187,11 +4314,23 @@ PyUFunc_GenericReduction(PyUFuncObject *ufunc,
     if (ret == NULL) {
         goto fail;
     }
+    #if defined(HAVE_NEON_NPY)
+    /* Avoid null pointers */
+    if(ndim == 1 && (axes_obj == NULL || axes_obj == Py_None) && (PyArray_TYPE(mp) == NPY_LONG||PyArray_TYPE(mp) == NPY_FLOAT||PyArray_TYPE(mp) == NPY_DOUBLE) 
+            && ((strcmp(ufunc->name, "add") == 0)||(strcmp(ufunc->name, "maximum") == 0)||(strcmp(ufunc->name, "minimum") == 0)))
+    {
+        Py_XDECREF(signature[0]);
+        Py_XDECREF(signature[1]);
+        Py_XDECREF(signature[2]);
+    }
+    else
+    #endif
 
+    {
     Py_DECREF(signature[0]);
     Py_DECREF(signature[1]);
     Py_DECREF(signature[2]);
-
+    }
     Py_DECREF(mp);
     Py_XDECREF(full_args.in);
     Py_XDECREF(full_args.out);

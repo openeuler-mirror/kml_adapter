@@ -67,6 +67,11 @@ inline void KML_VML_FLOAT_multiply(char **args, Py_intptr_t const *dimensions)
     vsmul(dimensions[0], (float*)args[0], (float*)args[1], (float*)args[0x2]);
 }
 
+inline void KML_VML_FLOAT_divide(char **args, Py_intptr_t const *dimensions)
+{
+    vsdiv(dimensions[0], (float*)args[0], (float*)args[1], (float*)args[0x2]);
+}
+
 inline void KML_VML_FLOAT_exp(char **args, Py_intptr_t const *dimensions)
 {
     vsexp(dimensions[0], (float*)args[0], (float*)args[1]);
@@ -140,6 +145,11 @@ inline void KML_VML_DOUBLE_subtract(char **args, Py_intptr_t const *dimensions)
 inline void KML_VML_DOUBLE_multiply(char **args, Py_intptr_t const *dimensions)
 {
     vdmul(dimensions[0], (double*)args[0], (double*)args[1], (double*)args[0x2]);
+}
+
+inline void KML_VML_DOUBLE_divide(char **args, Py_intptr_t const *dimensions)
+{
+    vddiv(dimensions[0], (double*)args[0], (double*)args[1], (double*)args[0x2]);
 }
 
 inline void KML_VML_DOUBLE_exp(char **args, Py_intptr_t const *dimensions)

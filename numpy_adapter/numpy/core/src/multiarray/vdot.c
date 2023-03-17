@@ -6,8 +6,11 @@
 
 #include "common.h"
 #include "vdot.h"
+#ifdef HAVE_HUAWEI_KML
+#include "kblas.h"
+#else
 #include "npy_cblas.h"
-
+#endif
 
 /*
  * All data is assumed aligned.
@@ -16,7 +19,7 @@ NPY_NO_EXPORT void
 CFLOAT_vdot(char *ip1, npy_intp is1, char *ip2, npy_intp is2,
             char *op, npy_intp n, void *NPY_UNUSED(ignore))
 {
-#if defined(HAVE_CBLAS)
+#if defined(HAVE_HUAWEI_KML) || defined(HAVE_CBLAS)
     CBLAS_INT is1b = blas_stride(is1, sizeof(npy_cfloat));
     CBLAS_INT is2b = blas_stride(is2, sizeof(npy_cfloat));
 
@@ -26,8 +29,12 @@ CFLOAT_vdot(char *ip1, npy_intp is1, char *ip2, npy_intp is2,
         while (n > 0) {
             CBLAS_INT chunk = n < NPY_CBLAS_CHUNK ? n : NPY_CBLAS_CHUNK;
             float tmp[2];
-
-            CBLAS_FUNC(cblas_cdotc_sub)((CBLAS_INT)n, ip1, is1b, ip2, is2b, tmp);
+#if defined(HAVE_HUAWEI_KML)
+            cblas_cdotc_sub
+#else
+            CBLAS_FUNC(cblas_cdotc_sub)
+#endif
+                ((CBLAS_INT)n, ip1, is1b, ip2, is2b, tmp);
             sum[0] += (double)tmp[0];
             sum[1] += (double)tmp[1];
             /* use char strides here */
@@ -67,7 +74,7 @@ NPY_NO_EXPORT void
 CDOUBLE_vdot(char *ip1, npy_intp is1, char *ip2, npy_intp is2,
              char *op, npy_intp n, void *NPY_UNUSED(ignore))
 {
-#if defined(HAVE_CBLAS)
+#if defined(HAVE_HUAWEI_KML) || defined(HAVE_CBLAS)
     CBLAS_INT is1b = blas_stride(is1, sizeof(npy_cdouble));
     CBLAS_INT is2b = blas_stride(is2, sizeof(npy_cdouble));
 
@@ -77,8 +84,12 @@ CDOUBLE_vdot(char *ip1, npy_intp is1, char *ip2, npy_intp is2,
         while (n > 0) {
             CBLAS_INT chunk = n < NPY_CBLAS_CHUNK ? n : NPY_CBLAS_CHUNK;
             double tmp[2];
-
-            CBLAS_FUNC(cblas_zdotc_sub)((CBLAS_INT)n, ip1, is1b, ip2, is2b, tmp);
+#if defined(HAVE_HUAWEI_KML)
+            cblas_zdotc_sub
+#else
+            CBLAS_FUNC(cblas_zdotc_sub)
+#endif
+                ((CBLAS_INT)n, ip1, is1b, ip2, is2b, tmp);
             sum[0] += (double)tmp[0];
             sum[1] += (double)tmp[1];
             /* use char strides here */

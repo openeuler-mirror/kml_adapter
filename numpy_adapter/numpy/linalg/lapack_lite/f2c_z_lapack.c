@@ -1299,7 +1299,14 @@ L210:
 
 } /* zgebrd_ */
 
-/* Subroutine */ int zgeev_(char *jobvl, char *jobvr, integer *n,
+/* Subroutine */ 
+int 
+#ifdef HAVE_HUAWEI_KML
+    zgeev_aux_
+#else
+    zgeev_
+#endif
+    (char *jobvl, char *jobvr, integer *n,
 	doublecomplex *a, integer *lda, doublecomplex *w, doublecomplex *vl,
 	integer *ldvl, doublecomplex *vr, integer *ldvr, doublecomplex *work,
 	integer *lwork, doublereal *rwork, integer *info)

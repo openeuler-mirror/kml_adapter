@@ -1,9 +1,9 @@
 /* -*- c -*- */
 #define PY_SSIZE_T_CLEAN
 #include <Python.h>
-#include <structmember.h>
 #include <limits.h>
 #include <assert.h>
+#include <structmember.h>
 
 #define NPY_NO_DEPRECATED_API NPY_API_VERSION
 #define _MULTIARRAYMODULE
@@ -38,10 +38,15 @@
 #include "numpyos.h"
 #include <string.h>
 
-#include "cblasfuncs.h"
-#include "npy_cblas.h"
-#include "npy_buffer.h"
 
+#ifdef HAVE_HUAWEI_KML
+#include "kblas.h"
+#else
+#include "npy_cblas.h"
+#endif
+
+#include "cblasfuncs.h"
+#include "npy_buffer.h"
 
 /*
  * Define a stack allocated dummy array with only the minimum information set:
@@ -3580,20 +3585,25 @@ NPY_NO_EXPORT void
 @name@_dot(char *ip1, npy_intp is1, char *ip2, npy_intp is2, char *op,
            npy_intp n, void *NPY_UNUSED(ignore))
 {
-#if defined(HAVE_CBLAS)
+#if defined(HAVE_HUAWEI_KML) || defined(HAVE_CBLAS)
     CBLAS_INT is1b = blas_stride(is1, sizeof(@type@));
     CBLAS_INT is2b = blas_stride(is2, sizeof(@type@));
 
     if (is1b && is2b)
     {
         double sum = 0.;  /* double for stability */
-
         while (n > 0) {
             CBLAS_INT chunk = n < NPY_CBLAS_CHUNK ? n : NPY_CBLAS_CHUNK;
+            sum += 
+#ifdef HAVE_HUAWEI_KML
+                cblas_@prefix@dot
+#else
+                CBLAS_FUNC(cblas_@prefix@dot)
+#endif
+                (chunk,
+                    (@type@ *) ip1, is1b,
+                    (@type@ *) ip2, is2b);
 
-            sum += CBLAS_FUNC(cblas_@prefix@dot)(chunk,
-                                     (@type@ *) ip1, is1b,
-                                     (@type@ *) ip2, is2b);
             /* use char strides here */
             ip1 += chunk * is1;
             ip2 += chunk * is2;
@@ -3629,7 +3639,7 @@ NPY_NO_EXPORT void
 @name@_dot(char *ip1, npy_intp is1, char *ip2, npy_intp is2,
            char *op, npy_intp n, void *NPY_UNUSED(ignore))
 {
-#if defined(HAVE_CBLAS)
+#if defined(HAVE_HUAWEI_KML) || defined(HAVE_CBLAS)
     CBLAS_INT is1b = blas_stride(is1, sizeof(@ctype@));
     CBLAS_INT is2b = blas_stride(is2, sizeof(@ctype@));
 
@@ -3639,8 +3649,12 @@ NPY_NO_EXPORT void
         while (n > 0) {
             CBLAS_INT chunk = n < NPY_CBLAS_CHUNK ? n : NPY_CBLAS_CHUNK;
             @type@ tmp[2];
-
-            CBLAS_FUNC(cblas_@prefix@dotu_sub)((CBLAS_INT)n, ip1, is1b, ip2, is2b, tmp);
+#ifdef HAVE_HUAWEI_KML
+            cblas_@prefix@dotu_sub
+#else
+            CBLAS_FUNC(cblas_@prefix@dotu_sub)
+#endif
+                ((CBLAS_INT)n, ip1, is1b, ip2, is2b, tmp);
             sum[0] += (double)tmp[0];
             sum[1] += (double)tmp[1];
             /* use char strides here */

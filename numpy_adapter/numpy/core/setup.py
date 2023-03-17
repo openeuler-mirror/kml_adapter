@@ -866,7 +866,7 @@ def configuration(parent_package='',top_path=None):
 
     have_blas = blas_info and ('HAVE_CBLAS', None) in blas_info.get('define_macros', [])
 
-    if have_blas:
+    if True:
         extra_info = blas_info
         # These files are also in MANIFEST.in so that they are always in
         # the source distribution independently of HAVE_CBLAS.

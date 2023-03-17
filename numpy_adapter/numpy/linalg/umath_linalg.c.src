@@ -16,7 +16,10 @@
 
 #include "npy_config.h"
 
-#include "npy_cblas.h"
+#include "numpy/npy_common.h"
+#include "kblas.h"
+#include "klapack.h"
+#include "kml_math.h"
 
 #include <stddef.h>
 #include <stdio.h>
@@ -65,9 +68,13 @@ dbg_stack_trace()
  *****************************************************************************
  */
 
-#define FNAME(x) BLAS_FUNC(x)
+#define FNAME(x) x
 
+#ifdef HAVE_HUAWEI_KML
+typedef BLASINT         fortran_int;
+#else
 typedef CBLAS_INT         fortran_int;
+#endif
 
 typedef struct { float r, i; } f2c_complex;
 typedef struct { double r, i; } f2c_doublecomplex;
@@ -78,20 +85,21 @@ typedef double            fortran_doublereal;
 typedef f2c_complex       fortran_complex;
 typedef f2c_doublecomplex fortran_doublecomplex;
 
+
 extern fortran_int
-FNAME(sgeev)(char *jobvl, char *jobvr, fortran_int *n,
+FNAME(sgeev_aux_)(char *jobvl, char *jobvr, fortran_int *n,
              float a[], fortran_int *lda, float wr[], float wi[],
              float vl[], fortran_int *ldvl, float vr[], fortran_int *ldvr,
              float work[], fortran_int lwork[],
              fortran_int *info);
 extern fortran_int
-FNAME(dgeev)(char *jobvl, char *jobvr, fortran_int *n,
+FNAME(dgeev_aux_)(char *jobvl, char *jobvr, fortran_int *n,
              double a[], fortran_int *lda, double wr[], double wi[],
              double vl[], fortran_int *ldvl, double vr[], fortran_int *ldvr,
              double work[], fortran_int lwork[],
              fortran_int *info);
 extern fortran_int
-FNAME(cgeev)(char *jobvl, char *jobvr, fortran_int *n,
+FNAME(cgeev_aux_)(char *jobvl, char *jobvr, fortran_int *n,
              f2c_doublecomplex a[], fortran_int *lda,
              f2c_doublecomplex w[],
              f2c_doublecomplex vl[], fortran_int *ldvl,
@@ -100,7 +108,7 @@ FNAME(cgeev)(char *jobvl, char *jobvr, fortran_int *n,
              double rwork[],
              fortran_int *info);
 extern fortran_int
-FNAME(zgeev)(char *jobvl, char *jobvr, fortran_int *n,
+FNAME(zgeev_aux_)(char *jobvl, char *jobvr, fortran_int *n,
              f2c_doublecomplex a[], fortran_int *lda,
              f2c_doublecomplex w[],
              f2c_doublecomplex vl[], fortran_int *ldvl,
@@ -109,30 +117,31 @@ FNAME(zgeev)(char *jobvl, char *jobvr, fortran_int *n,
              double rwork[],
              fortran_int *info);
 
+/*
 extern fortran_int
-FNAME(ssyevd)(char *jobz, char *uplo, fortran_int *n,
-              float a[], fortran_int *lda, float w[], float work[],
-              fortran_int *lwork, fortran_int iwork[], fortran_int *liwork,
-              fortran_int *info);
+FNAME(sgesdd)(char *jobz, fortran_int *m, fortran_int *n,
+              float a[], fortran_int *lda, float s[], float u[],
+              fortran_int *ldu, float vt[], fortran_int *ldvt, float work[],
+              fortran_int *lwork, fortran_int iwork[], fortran_int *info);
 extern fortran_int
-FNAME(dsyevd)(char *jobz, char *uplo, fortran_int *n,
-              double a[], fortran_int *lda, double w[], double work[],
-              fortran_int *lwork, fortran_int iwork[], fortran_int *liwork,
-              fortran_int *info);
+FNAME(dgesdd)(char *jobz, fortran_int *m, fortran_int *n,
+              double a[], fortran_int *lda, double s[], double u[],
+              fortran_int *ldu, double vt[], fortran_int *ldvt, double work[],
+              fortran_int *lwork, fortran_int iwork[], fortran_int *info);
 extern fortran_int
-FNAME(cheevd)(char *jobz, char *uplo, fortran_int *n,
+FNAME(cgesdd)(char *jobz, fortran_int *m, fortran_int *n,
               f2c_complex a[], fortran_int *lda,
-              float w[], f2c_complex work[],
-              fortran_int *lwork, float rwork[], fortran_int *lrwork, fortran_int iwork[],
-              fortran_int *liwork,
-              fortran_int *info);
+              float s[], f2c_complex u[], fortran_int *ldu,
+              f2c_complex vt[], fortran_int *ldvt,
+              f2c_complex work[], fortran_int *lwork,
+              float rwork[], fortran_int iwork[], fortran_int *info);
 extern fortran_int
-FNAME(zheevd)(char *jobz, char *uplo, fortran_int *n,
+FNAME(zgesdd)(char *jobz, fortran_int *m, fortran_int *n,
               f2c_doublecomplex a[], fortran_int *lda,
-              double w[], f2c_doublecomplex work[],
-              fortran_int *lwork, double rwork[], fortran_int *lrwork, fortran_int iwork[],
-              fortran_int *liwork,
-              fortran_int *info);
+              double s[], f2c_doublecomplex u[], fortran_int *ldu,
+              f2c_doublecomplex vt[], fortran_int *ldvt,
+              f2c_doublecomplex work[], fortran_int *lwork,
+              double rwork[], fortran_int iwork[], fortran_int *info);
 
 extern fortran_int
 FNAME(sgelsd)(fortran_int *m, fortran_int *n, fortran_int *nrhs,
@@ -161,6 +170,33 @@ FNAME(zgelsd)(fortran_int *m, fortran_int *n, fortran_int *nrhs,
               double s[], double *rcond, fortran_int *rank,
               f2c_doublecomplex work[], fortran_int *lwork,
               double rwork[], fortran_int iwork[],
+              fortran_int *info);
+*/
+
+#ifndef HAVE_HUAWEI_KML
+extern fortran_int
+FNAME(ssyevd)(char *jobz, char *uplo, fortran_int *n,
+              float a[], fortran_int *lda, float w[], float work[],
+              fortran_int *lwork, fortran_int iwork[], fortran_int *liwork,
+              fortran_int *info);
+extern fortran_int
+FNAME(dsyevd)(char *jobz, char *uplo, fortran_int *n,
+              double a[], fortran_int *lda, double w[], double work[],
+              fortran_int *lwork, fortran_int iwork[], fortran_int *liwork,
+              fortran_int *info);
+extern fortran_int
+FNAME(cheevd)(char *jobz, char *uplo, fortran_int *n,
+              f2c_complex a[], fortran_int *lda,
+              float w[], f2c_complex work[],
+              fortran_int *lwork, float rwork[], fortran_int *lrwork, fortran_int iwork[],
+              fortran_int *liwork,
+              fortran_int *info);
+extern fortran_int
+FNAME(zheevd)(char *jobz, char *uplo, fortran_int *n,
+              f2c_doublecomplex a[], fortran_int *lda,
+              double w[], f2c_doublecomplex work[],
+              fortran_int *lwork, double rwork[], fortran_int *lrwork, fortran_int iwork[],
+              fortran_int *liwork,
               fortran_int *info);
 
 extern fortran_int
@@ -243,31 +279,6 @@ extern fortran_int
 FNAME(zpotrf)(char *uplo, fortran_int *n,
               f2c_doublecomplex a[], fortran_int *lda,
               fortran_int *info);
-
-extern fortran_int
-FNAME(sgesdd)(char *jobz, fortran_int *m, fortran_int *n,
-              float a[], fortran_int *lda, float s[], float u[],
-              fortran_int *ldu, float vt[], fortran_int *ldvt, float work[],
-              fortran_int *lwork, fortran_int iwork[], fortran_int *info);
-extern fortran_int
-FNAME(dgesdd)(char *jobz, fortran_int *m, fortran_int *n,
-              double a[], fortran_int *lda, double s[], double u[],
-              fortran_int *ldu, double vt[], fortran_int *ldvt, double work[],
-              fortran_int *lwork, fortran_int iwork[], fortran_int *info);
-extern fortran_int
-FNAME(cgesdd)(char *jobz, fortran_int *m, fortran_int *n,
-              f2c_complex a[], fortran_int *lda,
-              float s[], f2c_complex u[], fortran_int *ldu,
-              f2c_complex vt[], fortran_int *ldvt,
-              f2c_complex work[], fortran_int *lwork,
-              float rwork[], fortran_int iwork[], fortran_int *info);
-extern fortran_int
-FNAME(zgesdd)(char *jobz, fortran_int *m, fortran_int *n,
-              f2c_doublecomplex a[], fortran_int *lda,
-              double s[], f2c_doublecomplex u[], fortran_int *ldu,
-              f2c_doublecomplex vt[], fortran_int *ldvt,
-              f2c_doublecomplex work[], fortran_int *lwork,
-              double rwork[], fortran_int iwork[], fortran_int *info);
 
 extern fortran_int
 FNAME(spotrs)(char *uplo, fortran_int *n, fortran_int *nrhs,
@@ -381,6 +392,7 @@ FNAME(zgemm)(char *transa, char *transb,
              f2c_doublecomplex *b, fortran_int *ldb,
              f2c_doublecomplex *beta,
              f2c_doublecomplex *c, fortran_int *ldc);
+#endif
 
 
 #define LAPACK_T(FUNC)                                          \
@@ -784,15 +796,28 @@ linearize_@TYPE@_matrix(void *dst_in,
         fortran_int one = 1;
         for (i = 0; i < data->rows; i++) {
             if (column_strides > 0) {
+#ifdef HAVE_HUAWEI_KML
+                FNAME(cblas_@copy@)(columns,
+                              (void*)src, column_strides,
+                              (void*)dst, one);
+#else
                 FNAME(@copy@)(&columns,
                               (void*)src, &column_strides,
                               (void*)dst, &one);
+#endif
             }
             else if (column_strides < 0) {
+#ifdef HAVE_HUAWEI_KML
+                FNAME(cblas_@copy@)(columns,
+                              (void*)((@typ@*)src + (columns-1)*column_strides),
+                              column_strides,
+                              (void*)dst, one);
+#else
                 FNAME(@copy@)(&columns,
                               (void*)((@typ@*)src + (columns-1)*column_strides),
                               &column_strides,
                               (void*)dst, &one);
+#endif
             }
             else {
                 /*
@@ -830,15 +855,28 @@ delinearize_@TYPE@_matrix(void *dst_in,
         fortran_int one = 1;
         for (i = 0; i < data->rows; i++) {
             if (column_strides > 0) {
+#ifdef HAVE_HUAWEI_KML
+                FNAME(cblas_@copy@)(columns,
+                              (void*)src, one,
+                              (void*)dst, column_strides);
+#else
                 FNAME(@copy@)(&columns,
                               (void*)src, &one,
                               (void*)dst, &column_strides);
+#endif
             }
             else if (column_strides < 0) {
+#ifdef HAVE_HUAWEI_KML
+                FNAME(cblas_@copy@)(columns,
+                              (void*)src, one,
+                              (void*)((@typ@*)dst + (columns-1)*column_strides),
+                              column_strides);
+#else
                 FNAME(@copy@)(&columns,
                               (void*)src, &one,
                               (void*)((@typ@*)dst + (columns-1)*column_strides),
                               &column_strides);
+#endif
             }
             else {
                 /*
@@ -951,7 +989,9 @@ triu_@TYPE@_matrix(void *ptr, size_t n)
    #TYPE = FLOAT, DOUBLE#
    #typ = npy_float, npy_double#
    #log_func = npy_logf, npy_log#
+   #kml_log_func = kml_logf, kml_log#
    #exp_func = npy_expf, npy_exp#
+   #kml_exp_func = kml_expf, kml_exp#
    #zero = 0.0f, 0.0#
 */
 
@@ -970,8 +1010,12 @@ static NPY_INLINE void
             acc_sign = -acc_sign;
             abs_element = -abs_element;
         }
-
+#ifndef HAVE_HUAWEI_KML
         acc_logdet += @log_func@(abs_element);
+        // defined in  <numpy/npy_math.h>
+#else
+        acc_logdet += @kml_log_func@(abs_element);
+#endif
         src += m+1;
     }
 
@@ -982,7 +1026,11 @@ static NPY_INLINE void
 static NPY_INLINE @typ@
 @TYPE@_det_from_slogdet(@typ@ sign, @typ@ logdet)
 {
+#ifndef HAVE_HUAWEI_KML 
     @typ@ result = sign * @exp_func@(logdet);
+#else
+    @typ@ result = sign * @kml_exp_func@(logdet);
+#endif
     return result;
 }
 
@@ -995,7 +1043,9 @@ static NPY_INLINE @typ@
    #basetyp = npy_float, npy_double#
    #abs_func = npy_cabsf, npy_cabs#
    #log_func = npy_logf, npy_log#
+   #kml_log_func = kml_logf, kml_log#
    #exp_func = npy_expf, npy_exp#
+   #kml_exp_func = kml_expf, kml_exp#
    #zero = 0.0f, 0.0#
 */
 #define RE(COMPLEX) (((@basetyp@*)(&COMPLEX))[0])
@@ -1031,7 +1081,11 @@ static NPY_INLINE void
         IM(sign_element) = IM(*src) / abs_element;
 
         sign_acc = @TYPE@_mult(sign_acc, sign_element);
+#ifndef HAVE_HUAWEI_KML
         logdet_acc += @log_func@(abs_element);
+#else
+        logdet_acc += @kml_log_func@(abs_element);
+#endif
         src += m + 1;
     }
 
@@ -1043,7 +1097,11 @@ static NPY_INLINE @typ@
 @TYPE@_det_from_slogdet(@typ@ sign, @basetyp@ logdet)
 {
     @typ@ tmp;
+#ifndef HAVE_HUAWEI_KML
     RE(tmp) = @exp_func@(logdet);
+#else
+    RE(tmp) = @kml_exp_func@(logdet);
+#endif
     IM(tmp) = @zero@;
     return @TYPE@_mult(sign, tmp);
 }
@@ -1076,7 +1134,7 @@ static NPY_INLINE void
     fortran_int lda = fortran_int_max(m, 1);
     int i;
     /* note: done in place */
-    LAPACK(@cblas_type@getrf)(&m, &m, (void *)src, &lda, pivots, &info);
+    LAPACK(@cblas_type@getrf_)(&m, &m, (void *)src, &lda, pivots, &info);
 
     if (info == 0) {
         int change_sign = 0;
@@ -1222,7 +1280,7 @@ static NPY_INLINE fortran_int
 call_@lapack_func@(EIGH_PARAMS_t *params)
 {
     fortran_int rv;
-    LAPACK(@lapack_func@)(&params->JOBZ, &params->UPLO, &params->N,
+    LAPACK(@lapack_func@_)(&params->JOBZ, &params->UPLO, &params->N,
                           params->A, &params->LDA, params->W,
                           params->WORK, &params->LWORK,
                           params->IWORK, &params->LIWORK,
@@ -1320,7 +1378,7 @@ static NPY_INLINE fortran_int
 call_@lapack_func@(EIGH_PARAMS_t *params)
 {
     fortran_int rv;
-    LAPACK(@lapack_func@)(&params->JOBZ, &params->UPLO, &params->N,
+    LAPACK(@lapack_func@_)(&params->JOBZ, &params->UPLO, &params->N,
                           params->A, &params->LDA, params->W,
                           params->WORK, &params->LWORK,
                           params->RWORK, &params->LRWORK,
@@ -1582,7 +1640,7 @@ static NPY_INLINE fortran_int
 call_@lapack_func@(GESV_PARAMS_t *params)
 {
     fortran_int rv;
-    LAPACK(@lapack_func@)(&params->N, &params->NRHS,
+    LAPACK(@lapack_func@_)(&params->N, &params->NRHS,
                           params->A, &params->LDA,
                           params->IPIV,
                           params->B, &params->LDB,
@@ -1768,7 +1826,7 @@ static NPY_INLINE fortran_int
 call_@lapack_func@(POTR_PARAMS_t *params)
 {
     fortran_int rv;
-    LAPACK(@lapack_func@)(&params->UPLO,
+    LAPACK(@lapack_func@_)(&params->UPLO,
                           &params->N, params->A, &params->LDA,
                           &rv);
     return rv;
@@ -1928,6 +1986,7 @@ dump_geev_params(const char *name, GEEV_PARAMS_t* params)
    #typ = float, double#
    #complextyp = COMPLEX_t, DOUBLECOMPLEX_t#
    #lapack_func = sgeev, dgeev#
+   #klapack_func = sgeev_aux, dgeev_aux#
    #zero = 0.0f, 0.0#
 */
 
@@ -1935,7 +1994,7 @@ static NPY_INLINE fortran_int
 call_@lapack_func@(GEEV_PARAMS_t* params)
 {
     fortran_int rv;
-    LAPACK(@lapack_func@)(&params->JOBVL, &params->JOBVR,
+    LAPACK(@lapack_func@_)(&params->JOBVL, &params->JOBVR,
                           &params->N, params->A, &params->LDA,
                           params->WR, params->WI,
                           params->VLR, &params->LDVL,
@@ -2128,6 +2187,7 @@ process_@lapack_func@_results(GEEV_PARAMS_t *params)
    #ftyp = fortran_complex, fortran_doublecomplex#
    #realtyp = float, double#
    #lapack_func = cgeev, zgeev#
+   #klapack_func = cgeev_aux, zgeev_aux#
  */
 
 static NPY_INLINE fortran_int
@@ -2135,7 +2195,7 @@ call_@lapack_func@(GEEV_PARAMS_t* params)
 {
     fortran_int rv;
 
-    LAPACK(@lapack_func@)(&params->JOBVL, &params->JOBVR,
+    LAPACK(@lapack_func@_)(&params->JOBVL, &params->JOBVR,
                           &params->N, params->A, &params->LDA,
                           params->W,
                           params->VL, &params->LDVL,
@@ -2240,6 +2300,7 @@ process_@lapack_func@_results(GEEV_PARAMS_t *NPY_UNUSED(params))
    #COMPLEXTYPE = CFLOAT, CDOUBLE, CDOUBLE#
    #ftype = fortran_real, fortran_doublereal, fortran_doublecomplex#
    #lapack_func = sgeev, dgeev, zgeev#
+   #klapack_func = sgeev_aux, dgeev_aux, zgeev_aux#
  */
 
 static NPY_INLINE void
@@ -2473,7 +2534,7 @@ static NPY_INLINE fortran_int
 call_@lapack_func@(GESDD_PARAMS_t *params)
 {
     fortran_int rv;
-    LAPACK(@lapack_func@)(&params->JOBZ, &params->M, &params->N,
+    LAPACK(@lapack_func@_)(&params->JOBZ, &params->M, &params->N,
                           params->A, &params->LDA,
                           params->S,
                           params->U, &params->LDU,
@@ -2596,7 +2657,7 @@ static NPY_INLINE fortran_int
 call_@lapack_func@(GESDD_PARAMS_t *params)
 {
     fortran_int rv;
-    LAPACK(@lapack_func@)(&params->JOBZ, &params->M, &params->N,
+    LAPACK(@lapack_func@_)(&params->JOBZ, &params->M, &params->N,
                           params->A, &params->LDA,
                           params->S,
                           params->U, &params->LDU,
@@ -2902,7 +2963,7 @@ static inline fortran_int
 call_@lapack_func@(GEQRF_PARAMS_t *params)
 {
     fortran_int rv;
-    LAPACK(@lapack_func@)(&params->M, &params->N,
+    LAPACK(@lapack_func@_)(&params->M, &params->N,
                           params->A, &params->LDA,
                           params->TAU,
                           params->WORK, &params->LWORK,
@@ -3159,7 +3220,7 @@ static inline fortran_int
 call_@lapack_func@(GQR_PARAMS_t *params)
 {
     fortran_int rv;
-    LAPACK(@lapack_func@)(&params->M, &params->MC, &params->MN,
+    LAPACK(@lapack_func@_)(&params->M, &params->MC, &params->MN,
                           params->Q, &params->LDA,
                           params->TAU,
                           params->WORK, &params->LWORK,
@@ -3594,7 +3655,7 @@ static inline fortran_int
 call_@lapack_func@(GELSD_PARAMS_t *params)
 {
     fortran_int rv;
-    LAPACK(@lapack_func@)(&params->M, &params->N, &params->NRHS,
+    LAPACK(@lapack_func@_)(&params->M, &params->N, &params->NRHS,
                           params->A, &params->LDA,
                           params->B, &params->LDB,
                           params->S,
@@ -3706,7 +3767,7 @@ static inline fortran_int
 call_@lapack_func@(GELSD_PARAMS_t *params)
 {
     fortran_int rv;
-    LAPACK(@lapack_func@)(&params->M, &params->N, &params->NRHS,
+    LAPACK(@lapack_func@_)(&params->M, &params->N, &params->NRHS,
                           params->A, &params->LDA,
                           params->B, &params->LDB,
                           params->S,

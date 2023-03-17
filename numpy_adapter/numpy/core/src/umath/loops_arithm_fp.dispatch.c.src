@@ -541,7 +541,7 @@ NPY_NO_EXPORT void NPY_CPU_DISPATCH_CURFX(@TYPE@_@kind@)
         *((@type@ *)iop1) = io1;
 #endif
     } else {
-#if defined(HAVE_HUAWEI_KML) && (defined(KML_FLAG_add) || defined(KML_FLAG_subtract) || defined(KML_FLAG_multiply))
+#if defined(HAVE_HUAWEI_KML)
         if (steps[0] > 0 && steps[1] > 0 && dimensions[0] > 65536) {
             KML_VML_@TYPE@_@kind@(args, dimensions);
         }

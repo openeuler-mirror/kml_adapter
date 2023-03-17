@@ -2633,7 +2633,14 @@ L210:
 
 } /* sgebrd_ */
 
-/* Subroutine */ int sgeev_(char *jobvl, char *jobvr, integer *n, real *a,
+/* Subroutine */ 
+int 
+#ifdef HAVE_HUAWEI_KML
+    sgeev_aux_
+#else
+    sgeev_
+#endif
+    (char *jobvl, char *jobvr, integer *n, real *a,
 	integer *lda, real *wr, real *wi, real *vl, integer *ldvl, real *vr,
 	integer *ldvr, real *work, integer *lwork, integer *info)
 {

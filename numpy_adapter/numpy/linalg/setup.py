@@ -71,7 +71,7 @@ def configuration(parent_package='', top_path=None):
     config.add_extension(
         '_umath_linalg',
         sources=['umath_linalg.c.src', get_lapack_lite_sources],
-        depends=['lapack_lite/f2c.h'],
+        depends=['lapack_lite/f2c.h', 'kml_lapack_names.h'],
         extra_info=lapack_info,
         extra_cxx_compile_args=NPY_CXX_FLAGS,
         libraries=['npymath'],

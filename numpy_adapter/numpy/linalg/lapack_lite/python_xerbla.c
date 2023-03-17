@@ -2,7 +2,11 @@
 #include <Python.h>
 
 #include "numpy/npy_common.h"
+#ifdef HAVE_HUAWEI_KML
+#include "kblas.h"
+#else
 #include "npy_cblas.h"
+#endif
 
 /*
   From the original manpage:
@@ -21,7 +25,13 @@
   info: Number of the invalid parameter.
 */
 
-CBLAS_INT BLAS_FUNC(xerbla)(char *srname, CBLAS_INT *info)
+CBLAS_INT 
+#ifdef HAVE_HUAWEI_KML
+        xerbla
+#else
+        BLAS_FUNC(xerbla)
+#endif
+        (char *srname, CBLAS_INT *info)
 {
         static const char format[] = "On entry to %.*s" \
                 " parameter number %d had an illegal value";

@@ -8,9 +8,14 @@ More modifications by Jeff Whitaker
 #include <Python.h>
 
 #include "numpy/arrayobject.h"
-#include "npy_cblas.h"
 
+#ifdef HAVE_HUAWEI_KML
+#include "kblas.h"
+#define FNAME(name) name
+#else
+#include "npy_cblas.h"
 #define FNAME(name) BLAS_FUNC(name)
+#endif
 
 typedef CBLAS_INT        fortran_int;
 

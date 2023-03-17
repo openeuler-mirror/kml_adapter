@@ -16,7 +16,11 @@
 
 #include "npy_pycompat.h"
 
+#ifdef HAVE_HUAWEI_KML
+#include "kblas.h"
+#else
 #include "npy_cblas.h"
+#endif
 #include "arraytypes.h" /* For TYPE_dot functions */
 
 #include <assert.h>
@@ -27,16 +31,7 @@
  *****************************************************************************
  */
 
-#if defined(HAVE_CBLAS)
-/*
- * -1 to be conservative, in case blas internally uses a for loop with an
- * inclusive upper bound
- */
-#ifndef HAVE_BLAS_ILP64
-#define BLAS_MAXSIZE (NPY_MAX_INT - 1)
-#else
-#define BLAS_MAXSIZE (NPY_MAX_INT64 - 1)
-#endif
+#if defined(HAVE_HUAWEI_KML) || defined(HAVE_CBLAS)
 
 /*
  * Determine if a 2d matrix can be used by BLAS
@@ -106,7 +101,12 @@ NPY_NO_EXPORT void
         assert(is_blasable2d(is1_n, is1_m, n, m, sizeof(@typ@)));
         lda = (CBLAS_INT)(is1_n / sizeof(@typ@));
     }
-    CBLAS_FUNC(cblas_@prefix@gemv)(order, CblasTrans, N, M, @step1@, ip1, lda, ip2,
+#ifdef HAVE_HUAWEI_KML
+    cblas_@prefix@gemv
+#else
+    CBLAS_FUNC(cblas_@prefix@gemv)
+#endif
+        (order, CblasTrans, N, M, @step1@, ip1, lda, ip2,
                                      is2_n / sizeof(@typ@), @step0@, op, op_m / sizeof(@typ@));
 }
 
@@ -166,12 +166,22 @@ NPY_NO_EXPORT void
     ) {
         npy_intp i,j;
         if (trans1 == CblasNoTrans) {
-            CBLAS_FUNC(cblas_@prefix@syrk)(
+#ifdef HAVE_HUAWEI_KML
+            cblas_@prefix@syrk
+#else
+            CBLAS_FUNC(cblas_@prefix@syrk)
+#endif
+            (
                 order, CblasUpper, trans1, P, N, @step1@,
                 ip1, lda, @step0@, op, ldc);
         }
         else {
-            CBLAS_FUNC(cblas_@prefix@syrk)(
+#ifdef HAVE_HUAWEI_KML
+            cblas_@prefix@syrk
+#else
+            CBLAS_FUNC(cblas_@prefix@syrk)
+#endif
+            (
                 order, CblasUpper, trans1, P, N, @step1@,
                 ip1, ldb, @step0@, op, ldc);
         }
@@ -184,7 +194,12 @@ NPY_NO_EXPORT void
 
     }
     else {
-        CBLAS_FUNC(cblas_@prefix@gemm)(
+#ifdef HAVE_HUAWEI_KML
+        cblas_@prefix@gemm
+#else
+        CBLAS_FUNC(cblas_@prefix@gemm)
+#endif
+        (
             order, trans1, trans2, M, P, N, @step1@, ip1, lda,
             ip2, ldb, @step0@, op, ldc);
     }
@@ -407,7 +422,7 @@ NPY_NO_EXPORT void
     npy_intp dp = dimensions[2];
     npy_intp is1_m=steps[0], is1_n=steps[1], is2_n=steps[2], is2_p=steps[3],
          os_m=steps[4], os_p=steps[5];
-#if @USEBLAS@ && defined(HAVE_CBLAS)
+#if @USEBLAS@ && (defined(HAVE_HUAWEI_KML) || defined(HAVE_CBLAS))
     npy_intp sz = sizeof(@typ@);
     npy_bool special_case = (dm == 1 || dn == 1 || dp == 1);
     npy_bool any_zero_dim = (dm == 0 || dn == 0 || dp == 0);
@@ -432,7 +447,7 @@ NPY_NO_EXPORT void
     for (iOuter = 0; iOuter < dOuter; iOuter++,
                          args[0] += s0, args[1] += s1, args[2] += s2) {
         void *ip1=args[0], *ip2=args[1], *op=args[2];
-#if @USEBLAS@ && defined(HAVE_CBLAS)
+#if @USEBLAS@ && (defined(HAVE_HUAWEI_KML) || defined(HAVE_CBLAS))
         /*
          * TODO: refactor this out to a inner_loop_selector, in
          * PyUFunc_MatmulLoopSelector. But that call does not have access to

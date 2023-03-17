@@ -9,18 +9,35 @@
 
 #include <math.h>
 #include "numpy/npy_common.h"
+#ifdef HAVE_HUAWEI_KML
+#include "kblas.h"
+#else
 #include "npy_cblas.h"
+#endif
 
 #include "lapack_lite_names.h"
 
+#undef complex
+
+#ifdef HAVE_HUAWEI_KML
+typedef BLASINT integer;
+#else
 typedef CBLAS_INT integer;
+#endif
+
 typedef char *address;
 typedef short int shortint;
 typedef float real;
 typedef double doublereal;
 typedef struct { real r, i; } complex;
 typedef struct { doublereal r, i; } doublecomplex;
+
+#ifdef HAVE_HUAWEI_KML
+typedef BLASINT logical;
+#else
 typedef CBLAS_INT logical;
+#endif
+
 typedef short int shortlogical;
 typedef char logical1;
 typedef char integer1;
@@ -41,9 +58,15 @@ typedef short flag;
 typedef short ftnlen;
 typedef short ftnint;
 #else
+#ifdef HAVE_HUAWEI_KML
+typedef BLASINT flag;
+typedef BLASINT ftnlen;
+typedef BLASINT ftnint;
+#else
 typedef CBLAS_INT flag;
 typedef CBLAS_INT ftnlen;
 typedef CBLAS_INT ftnint;
+#endif
 #endif
 
 /*external read, write*/
