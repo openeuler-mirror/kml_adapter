@@ -52,18 +52,18 @@ typedef struct rfft_plan_i * rfft_plan;
 
 // adapted from https://stackoverflow.com/questions/42792939/
 // CAUTION: this function only works for arguments in the range [-0.25; 0.25]!
-static void my_sincosm1pi (double a, double *restrict res)
+static void my_sincosm1pi (float a, float *restrict res)
   {
-  double s = a * a;
+  float s = a * a;
   /* Approximate cos(pi*x)-1 for x in [-0.25,0.25] */
-  double r =     -1.0369917389758117e-4;
+  float r =     -1.0369917389758117e-4;
   r = fma (r, s,  1.9294935641298806e-3);
   r = fma (r, s, -2.5806887942825395e-2);
   r = fma (r, s,  2.3533063028328211e-1);
   r = fma (r, s, -1.3352627688538006e+0);
   r = fma (r, s,  4.0587121264167623e+0);
   r = fma (r, s, -4.9348022005446790e+0);
-  double c = r*s;
+  float c = r*s;
   /* Approximate sin(pi*x) for x in [-0.25,0.25] */
   r =             4.6151442520157035e-4;
   r = fma (r, s, -7.3700183130883555e-3);
@@ -78,7 +78,7 @@ static void my_sincosm1pi (double a, double *restrict res)
   res[1] = s;
   }
 
-NOINLINE static void calc_first_octant(size_t den, double * restrict res)
+NOINLINE static void calc_first_octant(size_t den, float * restrict res)
   {
   size_t n = (den+4)>>3;
   if (n==0) return;
@@ -90,7 +90,7 @@ NOINLINE static void calc_first_octant(size_t den, double * restrict res)
   size_t start=l1;
   while(start<n)
     {
-    double cs[2];
+    float cs[2];
     my_sincosm1pi((2.*start)/den,cs);
     res[2*start] = cs[0]+1.;
     res[2*start+1] = cs[1];
@@ -98,7 +98,7 @@ NOINLINE static void calc_first_octant(size_t den, double * restrict res)
     if (start+end>n) end = n-start;
     for (size_t i=1; i<end; ++i)
       {
-      double csx[2]={res[2*i], res[2*i+1]};
+      float csx[2]={res[2*i], res[2*i+1]};
       res[2*(start+i)] = ((cs[0]*csx[0] - cs[1]*csx[1] + cs[0]) + csx[0]) + 1.;
       res[2*(start+i)+1] = (cs[0]*csx[1] + cs[1]*csx[0]) + cs[1] + csx[1];
       }
@@ -108,9 +108,9 @@ NOINLINE static void calc_first_octant(size_t den, double * restrict res)
     res[2*i] += 1.;
   }
 
-NOINLINE static void calc_first_quadrant(size_t n, double * restrict res)
+NOINLINE static void calc_first_quadrant(size_t n, float * restrict res)
   {
-  double * restrict p = res+n;
+  float * restrict p = res+n;
   calc_first_octant(n<<1, p);
   size_t ndone=(n+2)>>2;
   size_t i=0, idx1=0, idx2=2*ndone-2;
@@ -128,10 +128,10 @@ NOINLINE static void calc_first_quadrant(size_t n, double * restrict res)
     }
   }
 
-NOINLINE static void calc_first_half(size_t n, double * restrict res)
+NOINLINE static void calc_first_half(size_t n, float * restrict res)
   {
   int ndone=(n+1)>>1;
-  double * p = res+n-1;
+  float * p = res+n-1;
   calc_first_octant(n<<2, p);
   int i4=0, in=n, i=0;
   for (; i4<=in-i4; ++i, i4+=4) // octant 0
@@ -155,9 +155,9 @@ NOINLINE static void calc_first_half(size_t n, double * restrict res)
     }
   }
 
-NOINLINE static void fill_first_quadrant(size_t n, double * restrict res)
+NOINLINE static void fill_first_quadrant(size_t n, float * restrict res)
   {
-  const double hsqt2 = 0.707106781186547524400844362104849;
+  const float hsqt2 = 0.707106781186547524400844362104849;
   size_t quart = n>>2;
   if ((n&7)==0)
     res[quart] = res[quart+1] = hsqt2;
@@ -168,7 +168,7 @@ NOINLINE static void fill_first_quadrant(size_t n, double * restrict res)
     }
   }
 
-NOINLINE static void fill_first_half(size_t n, double * restrict res)
+NOINLINE static void fill_first_half(size_t n, float * restrict res)
   {
   size_t half = n>>1;
   if ((n&3)==0)
@@ -185,7 +185,7 @@ NOINLINE static void fill_first_half(size_t n, double * restrict res)
       }
   }
 
-NOINLINE static void fill_second_half(size_t n, double * restrict res)
+NOINLINE static void fill_second_half(size_t n, float * restrict res)
   {
   if ((n&1)==0)
     for (size_t i=0; i<n; ++i)
@@ -198,7 +198,7 @@ NOINLINE static void fill_second_half(size_t n, double * restrict res)
       }
   }
 
-NOINLINE static void sincos_2pibyn_half(size_t n, double * restrict res)
+NOINLINE static void sincos_2pibyn_half(size_t n, float * restrict res)
   {
   if ((n&3)==0)
     {
@@ -215,7 +215,7 @@ NOINLINE static void sincos_2pibyn_half(size_t n, double * restrict res)
     calc_first_half(n, res);
   }
 
-NOINLINE static void sincos_2pibyn(size_t n, double * restrict res)
+NOINLINE static void sincos_2pibyn(size_t n, float * restrict res)
   {
   sincos_2pibyn_half(n, res);
   fill_second_half(n, res);
@@ -241,11 +241,11 @@ NOINLINE static size_t largest_prime_factor (size_t n)
   return res;
   }
 
-NOINLINE static double cost_guess (size_t n)
+NOINLINE static float cost_guess (size_t n)
   {
-  const double lfp=1.1; // penalty for non-hardcoded larger factors
+  const float lfp=1.1; // penalty for non-hardcoded larger factors
   size_t ni=n;
-  double result=0.;
+  float result=0.;
   size_t tmp;
   while (((tmp=(n>>1))<<1)==n)
     { result+=2; n=tmp; }
@@ -279,7 +279,7 @@ NOINLINE static size_t good_size(size_t n)
   }
 
 typedef struct cmplx {
-  double r,i;
+  float r,i;
 } cmplx;
 
 #define NFCT 25
@@ -300,8 +300,8 @@ typedef struct cfftp_plan_i * cfftp_plan;
 #define PMC(a,b,c,d) { a.r=c.r+d.r; a.i=c.i+d.i; b.r=c.r-d.r; b.i=c.i-d.i; }
 #define ADDC(a,b,c) { a.r=b.r+c.r; a.i=b.i+c.i; }
 #define SCALEC(a,b) { a.r*=b; a.i*=b; }
-#define ROT90(a) { double tmp_=a.r; a.r=-a.i; a.i=tmp_; }
-#define ROTM90(a) { double tmp_=-a.r; a.r=a.i; a.i=tmp_; }
+#define ROT90(a) { float tmp_=a.r; a.r=-a.i; a.i=tmp_; }
+#define ROTM90(a) { float tmp_=-a.r; a.r=a.i; a.i=tmp_; }
 #define CH(a,b,c) ch[(a)+ido*((b)+l1*(c))]
 #define CHa(a,b,c) ch+(a)+ido*((b)+l1*(c))
 #define CC(a,b,c) cc[(a)+ido*((b)+cdim*(c))]
@@ -316,7 +316,7 @@ typedef struct cfftp_plan_i * cfftp_plan;
 /* a = b*c */
 #define MULPMSIGNC(a,b,c) { a.r=b.r*c.r-sign*b.i*c.i; a.i=b.r*c.i+sign*b.i*c.r; }
 /* a *= b */
-#define MULPMSIGNCEQ(a,b) { double xtmp=a.r; a.r=b.r*a.r-sign*b.i*a.i; a.i=b.r*a.i+sign*b.i*xtmp; }
+#define MULPMSIGNCEQ(a,b) { float xtmp=a.r; a.r=b.r*a.r-sign*b.i*a.i; a.i=b.r*a.i+sign*b.i*xtmp; }
 
 NOINLINE static void pass2b (size_t ido, size_t l1, const cmplx * restrict cc,
   cmplx * restrict ch, const cmplx * restrict wa)
@@ -390,7 +390,7 @@ NOINLINE static void pass3b (size_t ido, size_t l1, const cmplx * restrict cc,
   cmplx * restrict ch, const cmplx * restrict wa)
   {
   const size_t cdim=3;
-  const double tw1r=-0.5, tw1i= 0.86602540378443864676;
+  const float tw1r=-0.5, tw1i= 0.86602540378443864676;
 
   if (ido==1)
     for (size_t k=0; k<l1; ++k)
@@ -427,7 +427,7 @@ NOINLINE static void pass3f (size_t ido, size_t l1, const cmplx * restrict cc,
   cmplx * restrict ch, const cmplx * restrict wa)
   {
   const size_t cdim=3;
-  const double tw1r=-0.5, tw1i= -0.86602540378443864676;
+  const float tw1r=-0.5, tw1i= -0.86602540378443864676;
 
   if (ido==1)
     for (size_t k=0; k<l1; ++k)
@@ -590,7 +590,7 @@ NOINLINE static void pass5b (size_t ido, size_t l1, const cmplx * restrict cc,
   cmplx * restrict ch, const cmplx * restrict wa)
   {
   const size_t cdim=5;
-  const double tw1r= 0.3090169943749474241,
+  const float tw1r= 0.3090169943749474241,
                tw1i= 0.95105651629515357212,
                tw2r= -0.8090169943749474241,
                tw2i= 0.58778525229247312917;
@@ -633,7 +633,7 @@ NOINLINE static void pass5f (size_t ido, size_t l1, const cmplx * restrict cc,
   cmplx * restrict ch, const cmplx * restrict wa)
   {
   const size_t cdim=5;
-  const double tw1r= 0.3090169943749474241,
+  const float tw1r= 0.3090169943749474241,
                tw1i= -0.95105651629515357212,
                tw2r= -0.8090169943749474241,
                tw2i= -0.58778525229247312917;
@@ -693,7 +693,7 @@ NOINLINE static void pass7(size_t ido, size_t l1, const cmplx * restrict cc,
   cmplx * restrict ch, const cmplx * restrict wa, const int sign)
   {
   const size_t cdim=7;
-  const double tw1r= 0.623489801858733530525,
+  const float tw1r= 0.623489801858733530525,
                tw1i= sign * 0.7818314824680298087084,
                tw2r= -0.222520933956314404289,
                tw2i= sign * 0.9749279121818236070181,
@@ -760,7 +760,7 @@ NOINLINE static void pass11 (size_t ido, size_t l1, const cmplx * restrict cc,
   cmplx * restrict ch, const cmplx * restrict wa, const int sign)
   {
   const size_t cdim=11;
-  const double tw1r =        0.8412535328311811688618,
+  const float tw1r =        0.8412535328311811688618,
                tw1i = sign * 0.5406408174555975821076,
                tw2r =        0.4154150130018864255293,
                tw2i = sign * 0.9096319953545183714117,
@@ -912,7 +912,7 @@ NOINLINE static int passg (size_t ido, size_t ip, size_t l1,
 #undef CX2
 #undef CX
 
-NOINLINE WARN_UNUSED_RESULT static int pass_all(cfftp_plan plan, cmplx c[], double fct,
+NOINLINE WARN_UNUSED_RESULT static int pass_all(cfftp_plan plan, cmplx c[], float fct,
   const int sign)
   {
   if (plan->length==1) return 0;
@@ -987,11 +987,11 @@ NOINLINE WARN_UNUSED_RESULT static int pass_all(cfftp_plan plan, cmplx c[], doub
 #undef PMC
 
 NOINLINE WARN_UNUSED_RESULT
-static int cfftp_forward(cfftp_plan plan, double c[], double fct)
+static int cfftp_forward(cfftp_plan plan, float c[], float fct)
   { return pass_all(plan,(cmplx *)c, fct, -1); }
 
 NOINLINE WARN_UNUSED_RESULT
-static int cfftp_backward(cfftp_plan plan, double c[], double fct)
+static int cfftp_backward(cfftp_plan plan, float c[], float fct)
   { return pass_all(plan,(cmplx *)c, fct, 1); }
 
 NOINLINE WARN_UNUSED_RESULT
@@ -1009,7 +1009,7 @@ static int cfftp_factorize (cfftp_plan plan)
     plan->fct[nfct++].fct=2;
     SWAP(plan->fct[0].fct, plan->fct[nfct-1].fct,size_t);
     }
-  size_t maxl=(size_t)(sqrt((double)length))+1;
+  size_t maxl=(size_t)(sqrt((float)length))+1;
   for (size_t divisor=3; (length>1)&&(divisor<maxl); divisor+=2)
     if ((length%divisor)==0)
       {
@@ -1019,7 +1019,7 @@ static int cfftp_factorize (cfftp_plan plan)
         plan->fct[nfct++].fct=divisor;
         length/=divisor;
         }
-      maxl=(size_t)(sqrt((double)length))+1;
+      maxl=(size_t)(sqrt((float)length))+1;
       }
   if (length>1) plan->fct[nfct++].fct=length;
   plan->nfct=nfct;
@@ -1043,7 +1043,7 @@ NOINLINE static size_t cfftp_twsize (cfftp_plan plan)
 NOINLINE WARN_UNUSED_RESULT static int cfftp_comp_twiddle (cfftp_plan plan)
   {
   size_t length=plan->length;
-  double *twid = RALLOC(double, 2*length);
+  float *twid = RALLOC(float, 2*length);
   if (!twid) return -1;
   sincos_2pibyn(length, twid);
   size_t l1=1;
@@ -1104,13 +1104,13 @@ static void destroy_cfftp_plan (cfftp_plan plan)
 typedef struct rfftp_fctdata
   {
   size_t fct;
-  double *tw, *tws;
+  float *tw, *tws;
   } rfftp_fctdata;
 
 typedef struct rfftp_plan_i
   {
   size_t length, nfct;
-  double *mem;
+  float *mem;
   rfftp_fctdata fct[NFCT];
   } rfftp_plan_i;
 typedef struct rfftp_plan_i * rfftp_plan;
@@ -1123,8 +1123,8 @@ typedef struct rfftp_plan_i * rfftp_plan;
 #define CC(a,b,c) cc[(a)+ido*((b)+l1*(c))]
 #define CH(a,b,c) ch[(a)+ido*((b)+cdim*(c))]
 
-NOINLINE static void radf2 (size_t ido, size_t l1, const double * restrict cc,
-  double * restrict ch, const double * restrict wa)
+NOINLINE static void radf2 (size_t ido, size_t l1, const float * restrict cc,
+  float * restrict ch, const float * restrict wa)
   {
   const size_t cdim=2;
 
@@ -1141,22 +1141,22 @@ NOINLINE static void radf2 (size_t ido, size_t l1, const double * restrict cc,
     for (size_t i=2; i<ido; i+=2)
       {
       size_t ic=ido-i;
-      double tr2, ti2;
+      float tr2, ti2;
       MULPM (tr2,ti2,WA(0,i-2),WA(0,i-1),CC(i-1,k,1),CC(i,k,1))
       PM (CH(i-1,0,k),CH(ic-1,1,k),CC(i-1,k,0),tr2)
       PM (CH(i  ,0,k),CH(ic  ,1,k),ti2,CC(i  ,k,0))
       }
   }
 
-NOINLINE static void radf3(size_t ido, size_t l1, const double * restrict cc,
-  double * restrict ch, const double * restrict wa)
+NOINLINE static void radf3(size_t ido, size_t l1, const float * restrict cc,
+  float * restrict ch, const float * restrict wa)
   {
   const size_t cdim=3;
-  static const double taur=-0.5, taui=0.86602540378443864676;
+  static const float taur=-0.5, taui=0.86602540378443864676;
 
   for (size_t k=0; k<l1; k++)
     {
-    double cr2=CC(0,k,1)+CC(0,k,2);
+    float cr2=CC(0,k,1)+CC(0,k,2);
     CH(0,0,k) = CC(0,k,0)+cr2;
     CH(0,2,k) = taui*(CC(0,k,2)-CC(0,k,1));
     CH(ido-1,1,k) = CC(0,k,0)+taur*cr2;
@@ -1166,31 +1166,31 @@ NOINLINE static void radf3(size_t ido, size_t l1, const double * restrict cc,
     for (size_t i=2; i<ido; i+=2)
       {
       size_t ic=ido-i;
-      double di2, di3, dr2, dr3;
+      float di2, di3, dr2, dr3;
       MULPM (dr2,di2,WA(0,i-2),WA(0,i-1),CC(i-1,k,1),CC(i,k,1)) // d2=conj(WA0)*CC1
       MULPM (dr3,di3,WA(1,i-2),WA(1,i-1),CC(i-1,k,2),CC(i,k,2)) // d3=conj(WA1)*CC2
-      double cr2=dr2+dr3; // c add
-      double ci2=di2+di3;
+      float cr2=dr2+dr3; // c add
+      float ci2=di2+di3;
       CH(i-1,0,k) = CC(i-1,k,0)+cr2; // c add
       CH(i  ,0,k) = CC(i  ,k,0)+ci2;
-      double tr2 = CC(i-1,k,0)+taur*cr2; // c add
-      double ti2 = CC(i  ,k,0)+taur*ci2;
-      double tr3 = taui*(di2-di3);  // t3 = taui*i*(d3-d2)?
-      double ti3 = taui*(dr3-dr2);
+      float tr2 = CC(i-1,k,0)+taur*cr2; // c add
+      float ti2 = CC(i  ,k,0)+taur*ci2;
+      float tr3 = taui*(di2-di3);  // t3 = taui*i*(d3-d2)?
+      float ti3 = taui*(dr3-dr2);
       PM(CH(i-1,2,k),CH(ic-1,1,k),tr2,tr3) // PM(i) = t2+t3
       PM(CH(i  ,2,k),CH(ic  ,1,k),ti3,ti2) // PM(ic) = conj(t2-t3)
       }
   }
 
-NOINLINE static void radf4(size_t ido, size_t l1, const double * restrict cc,
-  double * restrict ch, const double * restrict wa)
+NOINLINE static void radf4(size_t ido, size_t l1, const float * restrict cc,
+  float * restrict ch, const float * restrict wa)
   {
   const size_t cdim=4;
-  static const double hsqt2=0.70710678118654752440;
+  static const float hsqt2=0.70710678118654752440;
 
   for (size_t k=0; k<l1; k++)
     {
-    double tr1,tr2;
+    float tr1,tr2;
     PM (tr1,CH(0,2,k),CC(0,k,3),CC(0,k,1))
     PM (tr2,CH(ido-1,1,k),CC(0,k,0),CC(0,k,2))
     PM (CH(0,0,k),CH(ido-1,3,k),tr2,tr1)
@@ -1198,8 +1198,8 @@ NOINLINE static void radf4(size_t ido, size_t l1, const double * restrict cc,
   if ((ido&1)==0)
     for (size_t k=0; k<l1; k++)
       {
-      double ti1=-hsqt2*(CC(ido-1,k,1)+CC(ido-1,k,3));
-      double tr1= hsqt2*(CC(ido-1,k,1)-CC(ido-1,k,3));
+      float ti1=-hsqt2*(CC(ido-1,k,1)+CC(ido-1,k,3));
+      float tr1= hsqt2*(CC(ido-1,k,1)-CC(ido-1,k,3));
       PM (CH(ido-1,0,k),CH(ido-1,2,k),CC(ido-1,k,0),tr1)
       PM (CH(    0,3,k),CH(    0,1,k),ti1,CC(ido-1,k,2))
       }
@@ -1208,7 +1208,7 @@ NOINLINE static void radf4(size_t ido, size_t l1, const double * restrict cc,
     for (size_t i=2; i<ido; i+=2)
       {
       size_t ic=ido-i;
-      double ci2, ci3, ci4, cr2, cr3, cr4, ti1, ti2, ti3, ti4, tr1, tr2, tr3, tr4;
+      float ci2, ci3, ci4, cr2, cr3, cr4, ti1, ti2, ti3, ti4, tr1, tr2, tr3, tr4;
       MULPM(cr2,ci2,WA(0,i-2),WA(0,i-1),CC(i-1,k,1),CC(i,k,1))
       MULPM(cr3,ci3,WA(1,i-2),WA(1,i-1),CC(i-1,k,2),CC(i,k,2))
       MULPM(cr4,ci4,WA(2,i-2),WA(2,i-1),CC(i-1,k,3),CC(i,k,3))
@@ -1223,16 +1223,16 @@ NOINLINE static void radf4(size_t ido, size_t l1, const double * restrict cc,
       }
   }
 
-NOINLINE static void radf5(size_t ido, size_t l1, const double * restrict cc,
-  double * restrict ch, const double * restrict wa)
+NOINLINE static void radf5(size_t ido, size_t l1, const float * restrict cc,
+  float * restrict ch, const float * restrict wa)
   {
   const size_t cdim=5;
-  static const double tr11= 0.3090169943749474241, ti11=0.95105651629515357212,
+  static const float tr11= 0.3090169943749474241, ti11=0.95105651629515357212,
                       tr12=-0.8090169943749474241, ti12=0.58778525229247312917;
 
   for (size_t k=0; k<l1; k++)
     {
-    double cr2, cr3, ci4, ci5;
+    float cr2, cr3, ci4, ci5;
     PM (cr2,ci5,CC(0,k,4),CC(0,k,1))
     PM (cr3,ci4,CC(0,k,3),CC(0,k,2))
     CH(0,0,k)=CC(0,k,0)+cr2+cr3;
@@ -1245,7 +1245,7 @@ NOINLINE static void radf5(size_t ido, size_t l1, const double * restrict cc,
   for (size_t k=0; k<l1;++k)
     for (size_t i=2; i<ido; i+=2)
       {
-      double ci2, di2, ci4, ci5, di3, di4, di5, ci3, cr2, cr3, dr2, dr3,
+      float ci2, di2, ci4, ci5, di3, di4, di5, ci3, cr2, cr3, dr2, dr3,
          dr4, dr5, cr5, cr4, ti2, ti3, ti5, ti4, tr2, tr3, tr4, tr5;
       size_t ic=ido-i;
       MULPM (dr2,di2,WA(0,i-2),WA(0,i-1),CC(i-1,k,1),CC(i,k,1))
@@ -1279,8 +1279,8 @@ NOINLINE static void radf5(size_t ido, size_t l1, const double * restrict cc,
 #define CC(a,b,c) cc[(a)+ido*((b)+cdim*(c))]
 #define CH(a,b,c) ch[(a)+ido*((b)+l1*(c))]
 NOINLINE static void radfg(size_t ido, size_t ip, size_t l1,
-  double * restrict cc, double * restrict ch, const double * restrict wa,
-  const double * restrict csarr)
+  float * restrict cc, float * restrict ch, const float * restrict wa,
+  const float * restrict csarr)
   {
   const size_t cdim=ip;
   size_t ipph=(ip+1)/2;
@@ -1298,9 +1298,9 @@ NOINLINE static void radfg(size_t ido, size_t ip, size_t l1,
         size_t idij2=is2;
         for (size_t i=1; i<=ido-2; i+=2)                      // 112
           {
-          double t1=C1(i,k,j ), t2=C1(i+1,k,j ),
+          float t1=C1(i,k,j ), t2=C1(i+1,k,j ),
                  t3=C1(i,k,jc), t4=C1(i+1,k,jc);
-          double x1=wa[idij]*t1 + wa[idij+1]*t2,
+          float x1=wa[idij]*t1 + wa[idij+1]*t2,
                  x2=wa[idij]*t2 - wa[idij+1]*t1,
                  x3=wa[idij2]*t3 + wa[idij2+1]*t4,
                  x4=wa[idij2]*t4 - wa[idij2+1]*t3;
@@ -1318,13 +1318,13 @@ NOINLINE static void radfg(size_t ido, size_t ip, size_t l1,
   for (size_t j=1, jc=ip-1; j<ipph; ++j,--jc)                // 123
     for (size_t k=0; k<l1; ++k)                              // 122
       {
-      double t1=C1(0,k,j), t2=C1(0,k,jc);
+      float t1=C1(0,k,j), t2=C1(0,k,jc);
       C1(0,k,j ) = t1+t2;
       C1(0,k,jc) = t2-t1;
       }
 
 //everything in C
-//memset(ch,0,ip*l1*ido*sizeof(double));
+//memset(ch,0,ip*l1*ido*sizeof(float));
 
   for (size_t l=1,lc=ip-1; l<ipph; ++l,--lc)                 // 127
     {
@@ -1338,13 +1338,13 @@ NOINLINE static void radfg(size_t ido, size_t ip, size_t l1,
     for (; j<ipph-3; j+=4,jc-=4)              // 126
       {
       iang+=l; if (iang>=ip) iang-=ip;
-      double ar1=csarr[2*iang], ai1=csarr[2*iang+1];
+      float ar1=csarr[2*iang], ai1=csarr[2*iang+1];
       iang+=l; if (iang>=ip) iang-=ip;
-      double ar2=csarr[2*iang], ai2=csarr[2*iang+1];
+      float ar2=csarr[2*iang], ai2=csarr[2*iang+1];
       iang+=l; if (iang>=ip) iang-=ip;
-      double ar3=csarr[2*iang], ai3=csarr[2*iang+1];
+      float ar3=csarr[2*iang], ai3=csarr[2*iang+1];
       iang+=l; if (iang>=ip) iang-=ip;
-      double ar4=csarr[2*iang], ai4=csarr[2*iang+1];
+      float ar4=csarr[2*iang], ai4=csarr[2*iang+1];
       for (size_t ik=0; ik<idl1; ++ik)                       // 125
         {
         CH2(ik,l ) += ar1*C2(ik,j )+ar2*C2(ik,j +1)
@@ -1356,9 +1356,9 @@ NOINLINE static void radfg(size_t ido, size_t ip, size_t l1,
     for (; j<ipph-1; j+=2,jc-=2)              // 126
       {
       iang+=l; if (iang>=ip) iang-=ip;
-      double ar1=csarr[2*iang], ai1=csarr[2*iang+1];
+      float ar1=csarr[2*iang], ai1=csarr[2*iang+1];
       iang+=l; if (iang>=ip) iang-=ip;
-      double ar2=csarr[2*iang], ai2=csarr[2*iang+1];
+      float ar2=csarr[2*iang], ai2=csarr[2*iang+1];
       for (size_t ik=0; ik<idl1; ++ik)                       // 125
         {
         CH2(ik,l ) += ar1*C2(ik,j )+ar2*C2(ik,j +1);
@@ -1368,7 +1368,7 @@ NOINLINE static void radfg(size_t ido, size_t ip, size_t l1,
     for (; j<ipph; ++j,--jc)              // 126
       {
       iang+=l; if (iang>=ip) iang-=ip;
-      double ar=csarr[2*iang], ai=csarr[2*iang+1];
+      float ar=csarr[2*iang], ai=csarr[2*iang+1];
       for (size_t ik=0; ik<idl1; ++ik)                       // 125
         {
         CH2(ik,l ) += ar*C2(ik,j );
@@ -1383,7 +1383,7 @@ NOINLINE static void radfg(size_t ido, size_t ip, size_t l1,
       CH2(ik,0) += C2(ik,j);
 
 // everything in CH at this point!
-//memset(cc,0,ip*l1*ido*sizeof(double));
+//memset(cc,0,ip*l1*ido*sizeof(float));
 
   for (size_t k=0; k<l1; ++k)                                // 131
     for (size_t i=0; i<ido; ++i)                             // 130
@@ -1423,8 +1423,8 @@ NOINLINE static void radfg(size_t ido, size_t ip, size_t l1,
 #define CH(a,b,c) ch[(a)+ido*((b)+l1*(c))]
 #define CC(a,b,c) cc[(a)+ido*((b)+cdim*(c))]
 
-NOINLINE static void radb2(size_t ido, size_t l1, const double * restrict cc,
-  double * restrict ch, const double * restrict wa)
+NOINLINE static void radb2(size_t ido, size_t l1, const float * restrict cc,
+  float * restrict ch, const float * restrict wa)
   {
   const size_t cdim=2;
 
@@ -1441,25 +1441,25 @@ NOINLINE static void radb2(size_t ido, size_t l1, const double * restrict cc,
     for (size_t i=2; i<ido; i+=2)
       {
       size_t ic=ido-i;
-      double ti2, tr2;
+      float ti2, tr2;
       PM (CH(i-1,k,0),tr2,CC(i-1,0,k),CC(ic-1,1,k))
       PM (ti2,CH(i  ,k,0),CC(i  ,0,k),CC(ic  ,1,k))
       MULPM (CH(i,k,1),CH(i-1,k,1),WA(0,i-2),WA(0,i-1),ti2,tr2)
       }
   }
 
-NOINLINE static void radb3(size_t ido, size_t l1, const double * restrict cc,
-  double * restrict ch, const double * restrict wa)
+NOINLINE static void radb3(size_t ido, size_t l1, const float * restrict cc,
+  float * restrict ch, const float * restrict wa)
   {
   const size_t cdim=3;
-  static const double taur=-0.5, taui=0.86602540378443864676;
+  static const float taur=-0.5, taui=0.86602540378443864676;
 
   for (size_t k=0; k<l1; k++)
     {
-    double tr2=2.*CC(ido-1,1,k);
-    double cr2=CC(0,0,k)+taur*tr2;
+    float tr2=2.*CC(ido-1,1,k);
+    float cr2=CC(0,0,k)+taur*tr2;
     CH(0,k,0)=CC(0,0,k)+tr2;
-    double ci3=2.*taui*CC(0,2,k);
+    float ci3=2.*taui*CC(0,2,k);
     PM (CH(0,k,2),CH(0,k,1),cr2,ci3);
     }
   if (ido==1) return;
@@ -1467,15 +1467,15 @@ NOINLINE static void radb3(size_t ido, size_t l1, const double * restrict cc,
     for (size_t i=2; i<ido; i+=2)
       {
       size_t ic=ido-i;
-      double tr2=CC(i-1,2,k)+CC(ic-1,1,k); // t2=CC(I) + conj(CC(ic))
-      double ti2=CC(i  ,2,k)-CC(ic  ,1,k);
-      double cr2=CC(i-1,0,k)+taur*tr2;     // c2=CC +taur*t2
-      double ci2=CC(i  ,0,k)+taur*ti2;
+      float tr2=CC(i-1,2,k)+CC(ic-1,1,k); // t2=CC(I) + conj(CC(ic))
+      float ti2=CC(i  ,2,k)-CC(ic  ,1,k);
+      float cr2=CC(i-1,0,k)+taur*tr2;     // c2=CC +taur*t2
+      float ci2=CC(i  ,0,k)+taur*ti2;
       CH(i-1,k,0)=CC(i-1,0,k)+tr2;         // CH=CC+t2
       CH(i  ,k,0)=CC(i  ,0,k)+ti2;
-      double cr3=taui*(CC(i-1,2,k)-CC(ic-1,1,k));// c3=taui*(CC(i)-conj(CC(ic)))
-      double ci3=taui*(CC(i  ,2,k)+CC(ic  ,1,k));
-      double di2, di3, dr2, dr3;
+      float cr3=taui*(CC(i-1,2,k)-CC(ic-1,1,k));// c3=taui*(CC(i)-conj(CC(ic)))
+      float ci3=taui*(CC(i  ,2,k)+CC(ic  ,1,k));
+      float di2, di3, dr2, dr3;
       PM(dr3,dr2,cr2,ci3) // d2= (cr2-ci3, ci2+cr3) = c2+i*c3
       PM(di2,di3,ci2,cr3) // d3= (cr2+ci3, ci2-cr3) = c2-i*c3
       MULPM(CH(i,k,1),CH(i-1,k,1),WA(0,i-2),WA(0,i-1),di2,dr2) // ch = WA*d2
@@ -1483,25 +1483,25 @@ NOINLINE static void radb3(size_t ido, size_t l1, const double * restrict cc,
       }
   }
 
-NOINLINE static void radb4(size_t ido, size_t l1, const double * restrict cc,
-  double * restrict ch, const double * restrict wa)
+NOINLINE static void radb4(size_t ido, size_t l1, const float * restrict cc,
+  float * restrict ch, const float * restrict wa)
   {
   const size_t cdim=4;
-  static const double sqrt2=1.41421356237309504880;
+  static const float sqrt2=1.41421356237309504880;
 
   for (size_t k=0; k<l1; k++)
     {
-    double tr1, tr2;
+    float tr1, tr2;
     PM (tr2,tr1,CC(0,0,k),CC(ido-1,3,k))
-    double tr3=2.*CC(ido-1,1,k);
-    double tr4=2.*CC(0,2,k);
+    float tr3=2.*CC(ido-1,1,k);
+    float tr4=2.*CC(0,2,k);
     PM (CH(0,k,0),CH(0,k,2),tr2,tr3)
     PM (CH(0,k,3),CH(0,k,1),tr1,tr4)
     }
   if ((ido&1)==0)
     for (size_t k=0; k<l1; k++)
       {
-      double tr1,tr2,ti1,ti2;
+      float tr1,tr2,ti1,ti2;
       PM (ti1,ti2,CC(0    ,3,k),CC(0    ,1,k))
       PM (tr2,tr1,CC(ido-1,0,k),CC(ido-1,2,k))
       CH(ido-1,k,0)=tr2+tr2;
@@ -1513,7 +1513,7 @@ NOINLINE static void radb4(size_t ido, size_t l1, const double * restrict cc,
   for (size_t k=0; k<l1;++k)
     for (size_t i=2; i<ido; i+=2)
       {
-      double ci2, ci3, ci4, cr2, cr3, cr4, ti1, ti2, ti3, ti4, tr1, tr2, tr3, tr4;
+      float ci2, ci3, ci4, cr2, cr3, cr4, ti1, ti2, ti3, ti4, tr1, tr2, tr3, tr4;
       size_t ic=ido-i;
       PM (tr2,tr1,CC(i-1,0,k),CC(ic-1,3,k))
       PM (ti1,ti2,CC(i  ,0,k),CC(ic  ,3,k))
@@ -1529,23 +1529,23 @@ NOINLINE static void radb4(size_t ido, size_t l1, const double * restrict cc,
       }
   }
 
-NOINLINE static void radb5(size_t ido, size_t l1, const double * restrict cc,
-  double * restrict ch, const double * restrict wa)
+NOINLINE static void radb5(size_t ido, size_t l1, const float * restrict cc,
+  float * restrict ch, const float * restrict wa)
   {
   const size_t cdim=5;
-  static const double tr11= 0.3090169943749474241, ti11=0.95105651629515357212,
+  static const float tr11= 0.3090169943749474241, ti11=0.95105651629515357212,
                       tr12=-0.8090169943749474241, ti12=0.58778525229247312917;
 
   for (size_t k=0; k<l1; k++)
     {
-    double ti5=CC(0,2,k)+CC(0,2,k);
-    double ti4=CC(0,4,k)+CC(0,4,k);
-    double tr2=CC(ido-1,1,k)+CC(ido-1,1,k);
-    double tr3=CC(ido-1,3,k)+CC(ido-1,3,k);
+    float ti5=CC(0,2,k)+CC(0,2,k);
+    float ti4=CC(0,4,k)+CC(0,4,k);
+    float tr2=CC(ido-1,1,k)+CC(ido-1,1,k);
+    float tr3=CC(ido-1,3,k)+CC(ido-1,3,k);
     CH(0,k,0)=CC(0,0,k)+tr2+tr3;
-    double cr2=CC(0,0,k)+tr11*tr2+tr12*tr3;
-    double cr3=CC(0,0,k)+tr12*tr2+tr11*tr3;
-    double ci4, ci5;
+    float cr2=CC(0,0,k)+tr11*tr2+tr12*tr3;
+    float cr3=CC(0,0,k)+tr12*tr2+tr11*tr3;
+    float ci4, ci5;
     MULPM(ci5,ci4,ti5,ti4,ti11,ti12)
     PM(CH(0,k,4),CH(0,k,1),cr2,ci5)
     PM(CH(0,k,3),CH(0,k,2),cr3,ci4)
@@ -1555,21 +1555,21 @@ NOINLINE static void radb5(size_t ido, size_t l1, const double * restrict cc,
     for (size_t i=2; i<ido; i+=2)
       {
       size_t ic=ido-i;
-      double tr2, tr3, tr4, tr5, ti2, ti3, ti4, ti5;
+      float tr2, tr3, tr4, tr5, ti2, ti3, ti4, ti5;
       PM(tr2,tr5,CC(i-1,2,k),CC(ic-1,1,k))
       PM(ti5,ti2,CC(i  ,2,k),CC(ic  ,1,k))
       PM(tr3,tr4,CC(i-1,4,k),CC(ic-1,3,k))
       PM(ti4,ti3,CC(i  ,4,k),CC(ic  ,3,k))
       CH(i-1,k,0)=CC(i-1,0,k)+tr2+tr3;
       CH(i  ,k,0)=CC(i  ,0,k)+ti2+ti3;
-      double cr2=CC(i-1,0,k)+tr11*tr2+tr12*tr3;
-      double ci2=CC(i  ,0,k)+tr11*ti2+tr12*ti3;
-      double cr3=CC(i-1,0,k)+tr12*tr2+tr11*tr3;
-      double ci3=CC(i  ,0,k)+tr12*ti2+tr11*ti3;
-      double ci4, ci5, cr5, cr4;
+      float cr2=CC(i-1,0,k)+tr11*tr2+tr12*tr3;
+      float ci2=CC(i  ,0,k)+tr11*ti2+tr12*ti3;
+      float cr3=CC(i-1,0,k)+tr12*tr2+tr11*tr3;
+      float ci3=CC(i  ,0,k)+tr12*ti2+tr11*ti3;
+      float ci4, ci5, cr5, cr4;
       MULPM(cr5,cr4,tr5,tr4,ti11,ti12)
       MULPM(ci5,ci4,ti5,ti4,ti11,ti12)
-      double dr2, dr3, dr4, dr5, di2, di3, di4, di5;
+      float dr2, dr3, dr4, dr5, di2, di3, di4, di5;
       PM(dr4,dr3,cr3,ci4)
       PM(di3,di4,ci3,cr4)
       PM(dr5,dr2,cr2,ci5)
@@ -1590,8 +1590,8 @@ NOINLINE static void radb5(size_t ido, size_t l1, const double * restrict cc,
 #define CH2(a,b) ch[(a)+idl1*(b)]
 
 NOINLINE static void radbg(size_t ido, size_t ip, size_t l1,
-  double * restrict cc, double * restrict ch, const double * restrict wa,
-  const double * restrict csarr)
+  float * restrict cc, float * restrict ch, const float * restrict wa,
+  const float * restrict csarr)
   {
   const size_t cdim=ip;
   size_t ipph=(ip+1)/ 2;
@@ -1637,13 +1637,13 @@ NOINLINE static void radbg(size_t ido, size_t ip, size_t l1,
     for(; j<ipph-3; j+=4,jc-=4)
       {
       iang+=l; if(iang>ip) iang-=ip;
-      double ar1=csarr[2*iang], ai1=csarr[2*iang+1];
+      float ar1=csarr[2*iang], ai1=csarr[2*iang+1];
       iang+=l; if(iang>ip) iang-=ip;
-      double ar2=csarr[2*iang], ai2=csarr[2*iang+1];
+      float ar2=csarr[2*iang], ai2=csarr[2*iang+1];
       iang+=l; if(iang>ip) iang-=ip;
-      double ar3=csarr[2*iang], ai3=csarr[2*iang+1];
+      float ar3=csarr[2*iang], ai3=csarr[2*iang+1];
       iang+=l; if(iang>ip) iang-=ip;
-      double ar4=csarr[2*iang], ai4=csarr[2*iang+1];
+      float ar4=csarr[2*iang], ai4=csarr[2*iang+1];
       for (size_t ik=0; ik<idl1; ++ik)
         {
         C2(ik,l ) += ar1*CH2(ik,j )+ar2*CH2(ik,j +1)
@@ -1655,9 +1655,9 @@ NOINLINE static void radbg(size_t ido, size_t ip, size_t l1,
     for(; j<ipph-1; j+=2,jc-=2)
       {
       iang+=l; if(iang>ip) iang-=ip;
-      double ar1=csarr[2*iang], ai1=csarr[2*iang+1];
+      float ar1=csarr[2*iang], ai1=csarr[2*iang+1];
       iang+=l; if(iang>ip) iang-=ip;
-      double ar2=csarr[2*iang], ai2=csarr[2*iang+1];
+      float ar2=csarr[2*iang], ai2=csarr[2*iang+1];
       for (size_t ik=0; ik<idl1; ++ik)
         {
         C2(ik,l ) += ar1*CH2(ik,j )+ar2*CH2(ik,j +1);
@@ -1667,7 +1667,7 @@ NOINLINE static void radbg(size_t ido, size_t ip, size_t l1,
     for(; j<ipph; ++j,--jc)
       {
       iang+=l; if(iang>ip) iang-=ip;
-      double war=csarr[2*iang], wai=csarr[2*iang+1];
+      float war=csarr[2*iang], wai=csarr[2*iang+1];
       for (size_t ik=0; ik<idl1; ++ik)
         {
         C2(ik,l ) += war*CH2(ik,j );
@@ -1707,7 +1707,7 @@ NOINLINE static void radbg(size_t ido, size_t ip, size_t l1,
       size_t idij = is;
       for (size_t i=1; i<=ido-2; i+=2)
         {
-        double t1=CH(i,k,j), t2=CH(i+1,k,j);
+        float t1=CH(i,k,j), t2=CH(i+1,k,j);
         CH(i  ,k,j) = wa[idij]*t1-wa[idij+1]*t2;
         CH(i+1,k,j) = wa[idij]*t2+wa[idij+1]*t1;
         idij+=2;
@@ -1725,7 +1725,7 @@ NOINLINE static void radbg(size_t ido, size_t ip, size_t l1,
 #undef MULPM
 #undef WA
 
-static void copy_and_norm(double *c, double *p1, size_t n, double fct)
+static void copy_and_norm(float *c, float *p1, size_t n, float fct)
   {
   if (p1!=c)
     {
@@ -1733,7 +1733,7 @@ static void copy_and_norm(double *c, double *p1, size_t n, double fct)
       for (size_t i=0; i<n; ++i)
         c[i] = fct*p1[i];
     else
-      memcpy (c,p1,n*sizeof(double));
+      memcpy (c,p1,n*sizeof(float));
     }
   else
     if (fct!=1.)
@@ -1742,14 +1742,14 @@ static void copy_and_norm(double *c, double *p1, size_t n, double fct)
   }
 
 WARN_UNUSED_RESULT
-static int rfftp_forward(rfftp_plan plan, double c[], double fct)
+static int rfftp_forward(rfftp_plan plan, float c[], float fct)
   {
   if (plan->length==1) return 0;
   size_t n=plan->length;
   size_t l1=n, nf=plan->nfct;
-  double *ch = RALLOC(double, n);
+  float *ch = RALLOC(float, n);
   if (!ch) return -1;
-  double *p1=c, *p2=ch;
+  float *p1=c, *p2=ch;
 
   for(size_t k1=0; k1<nf;++k1)
     {
@@ -1768,9 +1768,9 @@ static int rfftp_forward(rfftp_plan plan, double c[], double fct)
     else
       {
       radfg(ido, ip, l1, p1, p2, plan->fct[k].tw, plan->fct[k].tws);
-      SWAP (p1,p2,double *);
+      SWAP (p1,p2,float *);
       }
-    SWAP (p1,p2,double *);
+    SWAP (p1,p2,float *);
     }
   copy_and_norm(c,p1,n,fct);
   DEALLOC(ch);
@@ -1778,14 +1778,14 @@ static int rfftp_forward(rfftp_plan plan, double c[], double fct)
   }
 
 WARN_UNUSED_RESULT
-static int rfftp_backward(rfftp_plan plan, double c[], double fct)
+static int rfftp_backward(rfftp_plan plan, float c[], float fct)
   {
   if (plan->length==1) return 0;
   size_t n=plan->length;
   size_t l1=1, nf=plan->nfct;
-  double *ch = RALLOC(double, n);
+  float *ch = RALLOC(float, n);
   if (!ch) return -1;
-  double *p1=c, *p2=ch;
+  float *p1=c, *p2=ch;
 
   for(size_t k=0; k<nf; k++)
     {
@@ -1801,7 +1801,7 @@ static int rfftp_backward(rfftp_plan plan, double c[], double fct)
       radb5(ido, l1, p1, p2, plan->fct[k].tw);
     else
       radbg(ido, ip, l1, p1, p2, plan->fct[k].tw, plan->fct[k].tws);
-    SWAP (p1,p2,double *);
+    SWAP (p1,p2,float *);
     l1*=ip;
     }
   copy_and_norm(c,p1,n,fct);
@@ -1824,7 +1824,7 @@ static int rfftp_factorize (rfftp_plan plan)
     plan->fct[nfct++].fct=2;
     SWAP(plan->fct[0].fct, plan->fct[nfct-1].fct,size_t);
     }
-  size_t maxl=(size_t)(sqrt((double)length))+1;
+  size_t maxl=(size_t)(sqrt((float)length))+1;
   for (size_t divisor=3; (length>1)&&(divisor<maxl); divisor+=2)
     if ((length%divisor)==0)
       {
@@ -1834,7 +1834,7 @@ static int rfftp_factorize (rfftp_plan plan)
         plan->fct[nfct++].fct=divisor;
         length/=divisor;
         }
-      maxl=(size_t)(sqrt((double)length))+1;
+      maxl=(size_t)(sqrt((float)length))+1;
       }
   if (length>1) plan->fct[nfct++].fct=length;
   plan->nfct=nfct;
@@ -1858,11 +1858,11 @@ static size_t rfftp_twsize(rfftp_plan plan)
 WARN_UNUSED_RESULT NOINLINE static int rfftp_comp_twiddle (rfftp_plan plan)
   {
   size_t length=plan->length;
-  double *twid = RALLOC(double, 2*length);
+  float *twid = RALLOC(float, 2*length);
   if (!twid) return -1;
   sincos_2pibyn_half(length, twid);
   size_t l1=1;
-  double *ptr=plan->mem;
+  float *ptr=plan->mem;
   for (size_t k=0; k<plan->nfct; ++k)
     {
     size_t ip=plan->fct[k].fct, ido=length/(l1*ip);
@@ -1908,7 +1908,7 @@ NOINLINE static rfftp_plan make_rfftp_plan (size_t length)
   if (length==1) return plan;
   if (rfftp_factorize(plan)!=0) { DEALLOC(plan); return NULL; }
   size_t tws=rfftp_twsize(plan);
-  plan->mem=RALLOC(double,tws);
+  plan->mem=RALLOC(float,tws);
   if (!plan->mem) { DEALLOC(plan); return NULL; }
   if (rfftp_comp_twiddle(plan)!=0)
     { DEALLOC(plan->mem); DEALLOC(plan); return NULL; }
@@ -1925,8 +1925,8 @@ typedef struct fftblue_plan_i
   {
   size_t n, n2;
   cfftp_plan plan;
-  double *mem;
-  double *bk, *bkf;
+  float *mem;
+  float *bk, *bkf;
   } fftblue_plan_i;
 typedef struct fftblue_plan_i * fftblue_plan;
 
@@ -1936,13 +1936,13 @@ NOINLINE static fftblue_plan make_fftblue_plan (size_t length)
   if (!plan) return NULL;
   plan->n = length;
   plan->n2 = good_size(plan->n*2-1);
-  plan->mem = RALLOC(double, 2*plan->n+2*plan->n2);
+  plan->mem = RALLOC(float, 2*plan->n+2*plan->n2);
   if (!plan->mem) { DEALLOC(plan); return NULL; }
   plan->bk  = plan->mem;
   plan->bkf = plan->bk+2*plan->n;
 
 /* initialize b_k */
-  double *tmp = RALLOC(double,4*plan->n);
+  float *tmp = RALLOC(float,4*plan->n);
   if (!tmp) { DEALLOC(plan->mem); DEALLOC(plan); return NULL; }
   sincos_2pibyn(2*plan->n,tmp);
   plan->bk[0] = 1;
@@ -1958,7 +1958,7 @@ NOINLINE static fftblue_plan make_fftblue_plan (size_t length)
     }
 
   /* initialize the zero-padded, Fourier transformed b_k. Add normalisation. */
-  double xn2 = 1./plan->n2;
+  float xn2 = 1./plan->n2;
   plan->bkf[0] = plan->bk[0]*xn2;
   plan->bkf[1] = plan->bk[1]*xn2;
   for (size_t m=2; m<2*plan->n; m+=2)
@@ -1986,13 +1986,13 @@ NOINLINE static void destroy_fftblue_plan (fftblue_plan plan)
   }
 
 NOINLINE WARN_UNUSED_RESULT
-static int fftblue_fft(fftblue_plan plan, double c[], int isign, double fct)
+static int fftblue_fft(fftblue_plan plan, float c[], int isign, float fct)
   {
   size_t n=plan->n;
   size_t n2=plan->n2;
-  double *bk  = plan->bk;
-  double *bkf = plan->bkf;
-  double *akf = RALLOC(double, 2*n2);
+  float *bk  = plan->bk;
+  float *bkf = plan->bkf;
+  float *akf = RALLOC(float, 2*n2);
   if (!akf) return -1;
 
 /* initialize a_k and FFT it */
@@ -2018,14 +2018,14 @@ static int fftblue_fft(fftblue_plan plan, double c[], int isign, double fct)
   if (isign>0)
     for (size_t m=0; m<2*n2; m+=2)
       {
-      double im = -akf[m]*bkf[m+1] + akf[m+1]*bkf[m];
+      float im = -akf[m]*bkf[m+1] + akf[m+1]*bkf[m];
       akf[m  ]  =  akf[m]*bkf[m]   + akf[m+1]*bkf[m+1];
       akf[m+1]  = im;
       }
   else
     for (size_t m=0; m<2*n2; m+=2)
       {
-      double im = akf[m]*bkf[m+1] + akf[m+1]*bkf[m];
+      float im = akf[m]*bkf[m+1] + akf[m+1]*bkf[m];
       akf[m  ]  = akf[m]*bkf[m]   - akf[m+1]*bkf[m+1];
       akf[m+1]  = im;
       }
@@ -2052,22 +2052,22 @@ static int fftblue_fft(fftblue_plan plan, double c[], int isign, double fct)
   }
 
 WARN_UNUSED_RESULT
-static int cfftblue_backward(fftblue_plan plan, double c[], double fct)
+static int cfftblue_backward(fftblue_plan plan, float c[], float fct)
   { return fftblue_fft(plan,c,1,fct); }
 
 WARN_UNUSED_RESULT
-static int cfftblue_forward(fftblue_plan plan, double c[], double fct)
+static int cfftblue_forward(fftblue_plan plan, float c[], float fct)
   { return fftblue_fft(plan,c,-1,fct); }
 
 WARN_UNUSED_RESULT
-static int rfftblue_backward(fftblue_plan plan, double c[], double fct)
+static int rfftblue_backward(fftblue_plan plan, float c[], float fct)
   {
   size_t n=plan->n;
-  double *tmp = RALLOC(double,2*n);
+  float *tmp = RALLOC(float,2*n);
   if (!tmp) return -1;
   tmp[0]=c[0];
   tmp[1]=0.;
-  memcpy (tmp+2,c+1, (n-1)*sizeof(double));
+  memcpy (tmp+2,c+1, (n-1)*sizeof(float));
   if ((n&1)==0) tmp[n+1]=0.;
   for (size_t m=2; m<n; m+=2)
     {
@@ -2083,10 +2083,10 @@ static int rfftblue_backward(fftblue_plan plan, double c[], double fct)
   }
 
 WARN_UNUSED_RESULT
-static int rfftblue_forward(fftblue_plan plan, double c[], double fct)
+static int rfftblue_forward(fftblue_plan plan, float c[], float fct)
   {
   size_t n=plan->n;
-  double *tmp = RALLOC(double,2*n);
+  float *tmp = RALLOC(float,2*n);
   if (!tmp) return -1;
   for (size_t m=0; m<n; ++m)
     {
@@ -2096,7 +2096,7 @@ static int rfftblue_forward(fftblue_plan plan, double c[], double fct)
   if (fftblue_fft(plan,tmp,-1,fct)!=0)
     { DEALLOC(tmp); return -1; }
   c[0] = tmp[0];
-  memcpy (c+1, tmp+2, (n-1)*sizeof(double));
+  memcpy (c+1, tmp+2, (n-1)*sizeof(float));
   DEALLOC(tmp);
   return 0;
   }
@@ -2120,8 +2120,8 @@ static cfft_plan make_cfft_plan (size_t length)
     if (!plan->packplan) { DEALLOC(plan); return NULL; }
     return plan;
     }
-  double comp1 = cost_guess(length);
-  double comp2 = 2*cost_guess(good_size(2*length-1));
+  float comp1 = cost_guess(length);
+  float comp2 = 2*cost_guess(good_size(2*length-1));
   comp2*=1.5; /* fudge factor that appears to give good overall performance */
   if (comp2<comp1) // use Bluestein
     {
@@ -2145,7 +2145,7 @@ static void destroy_cfft_plan (cfft_plan plan)
   DEALLOC(plan);
   }
 
-WARN_UNUSED_RESULT static int cfft_backward(cfft_plan plan, double c[], double fct)
+WARN_UNUSED_RESULT static int cfft_backward(cfft_plan plan, float c[], float fct)
   {
   if (plan->packplan)
     return cfftp_backward(plan->packplan,c,fct);
@@ -2153,7 +2153,7 @@ WARN_UNUSED_RESULT static int cfft_backward(cfft_plan plan, double c[], double f
   return cfftblue_backward(plan->blueplan,c,fct);
   }
 
-WARN_UNUSED_RESULT static int cfft_forward(cfft_plan plan, double c[], double fct)
+WARN_UNUSED_RESULT static int cfft_forward(cfft_plan plan, float c[], float fct)
   {
   if (plan->packplan)
     return cfftp_forward(plan->packplan,c,fct);
@@ -2180,8 +2180,8 @@ static rfft_plan make_rfft_plan (size_t length)
     if (!plan->packplan) { DEALLOC(plan); return NULL; }
     return plan;
     }
-  double comp1 = 0.5*cost_guess(length);
-  double comp2 = 2*cost_guess(good_size(2*length-1));
+  float comp1 = 0.5*cost_guess(length);
+  float comp2 = 2*cost_guess(good_size(2*length-1));
   comp2*=1.5; /* fudge factor that appears to give good overall performance */
   if (comp2<comp1) // use Bluestein
     {
@@ -2205,7 +2205,7 @@ static void destroy_rfft_plan (rfft_plan plan)
   DEALLOC(plan);
   }
 
-WARN_UNUSED_RESULT static int rfft_backward(rfft_plan plan, double c[], double fct)
+WARN_UNUSED_RESULT static int rfft_backward(rfft_plan plan, float c[], float fct)
   {
   if (plan->packplan)
     return rfftp_backward(plan->packplan,c,fct);
@@ -2213,7 +2213,7 @@ WARN_UNUSED_RESULT static int rfft_backward(rfft_plan plan, double c[], double f
     return rfftblue_backward(plan->blueplan,c,fct);
   }
 
-WARN_UNUSED_RESULT static int rfft_forward(rfft_plan plan, double c[], double fct)
+WARN_UNUSED_RESULT static int rfft_forward(rfft_plan plan, float c[], float fct)
   {
   if (plan->packplan)
     return rfftp_forward(plan->packplan,c,fct);
@@ -2222,10 +2222,10 @@ WARN_UNUSED_RESULT static int rfft_forward(rfft_plan plan, double c[], double fc
   }
 
 static PyObject *
-execute_complex(PyObject *a1, int is_forward, double fct)
+execute_complex(PyObject *a1, int is_forward, float fct)
 {
     PyArrayObject *data = (PyArrayObject *)PyArray_FromAny(a1,
-            PyArray_DescrFromType(NPY_CDOUBLE), 1, 0,
+            PyArray_DescrFromType(NPY_CFLOAT), 1, 0,
             NPY_ARRAY_ENSURECOPY | NPY_ARRAY_DEFAULT |
             NPY_ARRAY_ENSUREARRAY | NPY_ARRAY_FORCECAST,
             NULL);
@@ -2234,18 +2234,18 @@ execute_complex(PyObject *a1, int is_forward, double fct)
     int npts = PyArray_DIM(data, PyArray_NDIM(data) - 1);
 
     int nrepeats = PyArray_SIZE(data)/npts;
-    double *dptr = (double *)PyArray_DATA(data);
+    float *dptr = (float *)PyArray_DATA(data);
     int fail=0;
     int runKML = 0;
     if (nrepeats >= 256) {
 #if defined(HAVE_HUAWEI_KML)
-      kml_fft_plan plan;
+      kml_fftf_plan plan;
       plan = is_forward ?
-        kml_fft_plan_dft_1d(npts, (kml_fft_complex*)dptr, (kml_fft_complex*)dptr, KML_FFT_FORWARD, KML_FFT_ESTIMATE) :
-        kml_fft_plan_dft_1d(npts, (kml_fft_complex*)dptr, (kml_fft_complex*)dptr, KML_FFT_BACKWARD, KML_FFT_ESTIMATE);
+        kml_fftf_plan_dft_1d(npts, (kml_fftf_complex*)dptr, (kml_fftf_complex*)dptr, KML_FFT_FORWARD, KML_FFT_ESTIMATE) :
+        kml_fftf_plan_dft_1d(npts, (kml_fftf_complex*)dptr, (kml_fftf_complex*)dptr, KML_FFT_BACKWARD, KML_FFT_ESTIMATE);
 
         for (int i = 0; i < nrepeats; ++i) {
-          kml_fft_execute_dft(plan, (kml_fft_complex*)dptr, (kml_fft_complex*)dptr);
+          kml_fftf_execute_dft(plan, (kml_fftf_complex*)dptr, (kml_fftf_complex*)dptr);
           if (is_forward == 0) {
             int idx;
             for (idx = 0; idx < npts*2 - 3; idx += 4) {
@@ -2260,7 +2260,7 @@ execute_complex(PyObject *a1, int is_forward, double fct)
           }
           dptr += npts * 2;
         }
-        kml_fft_destroy_plan(plan);
+        kml_fftf_destroy_plan(plan);
         runKML = 9527;
 #endif 
     } 
@@ -2290,12 +2290,12 @@ execute_complex(PyObject *a1, int is_forward, double fct)
 }
 
 static PyObject *
-execute_real_forward(PyObject *a1, double fct)
+execute_real_forward(PyObject *a1, float fct)
 {
     rfft_plan plan=NULL;
     int fail = 0;
     PyArrayObject *data = (PyArrayObject *)PyArray_FromAny(a1,
-            PyArray_DescrFromType(NPY_DOUBLE), 1, 0,
+            PyArray_DescrFromType(NPY_FLOAT), 1, 0,
             NPY_ARRAY_DEFAULT | NPY_ARRAY_ENSUREARRAY | NPY_ARRAY_FORCECAST,
             NULL);
     if (!data) return NULL;
@@ -2310,15 +2310,15 @@ execute_real_forward(PyObject *a1, double fct)
       tdim[d] = odim[d];
     tdim[ndim-1] = npts/2 + 1;
     PyArrayObject *ret = (PyArrayObject *)PyArray_Empty(ndim,
-            tdim, PyArray_DescrFromType(NPY_CDOUBLE), 0);
+            tdim, PyArray_DescrFromType(NPY_CFLOAT), 0);
     free(tdim);
     if (!ret) fail=1;
     if (!fail) {
       int rstep = PyArray_DIM(ret, PyArray_NDIM(ret) - 1)*2;
 
       int nrepeats = PyArray_SIZE(data)/npts;
-      double *rptr = (double *)PyArray_DATA(ret),
-             *dptr = (double *)PyArray_DATA(data);
+      float *rptr = (float *)PyArray_DATA(ret),
+             *dptr = (float *)PyArray_DATA(data);
 
       Py_BEGIN_ALLOW_THREADS;
       plan = make_rfft_plan(npts);
@@ -2326,7 +2326,7 @@ execute_real_forward(PyObject *a1, double fct)
       if (!fail)
         for (int i = 0; i < nrepeats; i++) {
             rptr[rstep-1] = 0.0;
-            memcpy((char *)(rptr+1), dptr, npts*sizeof(double));
+            memcpy((char *)(rptr+1), dptr, npts*sizeof(float));
             if (rfft_forward(plan, rptr+1, fct)!=0) {fail=1; break;}
             rptr[0] = rptr[1];
             rptr[1] = 0.0;
@@ -2345,30 +2345,30 @@ execute_real_forward(PyObject *a1, double fct)
     return (PyObject *)ret;
 }
 static PyObject *
-execute_real_backward(PyObject *a1, double fct)
+execute_real_backward(PyObject *a1, float fct)
 {
     rfft_plan plan=NULL;
     PyArrayObject *data = (PyArrayObject *)PyArray_FromAny(a1,
-            PyArray_DescrFromType(NPY_CDOUBLE), 1, 0,
+            PyArray_DescrFromType(NPY_CFLOAT), 1, 0,
             NPY_ARRAY_DEFAULT | NPY_ARRAY_ENSUREARRAY | NPY_ARRAY_FORCECAST,
             NULL);
     if (!data) return NULL;
     int npts = PyArray_DIM(data, PyArray_NDIM(data) - 1);
     PyArrayObject *ret = (PyArrayObject *)PyArray_Empty(PyArray_NDIM(data),
-            PyArray_DIMS(data), PyArray_DescrFromType(NPY_DOUBLE), 0);
+            PyArray_DIMS(data), PyArray_DescrFromType(NPY_FLOAT), 0);
     int fail = 0;
     if (!ret) fail=1;
     if (!fail) {
       int nrepeats = PyArray_SIZE(ret)/npts;
-      double *rptr = (double *)PyArray_DATA(ret),
-             *dptr = (double *)PyArray_DATA(data);
+      float *rptr = (float *)PyArray_DATA(ret),
+             *dptr = (float *)PyArray_DATA(data);
 
       Py_BEGIN_ALLOW_THREADS;
       plan = make_rfft_plan(npts);
       if (!plan) fail=1;
       if (!fail) {
         for (int i = 0; i < nrepeats; i++) {
-          memcpy((char *)(rptr + 1), (dptr + 2), (npts - 1)*sizeof(double));
+          memcpy((char *)(rptr + 1), (dptr + 2), (npts - 1)*sizeof(float));
           rptr[0] = dptr[0];
           if (rfft_backward(plan, rptr, fct)!=0) {fail=1; break;}
           rptr += npts;
@@ -2388,7 +2388,7 @@ execute_real_backward(PyObject *a1, double fct)
 }
 
 static PyObject *
-execute_real(PyObject *a1, int is_forward, double fct)
+execute_real(PyObject *a1, int is_forward, float fct)
 {
     return is_forward ? execute_real_forward(a1, fct)
                       : execute_real_backward(a1, fct);
@@ -2401,9 +2401,9 @@ execute(PyObject *NPY_UNUSED(self), PyObject *args)
 {
     PyObject *a1;
     int is_real, is_forward;
-    double fct;
+    float fct;
 
-    if(!PyArg_ParseTuple(args, "Oiid:execute", &a1, &is_real, &is_forward, &fct)) {
+    if(!PyArg_ParseTuple(args, "Oiif:execute", &a1, &is_real, &is_forward, &fct)) {
         return NULL;
     }
 
@@ -2420,7 +2420,7 @@ static struct PyMethodDef methods[] = {
 
 static struct PyModuleDef moduledef = {
         PyModuleDef_HEAD_INIT,
-        "_pocketfft_internal",
+        "_pocketfftf_internal",
         NULL,
         -1,
         methods,
@@ -2431,7 +2431,7 @@ static struct PyModuleDef moduledef = {
 };
 
 /* Initialization function for the module */
-PyMODINIT_FUNC PyInit__pocketfft_internal(void)
+PyMODINIT_FUNC PyInit__pocketfftf_internal(void)
 {
     PyObject *m;
     m = PyModule_Create(&moduledef);

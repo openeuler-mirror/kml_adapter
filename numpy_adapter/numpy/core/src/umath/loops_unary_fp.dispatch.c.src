@@ -10,6 +10,11 @@
  * to handle non-contiguous memory access comparing with SSE for
  * such small operations that this file covers.
 */
+
+#ifdef HAVE_HUAWEI_KML
+#include "kvml_adapter.h"
+#endif
+
 #define NPY_SIMD_FORCE_128
 #include "numpy/npy_math.h"
 #include "simd/simd.h"
@@ -257,6 +262,11 @@ static void simd_@TYPE@_@kind@_@STYPE@_@DTYPE@
 NPY_NO_EXPORT void NPY_CPU_DISPATCH_CURFX(@TYPE@_@kind@)
 (char **args, npy_intp const *dimensions, npy_intp const *steps, void *NPY_UNUSED(func))
 {
+#define KML_FLAG_@kind@
+
+#if defined(HAVE_HUAWEI_KML) && (defined(sqrt))
+    KML_VML_@TYPE@_@kind@(args, dimensions);
+#else
     const char *src = args[0]; char *dst = args[1];
     const npy_intp src_step = steps[0];
     const npy_intp dst_step = steps[1];
@@ -301,6 +311,8 @@ clear:;
 #if @clear@
     npy_clear_floatstatus_barrier((char*)dimensions);
 #endif
+#endif  // HAVE_HUAWEI_KML
+#undef KML_FLAG_@kind@
 }
 /**end repeat1**/
 /**end repeat**/

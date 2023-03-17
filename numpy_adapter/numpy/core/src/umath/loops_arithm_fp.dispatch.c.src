@@ -6,6 +6,10 @@
 #define _MULTIARRAYMODULE
 #define NPY_NO_DEPRECATED_API NPY_API_VERSION
 
+#ifdef HAVE_HUAWEI_KML
+#include "kvml_adapter.h"
+#endif
+
 #include "simd/simd.h"
 #include "loops_utils.h"
 #include "loops.h"
@@ -523,6 +527,7 @@ run_binary_simd_@kind@_@TYPE@(char **args, npy_intp const *dimensions, npy_intp 
 NPY_NO_EXPORT void NPY_CPU_DISPATCH_CURFX(@TYPE@_@kind@)
 (char **args, npy_intp const *dimensions, npy_intp const *steps, void *NPY_UNUSED(func))
 {
+#define KML_FLAG_@kind@
     if (IS_BINARY_REDUCE) {
 #if @PW@
         @type@ * iop1 = (@type@ *)args[0];
@@ -535,16 +540,40 @@ NPY_NO_EXPORT void NPY_CPU_DISPATCH_CURFX(@TYPE@_@kind@)
         }
         *((@type@ *)iop1) = io1;
 #endif
-    }
-    else if (!run_binary_simd_@kind@_@TYPE@(args, dimensions, steps)) {
-        BINARY_LOOP {
-            const @type@ in1 = *(@type@ *)ip1;
-            const @type@ in2 = *(@type@ *)ip2;
-            *((@type@ *)op1) = in1 @OP@ in2;
+    } else {
+#if defined(HAVE_HUAWEI_KML) && (defined(KML_FLAG_add) || defined(KML_FLAG_subtract) || defined(KML_FLAG_multiply))
+        if (steps[0] > 0 && steps[1] > 0 && dimensions[0] > 65536) {
+            KML_VML_@TYPE@_@kind@(args, dimensions);
         }
+        else
+#endif
+        {
+            if (!run_binary_simd_@kind@_@TYPE@(args, dimensions, steps)) {
+                BINARY_LOOP {
+                    const @type@ in1 = *(@type@ *)ip1;
+                    const @type@ in2 = *(@type@ *)ip2;
+                    *((@type@ *)op1) = in1 @OP@ in2;
+                }
+            }
+        } 
     }
+#undef KML_FLAG_@kind@
 }
 /**end repeat1**/
+
+/**begin repeat1
+ * # kind = power, fmod#
+ */
+NPY_NO_EXPORT void NPY_CPU_DISPATCH_CURFX(@TYPE@_@kind@)
+(char **args, npy_intp const *dimensions, npy_intp const *steps, void *NPY_UNUSED(func))
+{
+#if defined(HAVE_HUAWEI_KML)
+    KML_VML_@TYPE@_@kind@(args, dimensions);
+#endif
+}
+
+/**end repeat1**/
+
 /**end repeat**/
 
 //###############################################################################

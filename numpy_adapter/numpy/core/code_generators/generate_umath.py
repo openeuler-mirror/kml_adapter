@@ -359,7 +359,9 @@ defdict = {
           docstrings.get('numpy.core.umath.fmod'),
           None,
           TD(ints),
-          TD(flts, f='fmod', astype={'e': 'f'}),
+          TD('e', f='fmod', astype={'e': 'f'}),
+          TD('fd', dispatch=[('loops_arithm_fp', 'fd')]),
+          TD('g', f='fmod', astype={'e' : 'f'}),
           TD(P, f='fmod'),
           ),
 'square':
@@ -390,7 +392,9 @@ defdict = {
           docstrings.get('numpy.core.umath.power'),
           None,
           TD(ints),
-          TD(inexact, f='pow', astype={'e': 'f'}),
+          TD('e', f='pow', astype={'e': 'f'}),
+          TD('fd', dispatch=[('loops_arithm_fp', 'fd')]),
+          TD('gFDG', f='pow', astype={'e' : 'f'}),
           TD(O, f='npy_ObjectPower'),
           ),
 'float_power':

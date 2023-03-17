@@ -32,11 +32,12 @@ __all__ = ['fft', 'ifft', 'rfft', 'irfft', 'hfft', 'ihfft', 'rfftn',
 
 import functools
 
-from numpy.core import asarray, zeros, swapaxes, conjugate, take, sqrt
+from numpy.core import asarray, zeros, swapaxes, conjugate, take, sqrt, divide, ones
 from . import _pocketfft_internal as pfi
+from . import _pocketfftf_internal as pfif
 from numpy.core.multiarray import normalize_axis_index
 from numpy.core import overrides
-
+from numpy import float32, float64, complex64, complex128
 
 array_function_dispatch = functools.partial(
     overrides.array_function_dispatch, module='numpy.fft')
@@ -65,13 +66,22 @@ def _raw_fft(a, n, axis, is_real, is_forward, inv_norm):
             z = zeros(s, a.dtype.char)
             z[tuple(index)] = a
             a = z
-
-    if axis == a.ndim-1:
-        r = pfi.execute(a, is_real, is_forward, fct)
+    
+    if a.dtype == float32 or a.dtype == complex64:
+        if axis == a.ndim-1:
+            r = pfif.execute(a, is_real, is_forward, fct)
+        else:
+            a = swapaxes(a, axis, -1)
+            r = pfif.execute(a, is_real, is_forward, fct)
+            r = swapaxes(r, axis, -1)
     else:
-        a = swapaxes(a, axis, -1)
-        r = pfi.execute(a, is_real, is_forward, fct)
-        r = swapaxes(r, axis, -1)
+        if axis == a.ndim-1:
+            r = pfi.execute(a, is_real, is_forward, fct)
+        else:
+            a = swapaxes(a, axis, -1)
+            r = pfi.execute(a, is_real, is_forward, fct)
+            r = swapaxes(r, axis, -1)
+
     return r
 
 

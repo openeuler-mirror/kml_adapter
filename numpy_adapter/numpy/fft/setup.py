@@ -13,6 +13,10 @@ def configuration(parent_package='',top_path=None):
                          sources=['_pocketfft.c'],
                          define_macros=defs,
                          )
+    config.add_extension('_pocketfftf_internal',
+                         sources=['_pocketfftf.c'],
+                         define_macros=defs,
+                         )              
 
     config.add_data_files('*.pyi')
     return config

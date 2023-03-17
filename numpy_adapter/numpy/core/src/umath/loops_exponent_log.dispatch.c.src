@@ -7,6 +7,10 @@
 #define _MULTIARRAYMODULE
 #define NPY_NO_DEPRECATED_API NPY_API_VERSION
 
+#ifdef HAVE_HUAWEI_KML
+#include "kvml_adapter.h"
+#endif
+
 #include <float.h>
 
 #include "numpy/npy_math.h"
@@ -1260,7 +1264,9 @@ AVX512_SKX_frexp_@TYPE@(char **args, npy_intp const *dimensions, npy_intp const 
 NPY_NO_EXPORT void NPY_CPU_DISPATCH_CURFX(FLOAT_@func@)
 (char **args, npy_intp const *dimensions, npy_intp const *steps, void *NPY_UNUSED(data))
 {
-#if defined(SIMD_AVX2_FMA3) || defined(SIMD_AVX512F)
+#if defined(HAVE_HUAWEI_KML)
+    KML_VML_FLOAT_@func@(args, dimensions);
+#elif defined(SIMD_AVX2_FMA3) || defined(SIMD_AVX512F)
     // third arg in `IS_OUTPUT_BLOCKABLE_UNARY` is dummy
     // TODO: get ride of this macro during the move to NPYV
     if (IS_OUTPUT_BLOCKABLE_UNARY(sizeof(npy_float), sizeof(npy_float), 64)) {
@@ -1293,6 +1299,9 @@ NPY_NO_EXPORT void NPY_CPU_DISPATCH_CURFX(FLOAT_@func@)
 NPY_NO_EXPORT void NPY_CPU_DISPATCH_CURFX(DOUBLE_@func@)
 (char **args, npy_intp const *dimensions, npy_intp const *steps, void *NPY_UNUSED(data))
 {
+#if defined(HAVE_HUAWEI_KML)
+    KML_VML_FLOAT_@func@(args, dimensions);
+#else
 #ifdef SIMD_AVX512F_NOCLANG_BUG
     if (IS_OUTPUT_BLOCKABLE_UNARY(sizeof(npy_double), sizeof(npy_double), 64)) {
         AVX512F_@func@_DOUBLE((npy_double*)args[1], (npy_double*)args[0], dimensions[0], steps[0]);
@@ -1303,6 +1312,7 @@ NPY_NO_EXPORT void NPY_CPU_DISPATCH_CURFX(DOUBLE_@func@)
         const npy_double in1 = *(npy_double *)ip1;
         *(npy_double *)op1 = @scalar@(in1);
     }
+#endif
 }
 /**end repeat**/
 

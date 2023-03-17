@@ -4,6 +4,11 @@
  ** vsx2
  ** neon_vfpv4
  **/
+
+#ifdef HAVE_HUAWEI_KML
+#include "kvml_adapter.h"
+#endif
+
 #include "numpy/npy_math.h"
 #include "simd/simd.h"
 #include "loops_utils.h"
@@ -202,6 +207,9 @@ simd_sincos_f32(const float *src, npy_intp ssrc, float *dst, npy_intp sdst,
 NPY_NO_EXPORT void NPY_CPU_DISPATCH_CURFX(FLOAT_@func@)
 (char **args, npy_intp const *dimensions, npy_intp const *steps, void *NPY_UNUSED(data))
 {
+#if defined(HAVE_HUAWEI_KML)
+    KML_VML_FLOAT_@func@(args, dimensions);
+#else
     const float *src = (float*)args[0];
           float *dst = (float*)args[1];
 
@@ -225,6 +233,7 @@ NPY_NO_EXPORT void NPY_CPU_DISPATCH_CURFX(FLOAT_@func@)
         const float src0 = *src;
         *dst = npy_@func@f(src0);
     }
-#endif
+#endif  // NPY_SIMD_FMA3
+#endif  // HAVE_HUAWEI_KML
 }
 /**end repeat**/
