@@ -30,7 +30,7 @@
 #define PY_SSIZE_T_CLEAN
 /* Add neon opt macro */
 #ifdef HAVE_NEON_NPY
-#include "neon_opt.h"
+#include "knpy.h"
 #endif
 
 #include <Python.h>
