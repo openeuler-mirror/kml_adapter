@@ -264,7 +264,7 @@ NPY_NO_EXPORT void NPY_CPU_DISPATCH_CURFX(@TYPE@_@kind@)
 {
 #define KML_FLAG_@kind@
 
-#if defined(HAVE_HUAWEI_KML) && (defined(sqrt))
+#if defined(HAVE_HUAWEI_KML) && (defined(KML_FLAG_sqrt))
     KML_VML_@TYPE@_@kind@(args, dimensions);
 #else
     const char *src = args[0]; char *dst = args[1];
