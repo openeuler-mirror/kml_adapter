@@ -15,10 +15,10 @@ index 5921e15..2ecf46f 100644
  #include "src/Core/util/ReenableStupidWarnings.h"
 diff --git a/Eigen/src/Core/AssignEvaluator_KUNPENG.h b/Eigen/src/Core/AssignEvaluator_KUNPENG.h
 new file mode 100644
-index 0000000..0670445
+index 0000000..6784634
 --- /dev/null
 +++ b/Eigen/src/Core/AssignEvaluator_KUNPENG.h
-@@ -0,0 +1,693 @@
+@@ -0,0 +1,1686 @@
 +/*
 + * Copyright: Copyright (c) Huawei Technologies Co., Ltd. 2023. All rights reserved.
 + * Description: Kunpeng Optimization.
@@ -57,18 +57,71 @@ index 0000000..0670445
 +#ifdef __cplusplus
 +extern "C" {
 +#endif
-+void vsadd(const int len, const float *src1, const float *src2, float *dst);
-+void vdadd(const int len, const double *src1, const double *src2, double *dst);
-+void vcadd(const int len, const float _Complex *src1, const float _Complex *src2, float _Complex *dst);
-+void vzadd(const int len, const double _Complex *src1, const double _Complex *src2, double _Complex *dst);
-+void vssub(const int len, const float *src1, const float *src2, float *dst);
-+void vdsub(const int len, const double *src1, const double *src2, double *dst);
-+void vcsub(const int len, const float _Complex *src1, const float _Complex *src2, float _Complex *dst);
-+void vzsub(const int len, const double _Complex *src1, const double _Complex *src2, double _Complex *dst);
-+void vsmul(const int len, const float *src1, const float *src2, float *dst);
-+void vdmul(const int len, const double *src1, const double *src2, double *dst);
-+void vcmul(const int len, const float _Complex *src1, const float _Complex *src2, float _Complex *dst);
-+void vzmul(const int len, const double _Complex *src1, const double _Complex *src2, double _Complex *dst);
++
++void cblas_somatadd(const enum CBLAS_ORDER ordering, const enum CBLAS_TRANSPOSE transa,
++    const enum CBLAS_TRANSPOSE transb, const BLASINT m, const BLASINT n, const float alpha, float *a,
++    const BLASINT lda, const float beta, float *b, const BLASINT ldb, float *c, const BLASINT ldc);
++void cblas_domatadd(const enum CBLAS_ORDER ordering, const enum CBLAS_TRANSPOSE transa,
++    const enum CBLAS_TRANSPOSE transb, const BLASINT m, const BLASINT n, const double alpha, double *a,
++    const BLASINT lda, const double beta, double *b, const BLASINT ldb, double *c, const BLASINT ldc);
++void cblas_comatadd(const enum CBLAS_ORDER ordering, const enum CBLAS_TRANSPOSE transa,
++    const enum CBLAS_TRANSPOSE transb, const BLASINT m, const BLASINT n, const float *alpha, float *a,
++    const BLASINT lda, const float *beta, float *b, const BLASINT ldb, float *c, const BLASINT ldc);
++void cblas_zomatadd(const enum CBLAS_ORDER ordering, const enum CBLAS_TRANSPOSE transa,
++    const enum CBLAS_TRANSPOSE transb, const BLASINT m, const BLASINT n, const double *alpha, double *a,
++    const BLASINT lda, const double *beta, double *b, const BLASINT ldb, double *c, const BLASINT ldc);
++
++void cblas_simatadd(const enum CBLAS_ORDER ordering, const enum CBLAS_TRANSPOSE transa,
++    const BLASINT m, const BLASINT n, const float alpha, float *a,
++    const BLASINT lda, float *c, const BLASINT ldc);
++void cblas_dimatadd(const enum CBLAS_ORDER ordering, const enum CBLAS_TRANSPOSE transa,
++    const BLASINT m, const BLASINT n, const double alpha, double *a,
++    const BLASINT lda, double *c, const BLASINT ldc);
++void cblas_cimatadd(const enum CBLAS_ORDER ordering, const enum CBLAS_TRANSPOSE transa,
++    const BLASINT m, const BLASINT n, const float *alpha, float *a,
++    const BLASINT lda, float *c, const BLASINT ldc);
++void cblas_zimatadd(const enum CBLAS_ORDER ordering, const enum CBLAS_TRANSPOSE transa,
++    const BLASINT m, const BLASINT n, const double *alpha, double *a,
++    const BLASINT lda, double *c, const BLASINT ldc);
++
++void cblas_somatsub(const enum CBLAS_ORDER ordering, const enum CBLAS_TRANSPOSE transa,
++    const enum CBLAS_TRANSPOSE transb, const BLASINT m, const BLASINT n, const float alpha, float *a,
++    const BLASINT lda, const float beta, float *b, const BLASINT ldb, float *c, const BLASINT ldc);
++void cblas_domatsub(const enum CBLAS_ORDER ordering, const enum CBLAS_TRANSPOSE transa,
++    const enum CBLAS_TRANSPOSE transb, const BLASINT m, const BLASINT n, const double alpha, double *a,
++    const BLASINT lda, const double beta, double *b, const BLASINT ldb, double *c, const BLASINT ldc);
++void cblas_comatsub(const enum CBLAS_ORDER ordering, const enum CBLAS_TRANSPOSE transa,
++    const enum CBLAS_TRANSPOSE transb, const BLASINT m, const BLASINT n, const float *alpha, float *a,
++    const BLASINT lda, const float *beta, float *b, const BLASINT ldb, float *c, const BLASINT ldc);
++void cblas_zomatsub(const enum CBLAS_ORDER ordering, const enum CBLAS_TRANSPOSE transa,
++    const enum CBLAS_TRANSPOSE transb, const BLASINT m, const BLASINT n, const double *alpha, double *a,
++    const BLASINT lda, const double *beta, double *b, const BLASINT ldb, double *c, const BLASINT ldc);
++
++void cblas_simatsub(const enum CBLAS_ORDER ordering, const enum CBLAS_TRANSPOSE transa,
++    const BLASINT m, const BLASINT n, const float alpha, float *a,
++    const BLASINT lda, float *c, const BLASINT ldc);
++void cblas_dimatsub(const enum CBLAS_ORDER ordering, const enum CBLAS_TRANSPOSE transa,
++    const BLASINT m, const BLASINT n, const double alpha, double *a,
++    const BLASINT lda, double *c, const BLASINT ldc);
++void cblas_cimatsub(const enum CBLAS_ORDER ordering, const enum CBLAS_TRANSPOSE transa,
++    const BLASINT m, const BLASINT n, const float *alpha, float *a,
++    const BLASINT lda, float *c, const BLASINT ldc);
++void cblas_zimatsub(const enum CBLAS_ORDER ordering, const enum CBLAS_TRANSPOSE transa,
++    const BLASINT m, const BLASINT n, const double *alpha, double *a,
++    const BLASINT lda, double *c, const BLASINT ldc);
++
++void cblas_somatmul(const enum CBLAS_ORDER ordering, const enum CBLAS_TRANSPOSE transa,
++    const enum CBLAS_TRANSPOSE transb, const BLASINT m, const BLASINT n, const float alpha, float *a,
++    const BLASINT lda, float *b, const BLASINT ldb, float *c, const BLASINT ldc);
++void cblas_domatmul(const enum CBLAS_ORDER ordering, const enum CBLAS_TRANSPOSE transa,
++    const enum CBLAS_TRANSPOSE transb, const BLASINT m, const BLASINT n, const double alpha, double *a,
++    const BLASINT lda, double *b, const BLASINT ldb, double *c, const BLASINT ldc);
++void cblas_comatmul(const enum CBLAS_ORDER ordering, const enum CBLAS_TRANSPOSE transa,
++    const enum CBLAS_TRANSPOSE transb, const BLASINT m, const BLASINT n, const float *alpha, float *a,
++    const BLASINT lda, float *b, const BLASINT ldb, float *c, const BLASINT ldc);
++void cblas_zomatmul(const enum CBLAS_ORDER ordering, const enum CBLAS_TRANSPOSE transa,
++    const enum CBLAS_TRANSPOSE transb, const BLASINT m, const BLASINT n, const double *alpha, double *a,
++    const BLASINT lda, double *b, const BLASINT ldb, double *c, const BLASINT ldc);
 +
 +void cblas_sgemv(const enum CBLAS_ORDER order, const enum CBLAS_TRANSPOSE trans, const BLASINT m, const BLASINT n,
 +    const float alpha, const float *a, const BLASINT lda, const float *x, const BLASINT incX, const float beta,
@@ -83,640 +136,1580 @@ index 0000000..0670445
 +    const void *alpha, const void *a, const BLASINT lda, const void *x, const BLASINT incX, const void *beta, void *y,
 +    const BLASINT incY);
 +
++void cblas_scopy(const BLASINT n, const float *x, const BLASINT incx, float *y, const BLASINT incy);
++void cblas_dcopy(const BLASINT n, const double *x, const BLASINT incx, double *y, const BLASINT incy);
++void cblas_ccopy(const BLASINT n, const void *x, const BLASINT incx, void *y, const BLASINT incy);
++void cblas_zcopy(const BLASINT n, const void *x, const BLASINT incx, void *y, const BLASINT incy);
++
++
++#define PLDL1KEEP(ptr) __asm__ __volatile__("PRFM PLDL1KEEP, %0" ::"Q"(*(ptr)))
++#define PLDL2KEEP(ptr) __asm__ __volatile__("PRFM PLDL2KEEP, %0" ::"Q"(*(ptr)))
++#define PSTL1KEEP(ptr) __asm__ __volatile__("PRFM PSTL1KEEP, %0" ::"Q"(*(ptr)))
++#define PSTL2KEEP(ptr) __asm__ __volatile__("PRFM PSTL2KEEP, %0" ::"Q"(*(ptr)))
++#define PLDL1STRM(ptr) __asm__ __volatile__("PRFM PLDL1STRM, %0" ::"Q"(*(ptr)))
++#define PLDL2STRM(ptr) __asm__ __volatile__("PRFM PLDL2STRM, %0" ::"Q"(*(ptr)))
++#define PSTL1STRM(ptr) __asm__ __volatile__("PRFM PSTL1STRM, %0" ::"Q"(*(ptr)))
++#define PSTL2STRM(ptr) __asm__ __volatile__("PRFM PSTL2STRM, %0" ::"Q"(*(ptr)))
++
++#define PLDL1KEEP_OFF(ptr, off) __asm__ volatile("prfm PLDL1KEEP, [%0, #(%1)]" ::"r"(ptr), "i"(off) :)
++#define PLDL2KEEP_OFF(ptr, off) __asm__ volatile("prfm PLDL2KEEP, [%0, #(%1)]" ::"r"(ptr), "i"(off) :)
++#define PSTL1KEEP_OFF(ptr, off) __asm__ volatile("prfm PSTL1KEEP, [%0, #(%1)]" ::"r"(ptr), "i"(off) :)
++
++void vsfill(const int len, float *dst, float alpha)
++{
++    float32x4_t vAlpha = vdupq_n_f32(alpha);
++
++    const int32_t loopLen1 = len & 0xfffffff0;
++    const int32_t loopLen2 = len & 0xfffffffc;
++    int32_t i;
++    PSTL2KEEP(dst);
++    for (i = 0; i < loopLen1; i += 0x10) {
++        vst1q_f32(dst, vAlpha);
++        vst1q_f32(dst + 0x4, vAlpha);
++        vst1q_f32(dst + 0x8, vAlpha);
++        vst1q_f32(dst + 0xc, vAlpha);
++        dst += 0x10;
++    }
++
++    for (; i < loopLen2; i += 0x4) {
++        vst1q_f32(dst, vAlpha);
++        dst += 0x4;
++    }
++
++    for (; i < len; ++i) {
++        *dst = alpha;
++        dst++;
++    }
++}
++
++void vdfill(const int len, double *dst, double alpha)
++{
++    float64x2_t vAlpha = vdupq_n_f64(alpha);
++
++    const int32_t loopLen1 = len & 0xfffffff8;
++    const int32_t loopLen2 = len & 0xfffffffe;
++    int32_t i;
++    PSTL2KEEP(dst);
++    for (i = 0; i < loopLen1; i += 0x8) {
++        vst1q_f64(dst, vAlpha);
++        vst1q_f64(dst + 0x2, vAlpha);
++        vst1q_f64(dst + 0x4, vAlpha);
++        vst1q_f64(dst + 0x6, vAlpha);
++        dst += 0x8;
++    }
++
++    for (; i < loopLen2; i += 0x2) {
++        vst1q_f64(dst, vAlpha);
++        dst += 0x2;
++    }
++
++    for (; i < len; ++i) {
++        *dst = alpha;
++        dst++;
++    }
++}
++
++void vcfill(const int len, std::complex<float> *dst, std::complex<float> alpha)
++{
++    float real = alpha.real();
++    float imag = alpha.imag();
++    float32x4x2_t vAlpha;
++    vAlpha.val[0] = vdupq_n_f32(real);
++    vAlpha.val[1] = vdupq_n_f32(imag);
++
++    float *dstTmp = (float *)dst;
++    const int32_t rlen = len * 2;
++    const int32_t loopLen1 = rlen & 0xffffffe0;
++    const int32_t loopLen2 = rlen & 0xfffffff8;
++    int32_t i;
++    PSTL2KEEP(dstTmp);
++    for (i = 0; i < loopLen1; i += 0x20) {
++        vst2q_f32(dstTmp, vAlpha);
++        vst2q_f32(dstTmp + 0x8, vAlpha);
++        vst2q_f32(dstTmp + 0x10, vAlpha);
++        vst2q_f32(dstTmp + 0x18, vAlpha);
++        dstTmp += 0x20;
++    }
++
++    for (; i < loopLen2; i += 0x8) {
++        vst2q_f32(dstTmp, vAlpha);
++        dstTmp += 0x8;
++    }
++
++    for (; i < rlen; i += 0x2) {
++        *dstTmp = real;
++        *(dstTmp + 0x1) = imag;
++        dstTmp += 0x2;
++    }
++}
++
++void vzfill(const int len, std::complex<double> *dst, std::complex<double> alpha)
++{
++    double real = alpha.real();
++    double imag = alpha.imag();
++    float64x2x2_t vAlpha;
++    vAlpha.val[0] = vdupq_n_f64(real);
++    vAlpha.val[1] = vdupq_n_f64(imag);
++
++    double *dstTmp = (double *)dst;
++    const int32_t rlen = len * 2;
++    const int32_t loopLen1 = rlen & 0xfffffff0;
++    const int32_t loopLen2 = rlen & 0xfffffffc;
++    int32_t i;
++    PSTL2KEEP(dstTmp);
++    for (i = 0; i < loopLen1; i += 0x10) {
++        vst2q_f64(dstTmp, vAlpha);
++        vst2q_f64(dstTmp + 0x4, vAlpha);
++        vst2q_f64(dstTmp + 0x8, vAlpha);
++        vst2q_f64(dstTmp + 0xc, vAlpha);
++        dstTmp += 0x10;
++    }
++
++    for (; i < loopLen2; i += 0x4) {
++        vst2q_f64(dstTmp, vAlpha);
++        dstTmp += 0x4;
++    }
++
++    for (; i < rlen; i += 0x2) {
++        *dstTmp = real;
++        *(dstTmp + 0x1) = imag;
++        dstTmp += 0x2;
++    }
++}
++
++
 +#ifdef __cplusplus
 +}
 +#endif
 +
 +namespace Eigen {
-+
 +// This implementation is based on Assign.h
 +
 +namespace internal {
-+
-+template<int DstRows, int DstCols, int DstOptions, int DstMaxRows, int DstMaxCols,
-+         int SrcRows1, int SrcCols1, int SrcOptions1, int SrcMaxRows1, int SrcMaxCols1,
-+         int SrcRows2, int SrcCols2, int SrcOptions2, int SrcMaxRows2, int SrcMaxCols2>
-+EIGEN_DEVICE_FUNC EIGEN_STRONG_INLINE void call_dense_assignment_loop(Eigen::Matrix<float, DstRows, DstCols, DstOptions, DstMaxRows, DstMaxCols> & dst,
-+  const Eigen::CwiseBinaryOp<Eigen::internal::scalar_sum_op<float, float>,
-+                             Eigen::Matrix<float, SrcRows1, SrcCols1, SrcOptions1, SrcMaxRows1, SrcMaxCols1> const,
-+                             Eigen::Matrix<float, SrcRows2, SrcCols2, SrcOptions2, SrcMaxRows2, SrcMaxCols2> const> &src,
-+  const Eigen::internal::assign_op<float, float> &func)
++template <int DstRows, int DstCols, int DstOptions, int DstMaxRows, int DstMaxCols, int SrcRows1, int SrcCols1,
++    int SrcOptions1, int SrcMaxRows1, int SrcMaxCols1, int SrcRows2, int SrcCols2, int SrcOptions2, int SrcMaxRows2,
++    int SrcMaxCols2>
++EIGEN_DEVICE_FUNC EIGEN_STRONG_INLINE void call_dense_assignment_loop(
++    Eigen::Matrix<float, DstRows, DstCols, DstOptions, DstMaxRows, DstMaxCols> &dst,
++    const Eigen::CwiseBinaryOp<Eigen::internal::scalar_sum_op<float, float>,
++    Eigen::Matrix<float, SrcRows1, SrcCols1, SrcOptions1, SrcMaxRows1, SrcMaxCols1> const,
++    Eigen::Matrix<float, SrcRows2, SrcCols2, SrcOptions2, SrcMaxRows2, SrcMaxCols2> const> &src,
++    const Eigen::internal::assign_op<float, float> &func)
 +{
-+  resize_if_allowed(dst, src, func);
-+  StorageOptions srcMajor = (int(SrcOptions1)&RowMajorBit) ? RowMajor : ColMajor;
-+  StorageOptions dstMajor = (int(DstOptions)&RowMajorBit) ? RowMajor : ColMajor;
-+  const int lhsRows = (srcMajor==ColMajor) ? src.lhs().rows() : src.lhs().cols();
-+  const int lhsCols = (srcMajor==ColMajor) ? src.lhs().cols() : src.lhs().rows();
-+  const int dstRows = (dstMajor==ColMajor) ? dst.rows() : dst.cols();
-+  const int dstCols = (dstMajor==ColMajor) ? dst.cols() : dst.rows();
-+  const int lhsMajorStride = (srcMajor==ColMajor) ? src.lhs().rowStride() : src.lhs().colStride();
-+  const int dstMajorStride = (dstMajor==ColMajor) ? dst.rowStride() : dst.colStride();
++    resize_if_allowed(dst, src, func);
++    StorageOptions srcMajor = (int(SrcOptions1) & RowMajorBit) ? RowMajor : ColMajor;
++    StorageOptions dstMajor = (int(DstOptions) & RowMajorBit) ? RowMajor : ColMajor;
++    const int lhsRows = (srcMajor == ColMajor) ? src.lhs().rows() : src.lhs().cols();
++    const int lhsCols = (srcMajor == ColMajor) ? src.lhs().cols() : src.lhs().rows();
++    const int dstRows = (dstMajor == ColMajor) ? dst.rows() : dst.cols();
++    const int dstCols = (dstMajor == ColMajor) ? dst.cols() : dst.rows();
++    const int lhsMajorStride = (srcMajor == ColMajor) ? src.lhs().rowStride() : src.lhs().colStride();
++    const int dstMajorStride = (dstMajor == ColMajor) ? dst.rowStride() : dst.colStride();
 +
-+  if (srcMajor == dstMajor && lhsRows == dstRows && lhsCols == dstCols &&
-+      lhsMajorStride == dstMajorStride && dstMajorStride == 1) {
-+        vsadd(dst.size(), (float*)src.lhs().data(), (float*)src.rhs().data(), (float*)dst.data());
-+  } else {
-+    typedef evaluator<Eigen::Matrix<float, DstRows, DstCols, DstOptions, DstMaxRows, DstMaxCols> > DstEvaluatorType;
-+    typedef evaluator<Eigen::CwiseBinaryOp<Eigen::internal::scalar_sum_op<float, float>,
-+                      Eigen::Matrix<float, SrcRows1, SrcCols1, SrcOptions1, SrcMaxRows1, SrcMaxCols1> const,
-+                      Eigen::Matrix<float, SrcRows2, SrcCols2, SrcOptions2, SrcMaxRows2, SrcMaxCols2> const> > SrcEvaluatorType;
++    if (srcMajor == dstMajor && lhsRows == dstRows && lhsCols == dstCols && lhsMajorStride == dstMajorStride &&
++        dstMajorStride == 1) {
++        CBLAS_ORDER order = (srcMajor == ColMajor) ? CblasColMajor : CblasRowMajor;
++        cblas_somatadd(order, CblasNoTrans,
++                       CblasNoTrans, lhsRows, lhsCols, 1.0f, (float *)src.lhs().data(), lhsRows,
++                       1.0f, (float *)src.rhs().data(), lhsRows, (float *)dst.data(), dstRows);
++    } else {
++        typedef evaluator<Eigen::Matrix<float, DstRows, DstCols, DstOptions, DstMaxRows, DstMaxCols> > DstEvaluatorType;
++        typedef evaluator<Eigen::CwiseBinaryOp<Eigen::internal::scalar_sum_op<float, float>,
++            Eigen::Matrix<float, SrcRows1, SrcCols1, SrcOptions1, SrcMaxRows1, SrcMaxCols1> const,
++            Eigen::Matrix<float, SrcRows2, SrcCols2, SrcOptions2, SrcMaxRows2, SrcMaxCols2> const> >
++            SrcEvaluatorType;
 +
-+    SrcEvaluatorType srcEvaluator(src);
-+    DstEvaluatorType dstEvaluator(dst);
++        SrcEvaluatorType srcEvaluator(src);
++        DstEvaluatorType dstEvaluator(dst);
 +
-+    typedef generic_dense_assignment_kernel<DstEvaluatorType,SrcEvaluatorType,Eigen::internal::assign_op<float, float> > Kernel;
-+    Kernel kernel(dstEvaluator, srcEvaluator, func, dst.const_cast_derived());
++        typedef generic_dense_assignment_kernel<DstEvaluatorType, SrcEvaluatorType,
++            Eigen::internal::assign_op<float, float> >
++            Kernel;
++        Kernel kernel(dstEvaluator, srcEvaluator, func, dst.const_cast_derived());
 +
-+    dense_assignment_loop<Kernel>::run(kernel);
-+  }
++        dense_assignment_loop<Kernel>::run(kernel);
++    }
 +}
 +
-+template<int DstRows, int DstCols, int DstOptions, int DstMaxRows, int DstMaxCols,
-+         int SrcRows1, int SrcCols1, int SrcOptions1, int SrcMaxRows1, int SrcMaxCols1,
-+         int SrcRows2, int SrcCols2, int SrcOptions2, int SrcMaxRows2, int SrcMaxCols2>
-+EIGEN_DEVICE_FUNC EIGEN_STRONG_INLINE void call_dense_assignment_loop(Eigen::Matrix<double, DstRows, DstCols, DstOptions, DstMaxRows, DstMaxCols> & dst,
-+  const Eigen::CwiseBinaryOp<Eigen::internal::scalar_sum_op<double, double>,
-+                             Eigen::Matrix<double, SrcRows1, SrcCols1, SrcOptions1, SrcMaxRows1, SrcMaxCols1> const,
-+                             Eigen::Matrix<double, SrcRows2, SrcCols2, SrcOptions2, SrcMaxRows2, SrcMaxCols2> const> &src,
-+  const Eigen::internal::assign_op<double, double> &func)
++template <int DstRows, int DstCols, int DstOptions, int DstMaxRows, int DstMaxCols, int SrcRows1, int SrcCols1,
++    int SrcOptions1, int SrcMaxRows1, int SrcMaxCols1, int SrcRows2, int SrcCols2, int SrcOptions2, int SrcMaxRows2,
++    int SrcMaxCols2>
++EIGEN_DEVICE_FUNC EIGEN_STRONG_INLINE void call_dense_assignment_loop(
++    Eigen::Matrix<double, DstRows, DstCols, DstOptions, DstMaxRows, DstMaxCols> &dst,
++    const Eigen::CwiseBinaryOp<Eigen::internal::scalar_sum_op<double, double>,
++    Eigen::Matrix<double, SrcRows1, SrcCols1, SrcOptions1, SrcMaxRows1, SrcMaxCols1> const,
++    Eigen::Matrix<double, SrcRows2, SrcCols2, SrcOptions2, SrcMaxRows2, SrcMaxCols2> const> &src,
++    const Eigen::internal::assign_op<double, double> &func)
 +{
-+  resize_if_allowed(dst, src, func);
-+  StorageOptions srcMajor = (int(SrcOptions1)&RowMajorBit) ? RowMajor : ColMajor;
-+  StorageOptions dstMajor = (int(DstOptions)&RowMajorBit) ? RowMajor : ColMajor;
-+  const int lhsRows = (srcMajor==ColMajor) ? src.lhs().rows() : src.lhs().cols();
-+  const int lhsCols = (srcMajor==ColMajor) ? src.lhs().cols() : src.lhs().rows();
-+  const int dstRows = (dstMajor==ColMajor) ? dst.rows() : dst.cols();
-+  const int dstCols = (dstMajor==ColMajor) ? dst.cols() : dst.rows();
-+  const int lhsMajorStride = (srcMajor==ColMajor) ? src.lhs().rowStride() : src.lhs().colStride();
-+  const int dstMajorStride = (dstMajor==ColMajor) ? dst.rowStride() : dst.colStride();
++    resize_if_allowed(dst, src, func);
++    StorageOptions srcMajor = (int(SrcOptions1) & RowMajorBit) ? RowMajor : ColMajor;
++    StorageOptions dstMajor = (int(DstOptions) & RowMajorBit) ? RowMajor : ColMajor;
++    const int lhsRows = (srcMajor == ColMajor) ? src.lhs().rows() : src.lhs().cols();
++    const int lhsCols = (srcMajor == ColMajor) ? src.lhs().cols() : src.lhs().rows();
++    const int dstRows = (dstMajor == ColMajor) ? dst.rows() : dst.cols();
++    const int dstCols = (dstMajor == ColMajor) ? dst.cols() : dst.rows();
++    const int lhsMajorStride = (srcMajor == ColMajor) ? src.lhs().rowStride() : src.lhs().colStride();
++    const int dstMajorStride = (dstMajor == ColMajor) ? dst.rowStride() : dst.colStride();
 +
-+  if (srcMajor == dstMajor && lhsRows == dstRows && lhsCols == dstCols &&
-+      lhsMajorStride == dstMajorStride && dstMajorStride == 1) {
-+        vdadd(dst.size(), (double*)src.lhs().data(), (double*)src.rhs().data(), (double*)dst.data());
-+  } else {
-+    typedef evaluator<Eigen::Matrix<double, DstRows, DstCols, DstOptions, DstMaxRows, DstMaxCols> > DstEvaluatorType;
-+    typedef evaluator<Eigen::CwiseBinaryOp<Eigen::internal::scalar_sum_op<double, double>,
-+                      Eigen::Matrix<double, SrcRows1, SrcCols1, SrcOptions1, SrcMaxRows1, SrcMaxCols1> const,
-+                      Eigen::Matrix<double, SrcRows2, SrcCols2, SrcOptions2, SrcMaxRows2, SrcMaxCols2> const> > SrcEvaluatorType;
++    if (srcMajor == dstMajor && lhsRows == dstRows && lhsCols == dstCols && lhsMajorStride == dstMajorStride &&
++        dstMajorStride == 1) {
++        CBLAS_ORDER order = (srcMajor == ColMajor) ? CblasColMajor : CblasRowMajor;
++        cblas_domatadd(order, CblasNoTrans,
++                       CblasNoTrans, lhsRows, lhsCols, 1.0f, (double *)src.lhs().data(), lhsRows,
++                       1.0, (double *)src.rhs().data(), lhsRows, (double *)dst.data(), dstRows);
++    } else {
++        typedef evaluator<Eigen::Matrix<double, DstRows, DstCols, DstOptions, DstMaxRows, DstMaxCols> >
++            DstEvaluatorType;
++        typedef evaluator<Eigen::CwiseBinaryOp<Eigen::internal::scalar_sum_op<double, double>,
++            Eigen::Matrix<double, SrcRows1, SrcCols1, SrcOptions1, SrcMaxRows1, SrcMaxCols1> const,
++            Eigen::Matrix<double, SrcRows2, SrcCols2, SrcOptions2, SrcMaxRows2, SrcMaxCols2> const> >
++            SrcEvaluatorType;
 +
-+    SrcEvaluatorType srcEvaluator(src);
-+    DstEvaluatorType dstEvaluator(dst);
++        SrcEvaluatorType srcEvaluator(src);
++        DstEvaluatorType dstEvaluator(dst);
 +
-+    typedef generic_dense_assignment_kernel<DstEvaluatorType,SrcEvaluatorType,Eigen::internal::assign_op<double, double> > Kernel;
-+    Kernel kernel(dstEvaluator, srcEvaluator, func, dst.const_cast_derived());
++        typedef generic_dense_assignment_kernel<DstEvaluatorType, SrcEvaluatorType,
++            Eigen::internal::assign_op<double, double> >
++            Kernel;
++        Kernel kernel(dstEvaluator, srcEvaluator, func, dst.const_cast_derived());
 +
-+    dense_assignment_loop<Kernel>::run(kernel);
-+  }
++        dense_assignment_loop<Kernel>::run(kernel);
++    }
 +}
 +
-+template<int DstRows, int DstCols, int DstOptions, int DstMaxRows, int DstMaxCols,
-+         int SrcRows1, int SrcCols1, int SrcOptions1, int SrcMaxRows1, int SrcMaxCols1,
-+         int SrcRows2, int SrcCols2, int SrcOptions2, int SrcMaxRows2, int SrcMaxCols2>
-+EIGEN_DEVICE_FUNC EIGEN_STRONG_INLINE void call_dense_assignment_loop(Eigen::Matrix<std::complex<float>, DstRows, DstCols, DstOptions, DstMaxRows, DstMaxCols> & dst,
-+  const Eigen::CwiseBinaryOp<Eigen::internal::scalar_sum_op<std::complex<float>, std::complex<float> >,
-+                             Eigen::Matrix<std::complex<float>, SrcRows1, SrcCols1, SrcOptions1, SrcMaxRows1, SrcMaxCols1> const,
-+                             Eigen::Matrix<std::complex<float>, SrcRows2, SrcCols2, SrcOptions2, SrcMaxRows2, SrcMaxCols2> const> &src,
-+  const Eigen::internal::assign_op<std::complex<float>, std::complex<float> > &func)
++template <int DstRows, int DstCols, int DstOptions, int DstMaxRows, int DstMaxCols, int SrcRows1, int SrcCols1,
++    int SrcOptions1, int SrcMaxRows1, int SrcMaxCols1, int SrcRows2, int SrcCols2, int SrcOptions2, int SrcMaxRows2,
++    int SrcMaxCols2>
++EIGEN_DEVICE_FUNC EIGEN_STRONG_INLINE void call_dense_assignment_loop(
++    Eigen::Matrix<std::complex<float>, DstRows, DstCols, DstOptions, DstMaxRows, DstMaxCols> &dst,
++    const Eigen::CwiseBinaryOp<Eigen::internal::scalar_sum_op<std::complex<float>, std::complex<float> >,
++    Eigen::Matrix<std::complex<float>, SrcRows1, SrcCols1, SrcOptions1, SrcMaxRows1, SrcMaxCols1> const,
++    Eigen::Matrix<std::complex<float>, SrcRows2, SrcCols2, SrcOptions2, SrcMaxRows2, SrcMaxCols2> const> &src,
++    const Eigen::internal::assign_op<std::complex<float>, std::complex<float> > &func)
 +{
-+  resize_if_allowed(dst, src, func);
-+  StorageOptions srcMajor = (int(SrcOptions1)&RowMajorBit) ? RowMajor : ColMajor;
-+  StorageOptions dstMajor = (int(DstOptions)&RowMajorBit) ? RowMajor : ColMajor;
-+  const int lhsRows = (srcMajor==ColMajor) ? src.lhs().rows() : src.lhs().cols();
-+  const int lhsCols = (srcMajor==ColMajor) ? src.lhs().cols() : src.lhs().rows();
-+  const int dstRows = (dstMajor==ColMajor) ? dst.rows() : dst.cols();
-+  const int dstCols = (dstMajor==ColMajor) ? dst.cols() : dst.rows();
-+  const int lhsMajorStride = (srcMajor==ColMajor) ? src.lhs().rowStride() : src.lhs().colStride();
-+  const int dstMajorStride = (dstMajor==ColMajor) ? dst.rowStride() : dst.colStride();
++    resize_if_allowed(dst, src, func);
++    StorageOptions srcMajor = (int(SrcOptions1) & RowMajorBit) ? RowMajor : ColMajor;
++    StorageOptions dstMajor = (int(DstOptions) & RowMajorBit) ? RowMajor : ColMajor;
++    const int lhsRows = (srcMajor == ColMajor) ? src.lhs().rows() : src.lhs().cols();
++    const int lhsCols = (srcMajor == ColMajor) ? src.lhs().cols() : src.lhs().rows();
++    const int dstRows = (dstMajor == ColMajor) ? dst.rows() : dst.cols();
++    const int dstCols = (dstMajor == ColMajor) ? dst.cols() : dst.rows();
++    const int lhsMajorStride = (srcMajor == ColMajor) ? src.lhs().rowStride() : src.lhs().colStride();
++    const int dstMajorStride = (dstMajor == ColMajor) ? dst.rowStride() : dst.colStride();
++    const float alpha[2] = {1.0f};
++    const float beta[2] = {1.0f};
 +
-+  if (srcMajor == dstMajor && lhsRows == dstRows && lhsCols == dstCols &&
-+      lhsMajorStride == dstMajorStride && dstMajorStride == 1) {
-+        vcadd(dst.size(), (const __complex__ float*)src.lhs().data(), (const __complex__ float*)src.rhs().data(), (__complex__ float*)dst.data());
-+  } else {
-+    typedef evaluator<Eigen::Matrix<std::complex<float>, DstRows, DstCols, DstOptions, DstMaxRows, DstMaxCols> > DstEvaluatorType;
-+    typedef evaluator<Eigen::CwiseBinaryOp<Eigen::internal::scalar_sum_op<std::complex<float>, std::complex<float> >,
-+                      Eigen::Matrix<std::complex<float>, SrcRows1, SrcCols1, SrcOptions1, SrcMaxRows1, SrcMaxCols1> const,
-+                      Eigen::Matrix<std::complex<float>, SrcRows2, SrcCols2, SrcOptions2, SrcMaxRows2, SrcMaxCols2> const> > SrcEvaluatorType;
 +
-+    SrcEvaluatorType srcEvaluator(src);
-+    DstEvaluatorType dstEvaluator(dst);
++    if (srcMajor == dstMajor && lhsRows == dstRows && lhsCols == dstCols && lhsMajorStride == dstMajorStride &&
++        dstMajorStride == 1) {
++        CBLAS_ORDER order = (srcMajor == ColMajor) ? CblasColMajor : CblasRowMajor;
++        cblas_comatadd(order, CblasNoTrans,
++                       CblasNoTrans, lhsRows, lhsCols, alpha, (float *)src.lhs().data(), lhsRows,
++                       beta, (float *)src.rhs().data(), lhsRows, (float *)dst.data(), dstRows);
++    } else {
++        typedef evaluator<Eigen::Matrix<std::complex<float>, DstRows, DstCols, DstOptions, DstMaxRows, DstMaxCols> >
++            DstEvaluatorType;
++        typedef evaluator<
++            Eigen::CwiseBinaryOp<Eigen::internal::scalar_sum_op<std::complex<float>, std::complex<float> >,
++            Eigen::Matrix<std::complex<float>, SrcRows1, SrcCols1, SrcOptions1, SrcMaxRows1, SrcMaxCols1> const,
++            Eigen::Matrix<std::complex<float>, SrcRows2, SrcCols2, SrcOptions2, SrcMaxRows2, SrcMaxCols2> const> >
++            SrcEvaluatorType;
 +
-+    typedef generic_dense_assignment_kernel<DstEvaluatorType,SrcEvaluatorType,Eigen::internal::assign_op<std::complex<float>, std::complex<float> > > Kernel;
-+    Kernel kernel(dstEvaluator, srcEvaluator, func, dst.const_cast_derived());
++        SrcEvaluatorType srcEvaluator(src);
++        DstEvaluatorType dstEvaluator(dst);
 +
-+    dense_assignment_loop<Kernel>::run(kernel);
-+  }
++        typedef generic_dense_assignment_kernel<DstEvaluatorType, SrcEvaluatorType,
++            Eigen::internal::assign_op<std::complex<float>, std::complex<float> > >
++            Kernel;
++        Kernel kernel(dstEvaluator, srcEvaluator, func, dst.const_cast_derived());
++
++        dense_assignment_loop<Kernel>::run(kernel);
++    }
 +}
 +
-+template<int DstRows, int DstCols, int DstOptions, int DstMaxRows, int DstMaxCols,
-+         int SrcRows1, int SrcCols1, int SrcOptions1, int SrcMaxRows1, int SrcMaxCols1,
-+         int SrcRows2, int SrcCols2, int SrcOptions2, int SrcMaxRows2, int SrcMaxCols2>
-+EIGEN_DEVICE_FUNC EIGEN_STRONG_INLINE void call_dense_assignment_loop(Eigen::Matrix<std::complex<double>, DstRows, DstCols, DstOptions, DstMaxRows, DstMaxCols> & dst,
-+  const Eigen::CwiseBinaryOp<Eigen::internal::scalar_sum_op<std::complex<double>, std::complex<double> >,
-+                             Eigen::Matrix<std::complex<double>, SrcRows1, SrcCols1, SrcOptions1, SrcMaxRows1, SrcMaxCols1> const,
-+                             Eigen::Matrix<std::complex<double>, SrcRows2, SrcCols2, SrcOptions2, SrcMaxRows2, SrcMaxCols2> const> &src,
-+  const Eigen::internal::assign_op<std::complex<double>, std::complex<double> > &func)
++template <int DstRows, int DstCols, int DstOptions, int DstMaxRows, int DstMaxCols, int SrcRows1, int SrcCols1,
++    int SrcOptions1, int SrcMaxRows1, int SrcMaxCols1, int SrcRows2, int SrcCols2, int SrcOptions2, int SrcMaxRows2,
++    int SrcMaxCols2>
++EIGEN_DEVICE_FUNC EIGEN_STRONG_INLINE void call_dense_assignment_loop(
++    Eigen::Matrix<std::complex<double>, DstRows, DstCols, DstOptions, DstMaxRows, DstMaxCols> &dst,
++    const Eigen::CwiseBinaryOp<Eigen::internal::scalar_sum_op<std::complex<double>, std::complex<double> >,
++    Eigen::Matrix<std::complex<double>, SrcRows1, SrcCols1, SrcOptions1, SrcMaxRows1, SrcMaxCols1> const,
++    Eigen::Matrix<std::complex<double>, SrcRows2, SrcCols2, SrcOptions2, SrcMaxRows2, SrcMaxCols2> const> &src,
++    const Eigen::internal::assign_op<std::complex<double>, std::complex<double> > &func)
 +{
-+  resize_if_allowed(dst, src, func);
-+  StorageOptions srcMajor = (int(SrcOptions1)&RowMajorBit) ? RowMajor : ColMajor;
-+  StorageOptions dstMajor = (int(DstOptions)&RowMajorBit) ? RowMajor : ColMajor;
-+  const int lhsRows = (srcMajor==ColMajor) ? src.lhs().rows() : src.lhs().cols();
-+  const int lhsCols = (srcMajor==ColMajor) ? src.lhs().cols() : src.lhs().rows();
-+  const int dstRows = (dstMajor==ColMajor) ? dst.rows() : dst.cols();
-+  const int dstCols = (dstMajor==ColMajor) ? dst.cols() : dst.rows();
-+  const int lhsMajorStride = (srcMajor==ColMajor) ? src.lhs().rowStride() : src.lhs().colStride();
-+  const int dstMajorStride = (dstMajor==ColMajor) ? dst.rowStride() : dst.colStride();
++    resize_if_allowed(dst, src, func);
++    StorageOptions srcMajor = (int(SrcOptions1) & RowMajorBit) ? RowMajor : ColMajor;
++    StorageOptions dstMajor = (int(DstOptions) & RowMajorBit) ? RowMajor : ColMajor;
++    const int lhsRows = (srcMajor == ColMajor) ? src.lhs().rows() : src.lhs().cols();
++    const int lhsCols = (srcMajor == ColMajor) ? src.lhs().cols() : src.lhs().rows();
++    const int dstRows = (dstMajor == ColMajor) ? dst.rows() : dst.cols();
++    const int dstCols = (dstMajor == ColMajor) ? dst.cols() : dst.rows();
++    const int lhsMajorStride = (srcMajor == ColMajor) ? src.lhs().rowStride() : src.lhs().colStride();
++    const int dstMajorStride = (dstMajor == ColMajor) ? dst.rowStride() : dst.colStride();
++    const double alpha[2] = {1.0};
++    const double beta[2] = {1.0};
 +
-+  if (srcMajor == dstMajor && lhsRows == dstRows && lhsCols == dstCols &&
-+      lhsMajorStride == dstMajorStride && dstMajorStride == 1) {
-+        vzadd(dst.size(), (const __complex__ double*)src.lhs().data(), (const __complex__ double*)src.rhs().data(), (__complex__ double*)dst.data());
-+  } else {
-+    typedef evaluator<Eigen::Matrix<std::complex<double>, DstRows, DstCols, DstOptions, DstMaxRows, DstMaxCols> > DstEvaluatorType;
-+    typedef evaluator<Eigen::CwiseBinaryOp<Eigen::internal::scalar_sum_op<std::complex<double>, std::complex<double> >,
-+                      Eigen::Matrix<std::complex<double>, SrcRows1, SrcCols1, SrcOptions1, SrcMaxRows1, SrcMaxCols1> const,
-+                      Eigen::Matrix<std::complex<double>, SrcRows2, SrcCols2, SrcOptions2, SrcMaxRows2, SrcMaxCols2> const> > SrcEvaluatorType;
++    if (srcMajor == dstMajor && lhsRows == dstRows && lhsCols == dstCols && lhsMajorStride == dstMajorStride &&
++        dstMajorStride == 1) {
++        CBLAS_ORDER order = (srcMajor == ColMajor) ? CblasColMajor : CblasRowMajor;
++            cblas_zomatadd(order, CblasNoTrans,
++            CblasNoTrans, lhsRows, lhsCols, alpha, (double *)src.lhs().data(), lhsRows,
++            beta, (double *)src.rhs().data(), lhsRows, (double *)dst.data(), dstRows);
++    } else {
++        typedef evaluator<Eigen::Matrix<std::complex<double>, DstRows, DstCols, DstOptions, DstMaxRows, DstMaxCols> >
++            DstEvaluatorType;
++        typedef evaluator<
++            Eigen::CwiseBinaryOp<Eigen::internal::scalar_sum_op<std::complex<double>, std::complex<double> >,
++            Eigen::Matrix<std::complex<double>, SrcRows1, SrcCols1, SrcOptions1, SrcMaxRows1, SrcMaxCols1> const,
++            Eigen::Matrix<std::complex<double>, SrcRows2, SrcCols2, SrcOptions2, SrcMaxRows2, SrcMaxCols2> const> >
++            SrcEvaluatorType;
 +
-+    SrcEvaluatorType srcEvaluator(src);
-+    DstEvaluatorType dstEvaluator(dst);
++        SrcEvaluatorType srcEvaluator(src);
++        DstEvaluatorType dstEvaluator(dst);
 +
-+    typedef generic_dense_assignment_kernel<DstEvaluatorType,SrcEvaluatorType,Eigen::internal::assign_op<std::complex<double>, std::complex<double> > > Kernel;
-+    Kernel kernel(dstEvaluator, srcEvaluator, func, dst.const_cast_derived());
++        typedef generic_dense_assignment_kernel<DstEvaluatorType, SrcEvaluatorType,
++            Eigen::internal::assign_op<std::complex<double>, std::complex<double> > >
++            Kernel;
++        Kernel kernel(dstEvaluator, srcEvaluator, func, dst.const_cast_derived());
 +
-+    dense_assignment_loop<Kernel>::run(kernel);
-+  }
++        dense_assignment_loop<Kernel>::run(kernel);
++    }
 +}
 +
-+template<int DstRows, int DstCols, int DstOptions, int DstMaxRows, int DstMaxCols,
-+         int SrcRows1, int SrcCols1, int SrcOptions1, int SrcMaxRows1, int SrcMaxCols1,
-+         int SrcRows2, int SrcCols2, int SrcOptions2, int SrcMaxRows2, int SrcMaxCols2>
-+EIGEN_DEVICE_FUNC EIGEN_STRONG_INLINE void call_dense_assignment_loop(Eigen::Matrix<float, DstRows, DstCols, DstOptions, DstMaxRows, DstMaxCols> & dst,
-+  const Eigen::CwiseBinaryOp<Eigen::internal::scalar_difference_op<float, float>,
-+                             Eigen::Matrix<float, SrcRows1, SrcCols1, SrcOptions1, SrcMaxRows1, SrcMaxCols1> const,
-+                             Eigen::Matrix<float, SrcRows2, SrcCols2, SrcOptions2, SrcMaxRows2, SrcMaxCols2> const> &src,
-+  const Eigen::internal::assign_op<float, float> &func)
++template <int DstRows, int DstCols, int DstOptions, int DstMaxRows, int DstMaxCols, int SrcRows, int SrcCols,
++    int SrcOptions, int SrcMaxRows, int SrcMaxCols>
++EIGEN_DEVICE_FUNC EIGEN_STRONG_INLINE void call_dense_assignment_loop(
++    Eigen::Matrix<float, DstRows, DstCols, DstOptions, DstMaxRows, DstMaxCols> &dst,
++    const Eigen::Matrix<float, SrcRows, SrcCols, SrcOptions, SrcMaxRows, SrcMaxCols> &src,
++    const Eigen::internal::add_assign_op<float, float> &func)
 +{
-+  resize_if_allowed(dst, src, func);
-+  StorageOptions srcMajor = (int(SrcOptions1)&RowMajorBit) ? RowMajor : ColMajor;
-+  StorageOptions dstMajor = (int(DstOptions)&RowMajorBit) ? RowMajor : ColMajor;
-+  const int lhsRows = (srcMajor==ColMajor) ? src.lhs().rows() : src.lhs().cols();
-+  const int lhsCols = (srcMajor==ColMajor) ? src.lhs().cols() : src.lhs().rows();
-+  const int dstRows = (dstMajor==ColMajor) ? dst.rows() : dst.cols();
-+  const int dstCols = (dstMajor==ColMajor) ? dst.cols() : dst.rows();
-+  const int lhsMajorStride = (srcMajor==ColMajor) ? src.lhs().rowStride() : src.lhs().colStride();
-+  const int dstMajorStride = (dstMajor==ColMajor) ? dst.rowStride() : dst.colStride();
++    resize_if_allowed(dst, src, func);
++    StorageOptions srcMajor = (int(SrcOptions) & RowMajorBit) ? RowMajor : ColMajor;
++    StorageOptions dstMajor = (int(DstOptions) & RowMajorBit) ? RowMajor : ColMajor;
++    const int lhsRows = (srcMajor == ColMajor) ? src.rows() : src.cols();
++    const int lhsCols = (srcMajor == ColMajor) ? src.cols() : src.rows();
++    const int dstRows = (dstMajor == ColMajor) ? dst.rows() : dst.cols();
++    const int dstCols = (dstMajor == ColMajor) ? dst.cols() : dst.rows();
++    const int srcMajorStride = (srcMajor == ColMajor) ? src.rowStride() : src.colStride();
++    const int dstMajorStride = (dstMajor == ColMajor) ? dst.rowStride() : dst.colStride();
 +
-+  if (srcMajor == dstMajor && lhsRows == dstRows && lhsCols == dstCols &&
-+      lhsMajorStride == dstMajorStride && dstMajorStride == 1) {
-+        vssub(dst.size(), (float*)src.lhs().data(), (float*)src.rhs().data(), (float*)dst.data());
-+  } else {
-+    typedef evaluator<Eigen::Matrix<float, DstRows, DstCols, DstOptions, DstMaxRows, DstMaxCols> > DstEvaluatorType;
-+    typedef evaluator<Eigen::CwiseBinaryOp<Eigen::internal::scalar_difference_op<float, float>,
-+                      Eigen::Matrix<float, SrcRows1, SrcCols1, SrcOptions1, SrcMaxRows1, SrcMaxCols1> const,
-+                      Eigen::Matrix<float, SrcRows2, SrcCols2, SrcOptions2, SrcMaxRows2, SrcMaxCols2> const> > SrcEvaluatorType;
++    if (srcMajor == dstMajor && lhsRows == dstRows && lhsCols == dstCols && srcMajorStride == dstMajorStride &&
++        dstMajorStride == 1) {
++        CBLAS_ORDER order = (srcMajor == ColMajor) ? CblasColMajor : CblasRowMajor;
++        cblas_simatadd(order, CblasNoTrans,
++                       lhsRows, lhsCols, 1.0f, (float *)src.data(), lhsRows,
++    (float *)dst.data(), dstRows);
++    } else {
++        typedef evaluator<Eigen::Matrix<float, DstRows, DstCols, DstOptions, DstMaxRows, DstMaxCols> > DstEvaluatorType;
++        typedef evaluator<Eigen::Matrix<float, SrcRows, SrcCols, SrcOptions, SrcMaxRows, SrcMaxCols> > SrcEvaluatorType;
 +
-+    SrcEvaluatorType srcEvaluator(src);
-+    DstEvaluatorType dstEvaluator(dst);
++        SrcEvaluatorType srcEvaluator(src);
++        DstEvaluatorType dstEvaluator(dst);
 +
-+    typedef generic_dense_assignment_kernel<DstEvaluatorType,SrcEvaluatorType,Eigen::internal::assign_op<float, float> > Kernel;
-+    Kernel kernel(dstEvaluator, srcEvaluator, func, dst.const_cast_derived());
++        typedef generic_dense_assignment_kernel<DstEvaluatorType, SrcEvaluatorType,
++            Eigen::internal::add_assign_op<float, float> >
++            Kernel;
++        Kernel kernel(dstEvaluator, srcEvaluator, func, dst.const_cast_derived());
 +
-+    dense_assignment_loop<Kernel>::run(kernel);
-+  }
++        dense_assignment_loop<Kernel>::run(kernel);
++    }
 +}
 +
-+template<int DstRows, int DstCols, int DstOptions, int DstMaxRows, int DstMaxCols,
-+         int SrcRows1, int SrcCols1, int SrcOptions1, int SrcMaxRows1, int SrcMaxCols1,
-+         int SrcRows2, int SrcCols2, int SrcOptions2, int SrcMaxRows2, int SrcMaxCols2>
-+EIGEN_DEVICE_FUNC EIGEN_STRONG_INLINE void call_dense_assignment_loop(Eigen::Matrix<double, DstRows, DstCols, DstOptions, DstMaxRows, DstMaxCols> & dst,
-+  const Eigen::CwiseBinaryOp<Eigen::internal::scalar_difference_op<double, double>,
-+                             Eigen::Matrix<double, SrcRows1, SrcCols1, SrcOptions1, SrcMaxRows1, SrcMaxCols1> const,
-+                             Eigen::Matrix<double, SrcRows2, SrcCols2, SrcOptions2, SrcMaxRows2, SrcMaxCols2> const> &src,
-+  const Eigen::internal::assign_op<double, double> &func)
++template <int DstRows, int DstCols, int DstOptions, int DstMaxRows, int DstMaxCols, int SrcRows, int SrcCols,
++    int SrcOptions, int SrcMaxRows, int SrcMaxCols>
++EIGEN_DEVICE_FUNC EIGEN_STRONG_INLINE void call_dense_assignment_loop(
++    Eigen::Matrix<double, DstRows, DstCols, DstOptions, DstMaxRows, DstMaxCols> &dst,
++    const Eigen::Matrix<double, SrcRows, SrcCols, SrcOptions, SrcMaxRows, SrcMaxCols> &src,
++    const Eigen::internal::add_assign_op<double, double> &func)
 +{
-+  resize_if_allowed(dst, src, func);
-+  StorageOptions srcMajor = (int(SrcOptions1)&RowMajorBit) ? RowMajor : ColMajor;
-+  StorageOptions dstMajor = (int(DstOptions)&RowMajorBit) ? RowMajor : ColMajor;
-+  const int lhsRows = (srcMajor==ColMajor) ? src.lhs().rows() : src.lhs().cols();
-+  const int lhsCols = (srcMajor==ColMajor) ? src.lhs().cols() : src.lhs().rows();
-+  const int dstRows = (dstMajor==ColMajor) ? dst.rows() : dst.cols();
-+  const int dstCols = (dstMajor==ColMajor) ? dst.cols() : dst.rows();
-+  const int lhsMajorStride = (srcMajor==ColMajor) ? src.lhs().rowStride() : src.lhs().colStride();
-+  const int dstMajorStride = (dstMajor==ColMajor) ? dst.rowStride() : dst.colStride();
++    resize_if_allowed(dst, src, func);
++    StorageOptions srcMajor = (int(SrcOptions) & RowMajorBit) ? RowMajor : ColMajor;
++    StorageOptions dstMajor = (int(DstOptions) & RowMajorBit) ? RowMajor : ColMajor;
++    const int lhsRows = (srcMajor == ColMajor) ? src.rows() : src.cols();
++    const int lhsCols = (srcMajor == ColMajor) ? src.cols() : src.rows();
++    const int dstRows = (dstMajor == ColMajor) ? dst.rows() : dst.cols();
++    const int dstCols = (dstMajor == ColMajor) ? dst.cols() : dst.rows();
++    const int srcMajorStride = (srcMajor == ColMajor) ? src.rowStride() : src.colStride();
++    const int dstMajorStride = (dstMajor == ColMajor) ? dst.rowStride() : dst.colStride();
 +
-+  if (srcMajor == dstMajor && lhsRows == dstRows && lhsCols == dstCols &&
-+      lhsMajorStride == dstMajorStride && dstMajorStride == 1) {
-+        vdsub(dst.size(), (double*)src.lhs().data(), (double*)src.rhs().data(), (double*)dst.data());
-+  } else {
-+    typedef evaluator<Eigen::Matrix<double, DstRows, DstCols, DstOptions, DstMaxRows, DstMaxCols> > DstEvaluatorType;
-+    typedef evaluator<Eigen::CwiseBinaryOp<Eigen::internal::scalar_difference_op<double, double>,
-+                      Eigen::Matrix<double, SrcRows1, SrcCols1, SrcOptions1, SrcMaxRows1, SrcMaxCols1> const,
-+                      Eigen::Matrix<double, SrcRows2, SrcCols2, SrcOptions2, SrcMaxRows2, SrcMaxCols2> const> > SrcEvaluatorType;
++    if (srcMajor == dstMajor && lhsRows == dstRows && lhsCols == dstCols && srcMajorStride == dstMajorStride &&
++        dstMajorStride == 1) {
++        CBLAS_ORDER order = (srcMajor == ColMajor) ? CblasColMajor : CblasRowMajor;
++        cblas_dimatadd(order, CblasNoTrans,
++                       lhsRows, lhsCols, 1.0, (double *)src.data(), lhsRows,
++                       (double *)dst.data(), dstRows);
++    } else {
++        typedef evaluator<Eigen::Matrix<double, DstRows, DstCols, DstOptions, DstMaxRows, DstMaxCols> >
++            DstEvaluatorType;
++        typedef evaluator<Eigen::Matrix<double, SrcRows, SrcCols, SrcOptions, SrcMaxRows, SrcMaxCols> >
++            SrcEvaluatorType;
 +
-+    SrcEvaluatorType srcEvaluator(src);
-+    DstEvaluatorType dstEvaluator(dst);
++        SrcEvaluatorType srcEvaluator(src);
++        DstEvaluatorType dstEvaluator(dst);
 +
-+    typedef generic_dense_assignment_kernel<DstEvaluatorType,SrcEvaluatorType,Eigen::internal::assign_op<double, double> > Kernel;
-+    Kernel kernel(dstEvaluator, srcEvaluator, func, dst.const_cast_derived());
++        typedef generic_dense_assignment_kernel<DstEvaluatorType, SrcEvaluatorType,
++            Eigen::internal::add_assign_op<double, double> >
++            Kernel;
++        Kernel kernel(dstEvaluator, srcEvaluator, func, dst.const_cast_derived());
 +
-+    dense_assignment_loop<Kernel>::run(kernel);
-+  }
++        dense_assignment_loop<Kernel>::run(kernel);
++    }
 +}
 +
-+template<int DstRows, int DstCols, int DstOptions, int DstMaxRows, int DstMaxCols,
-+         int SrcRows1, int SrcCols1, int SrcOptions1, int SrcMaxRows1, int SrcMaxCols1,
-+         int SrcRows2, int SrcCols2, int SrcOptions2, int SrcMaxRows2, int SrcMaxCols2>
-+EIGEN_DEVICE_FUNC EIGEN_STRONG_INLINE void call_dense_assignment_loop(Eigen::Matrix<std::complex<float>, DstRows, DstCols, DstOptions, DstMaxRows, DstMaxCols> & dst,
-+  const Eigen::CwiseBinaryOp<Eigen::internal::scalar_difference_op<std::complex<float>, std::complex<float> >,
-+                             Eigen::Matrix<std::complex<float>, SrcRows1, SrcCols1, SrcOptions1, SrcMaxRows1, SrcMaxCols1> const,
-+                             Eigen::Matrix<std::complex<float>, SrcRows2, SrcCols2, SrcOptions2, SrcMaxRows2, SrcMaxCols2> const> &src,
-+  const Eigen::internal::assign_op<std::complex<float>, std::complex<float> > &func)
++template <int DstRows, int DstCols, int DstOptions, int DstMaxRows, int DstMaxCols, int SrcRows, int SrcCols,
++    int SrcOptions, int SrcMaxRows, int SrcMaxCols>
++EIGEN_DEVICE_FUNC EIGEN_STRONG_INLINE void call_dense_assignment_loop(
++    Eigen::Matrix<std::complex<float>, DstRows, DstCols, DstOptions, DstMaxRows, DstMaxCols> &dst,
++    const Eigen::Matrix<std::complex<float>, SrcRows, SrcCols, SrcOptions, SrcMaxRows, SrcMaxCols> &src,
++    const Eigen::internal::add_assign_op<std::complex<float>, std::complex<float> > &func)
 +{
-+  resize_if_allowed(dst, src, func);
-+  StorageOptions srcMajor = (int(SrcOptions1)&RowMajorBit) ? RowMajor : ColMajor;
-+  StorageOptions dstMajor = (int(DstOptions)&RowMajorBit) ? RowMajor : ColMajor;
-+  const int lhsRows = (srcMajor==ColMajor) ? src.lhs().rows() : src.lhs().cols();
-+  const int lhsCols = (srcMajor==ColMajor) ? src.lhs().cols() : src.lhs().rows();
-+  const int dstRows = (dstMajor==ColMajor) ? dst.rows() : dst.cols();
-+  const int dstCols = (dstMajor==ColMajor) ? dst.cols() : dst.rows();
-+  const int lhsMajorStride = (srcMajor==ColMajor) ? src.lhs().rowStride() : src.lhs().colStride();
-+  const int dstMajorStride = (dstMajor==ColMajor) ? dst.rowStride() : dst.colStride();
++    resize_if_allowed(dst, src, func);
++    StorageOptions srcMajor = (int(SrcOptions) & RowMajorBit) ? RowMajor : ColMajor;
++    StorageOptions dstMajor = (int(DstOptions) & RowMajorBit) ? RowMajor : ColMajor;
++    const int lhsRows = (srcMajor == ColMajor) ? src.rows() : src.cols();
++    const int lhsCols = (srcMajor == ColMajor) ? src.cols() : src.rows();
++    const int dstRows = (dstMajor == ColMajor) ? dst.rows() : dst.cols();
++    const int dstCols = (dstMajor == ColMajor) ? dst.cols() : dst.rows();
++    const int srcMajorStride = (srcMajor == ColMajor) ? src.rowStride() : src.colStride();
++    const int dstMajorStride = (dstMajor == ColMajor) ? dst.rowStride() : dst.colStride();
++    const float alpha[2] = {1.0f};
++    const float beta[2] = {1.0f};
 +
-+  if (srcMajor == dstMajor && lhsRows == dstRows && lhsCols == dstCols &&
-+      lhsMajorStride == dstMajorStride && dstMajorStride == 1) {
-+        vcsub(dst.size(), (const __complex__ float*)src.lhs().data(), (const __complex__ float*)src.rhs().data(), (__complex__ float*)dst.data());
-+  } else {
-+    typedef evaluator<Eigen::Matrix<std::complex<float>, DstRows, DstCols, DstOptions, DstMaxRows, DstMaxCols> > DstEvaluatorType;
-+    typedef evaluator<Eigen::CwiseBinaryOp<Eigen::internal::scalar_difference_op<std::complex<float>, std::complex<float> >,
-+                      Eigen::Matrix<std::complex<float>, SrcRows1, SrcCols1, SrcOptions1, SrcMaxRows1, SrcMaxCols1> const,
-+                      Eigen::Matrix<std::complex<float>, SrcRows2, SrcCols2, SrcOptions2, SrcMaxRows2, SrcMaxCols2> const> > SrcEvaluatorType;
++    if (srcMajor == dstMajor && lhsRows == dstRows && lhsCols == dstCols && srcMajorStride == dstMajorStride &&
++        dstMajorStride == 1) {
++            CBLAS_ORDER order = (srcMajor == ColMajor) ? CblasColMajor : CblasRowMajor;
++        cblas_cimatadd(order, CblasNoTrans, lhsRows, lhsCols, alpha, (float *)src.data(), lhsRows,
++                       (float *)dst.data(), dstRows);
++    } else {
++        typedef evaluator<Eigen::Matrix<std::complex<float>, DstRows, DstCols, DstOptions, DstMaxRows, DstMaxCols> >
++            DstEvaluatorType;
++        typedef evaluator<Eigen::Matrix<std::complex<float>, SrcRows, SrcCols, SrcOptions, SrcMaxRows, SrcMaxCols> >
++            SrcEvaluatorType;
 +
-+    SrcEvaluatorType srcEvaluator(src);
-+    DstEvaluatorType dstEvaluator(dst);
++        SrcEvaluatorType srcEvaluator(src);
++        DstEvaluatorType dstEvaluator(dst);
 +
-+    typedef generic_dense_assignment_kernel<DstEvaluatorType,SrcEvaluatorType,Eigen::internal::assign_op<std::complex<float>, std::complex<float> > > Kernel;
-+    Kernel kernel(dstEvaluator, srcEvaluator, func, dst.const_cast_derived());
++        typedef generic_dense_assignment_kernel<DstEvaluatorType, SrcEvaluatorType,
++            Eigen::internal::add_assign_op<std::complex<float>, std::complex<float> > >
++            Kernel;
++        Kernel kernel(dstEvaluator, srcEvaluator, func, dst.const_cast_derived());
 +
-+    dense_assignment_loop<Kernel>::run(kernel);
-+  }
++        dense_assignment_loop<Kernel>::run(kernel);
++    }
 +}
 +
-+template<int DstRows, int DstCols, int DstOptions, int DstMaxRows, int DstMaxCols,
-+         int SrcRows1, int SrcCols1, int SrcOptions1, int SrcMaxRows1, int SrcMaxCols1,
-+         int SrcRows2, int SrcCols2, int SrcOptions2, int SrcMaxRows2, int SrcMaxCols2>
-+EIGEN_DEVICE_FUNC EIGEN_STRONG_INLINE void call_dense_assignment_loop(Eigen::Matrix<std::complex<double>, DstRows, DstCols, DstOptions, DstMaxRows, DstMaxCols> & dst,
-+  const Eigen::CwiseBinaryOp<Eigen::internal::scalar_difference_op<std::complex<double>, std::complex<double> >,
-+                             Eigen::Matrix<std::complex<double>, SrcRows1, SrcCols1, SrcOptions1, SrcMaxRows1, SrcMaxCols1> const,
-+                             Eigen::Matrix<std::complex<double>, SrcRows2, SrcCols2, SrcOptions2, SrcMaxRows2, SrcMaxCols2> const> &src,
-+  const Eigen::internal::assign_op<std::complex<double>, std::complex<double> > &func)
++template <int DstRows, int DstCols, int DstOptions, int DstMaxRows, int DstMaxCols, int SrcRows, int SrcCols,
++    int SrcOptions, int SrcMaxRows, int SrcMaxCols>
++EIGEN_DEVICE_FUNC EIGEN_STRONG_INLINE void call_dense_assignment_loop(
++    Eigen::Matrix<std::complex<double>, DstRows, DstCols, DstOptions, DstMaxRows, DstMaxCols> &dst,
++    const Eigen::Matrix<std::complex<double>, SrcRows, SrcCols, SrcOptions, SrcMaxRows, SrcMaxCols> &src,
++    const Eigen::internal::add_assign_op<std::complex<double>, std::complex<double> > &func)
 +{
-+  resize_if_allowed(dst, src, func);
-+  StorageOptions srcMajor = (int(SrcOptions1)&RowMajorBit) ? RowMajor : ColMajor;
-+  StorageOptions dstMajor = (int(DstOptions)&RowMajorBit) ? RowMajor : ColMajor;
-+  const int lhsRows = (srcMajor==ColMajor) ? src.lhs().rows() : src.lhs().cols();
-+  const int lhsCols = (srcMajor==ColMajor) ? src.lhs().cols() : src.lhs().rows();
-+  const int dstRows = (dstMajor==ColMajor) ? dst.rows() : dst.cols();
-+  const int dstCols = (dstMajor==ColMajor) ? dst.cols() : dst.rows();
-+  const int lhsMajorStride = (srcMajor==ColMajor) ? src.lhs().rowStride() : src.lhs().colStride();
-+  const int dstMajorStride = (dstMajor==ColMajor) ? dst.rowStride() : dst.colStride();
++    resize_if_allowed(dst, src, func);
++    StorageOptions srcMajor = (int(SrcOptions) & RowMajorBit) ? RowMajor : ColMajor;
++    StorageOptions dstMajor = (int(DstOptions) & RowMajorBit) ? RowMajor : ColMajor;
++    const int lhsRows = (srcMajor == ColMajor) ? src.rows() : src.cols();
++    const int lhsCols = (srcMajor == ColMajor) ? src.cols() : src.rows();
++    const int dstRows = (dstMajor == ColMajor) ? dst.rows() : dst.cols();
++    const int dstCols = (dstMajor == ColMajor) ? dst.cols() : dst.rows();
++    const int srcMajorStride = (srcMajor == ColMajor) ? src.rowStride() : src.colStride();
++    const int dstMajorStride = (dstMajor == ColMajor) ? dst.rowStride() : dst.colStride();
++    const double alpha[2] = {1.0};
++    const double beta[2] = {1.0};
 +
-+  if (srcMajor == dstMajor && lhsRows == dstRows && lhsCols == dstCols &&
-+      lhsMajorStride == dstMajorStride && dstMajorStride == 1) {
-+        vzsub(dst.size(), (const __complex__ double*)src.lhs().data(), (const __complex__ double*)src.rhs().data(), (__complex__ double*)dst.data());
-+  } else {
-+    typedef evaluator<Eigen::Matrix<std::complex<double>, DstRows, DstCols, DstOptions, DstMaxRows, DstMaxCols> > DstEvaluatorType;
-+    typedef evaluator<Eigen::CwiseBinaryOp<Eigen::internal::scalar_difference_op<std::complex<double>, std::complex<double> >,
-+                      Eigen::Matrix<std::complex<double>, SrcRows1, SrcCols1, SrcOptions1, SrcMaxRows1, SrcMaxCols1> const,
-+                      Eigen::Matrix<std::complex<double>, SrcRows2, SrcCols2, SrcOptions2, SrcMaxRows2, SrcMaxCols2> const> > SrcEvaluatorType;
++    if (srcMajor == dstMajor && lhsRows == dstRows && lhsCols == dstCols && srcMajorStride == dstMajorStride &&
++        dstMajorStride == 1) {
++            CBLAS_ORDER order = (srcMajor == ColMajor) ? CblasColMajor : CblasRowMajor;
++        cblas_zimatadd(order, CblasNoTrans, lhsRows, lhsCols, alpha, (double *)src.data(), lhsRows,
++                       (double *)dst.data(), dstRows);
++    } else {
++        typedef evaluator<Eigen::Matrix<std::complex<double>, DstRows, DstCols, DstOptions, DstMaxRows, DstMaxCols> >
++            DstEvaluatorType;
++        typedef evaluator<Eigen::Matrix<std::complex<double>, SrcRows, SrcCols, SrcOptions, SrcMaxRows, SrcMaxCols> >
++            SrcEvaluatorType;
 +
-+    SrcEvaluatorType srcEvaluator(src);
-+    DstEvaluatorType dstEvaluator(dst);
++        SrcEvaluatorType srcEvaluator(src);
++        DstEvaluatorType dstEvaluator(dst);
 +
-+    typedef generic_dense_assignment_kernel<DstEvaluatorType,SrcEvaluatorType,Eigen::internal::assign_op<std::complex<double>, std::complex<double> > > Kernel;
-+    Kernel kernel(dstEvaluator, srcEvaluator, func, dst.const_cast_derived());
++        typedef generic_dense_assignment_kernel<DstEvaluatorType, SrcEvaluatorType,
++            Eigen::internal::add_assign_op<std::complex<double>, std::complex<double> > >
++            Kernel;
++        Kernel kernel(dstEvaluator, srcEvaluator, func, dst.const_cast_derived());
 +
-+    dense_assignment_loop<Kernel>::run(kernel);
-+  }
++        dense_assignment_loop<Kernel>::run(kernel);
++    }
 +}
 +
-+template<int DstRows, int DstCols, int DstOptions, int DstMaxRows, int DstMaxCols,
-+         int SrcRows1, int SrcCols1, int SrcOptions1, int SrcMaxRows1, int SrcMaxCols1,
-+         int SrcRows2, int SrcCols2, int SrcOptions2, int SrcMaxRows2, int SrcMaxCols2>
-+EIGEN_DEVICE_FUNC EIGEN_STRONG_INLINE void call_dense_assignment_loop(Eigen::Matrix<float, DstRows, DstCols, DstOptions, DstMaxRows, DstMaxCols> & dst,
-+  const Eigen::CwiseBinaryOp<Eigen::internal::scalar_product_op<float, float>,
-+                             Eigen::Matrix<float, SrcRows1, SrcCols1, SrcOptions1, SrcMaxRows1, SrcMaxCols1> const,
-+                             Eigen::Matrix<float, SrcRows2, SrcCols2, SrcOptions2, SrcMaxRows2, SrcMaxCols2> const> &src,
-+  const Eigen::internal::assign_op<float, float> &func)
++template <int DstRows, int DstCols, int DstOptions, int DstMaxRows, int DstMaxCols, int SrcRows1, int SrcCols1,
++    int SrcOptions1, int SrcMaxRows1, int SrcMaxCols1, int SrcRows2, int SrcCols2, int SrcOptions2, int SrcMaxRows2,
++    int SrcMaxCols2>
++EIGEN_DEVICE_FUNC EIGEN_STRONG_INLINE void call_dense_assignment_loop(
++    Eigen::Matrix<float, DstRows, DstCols, DstOptions, DstMaxRows, DstMaxCols> &dst,
++    const Eigen::CwiseBinaryOp<Eigen::internal::scalar_difference_op<float, float>,
++    Eigen::Matrix<float, SrcRows1, SrcCols1, SrcOptions1, SrcMaxRows1, SrcMaxCols1> const,
++    Eigen::Matrix<float, SrcRows2, SrcCols2, SrcOptions2, SrcMaxRows2, SrcMaxCols2> const> &src,
++    const Eigen::internal::assign_op<float, float> &func)
 +{
-+  resize_if_allowed(dst, src, func);
-+  StorageOptions srcMajor = (int(SrcOptions1)&RowMajorBit) ? RowMajor : ColMajor;
-+  StorageOptions dstMajor = (int(DstOptions)&RowMajorBit) ? RowMajor : ColMajor;
-+  const int lhsRows = (srcMajor==ColMajor) ? src.lhs().rows() : src.lhs().cols();
-+  const int lhsCols = (srcMajor==ColMajor) ? src.lhs().cols() : src.lhs().rows();
-+  const int dstRows = (dstMajor==ColMajor) ? dst.rows() : dst.cols();
-+  const int dstCols = (dstMajor==ColMajor) ? dst.cols() : dst.rows();
-+  const int lhsMajorStride = (srcMajor==ColMajor) ? src.lhs().rowStride() : src.lhs().colStride();
-+  const int dstMajorStride = (dstMajor==ColMajor) ? dst.rowStride() : dst.colStride();
++    resize_if_allowed(dst, src, func);
++    StorageOptions srcMajor = (int(SrcOptions1) & RowMajorBit) ? RowMajor : ColMajor;
++    StorageOptions dstMajor = (int(DstOptions) & RowMajorBit) ? RowMajor : ColMajor;
++    const int lhsRows = (srcMajor == ColMajor) ? src.lhs().rows() : src.lhs().cols();
++    const int lhsCols = (srcMajor == ColMajor) ? src.lhs().cols() : src.lhs().rows();
++    const int dstRows = (dstMajor == ColMajor) ? dst.rows() : dst.cols();
++    const int dstCols = (dstMajor == ColMajor) ? dst.cols() : dst.rows();
++    const int lhsMajorStride = (srcMajor == ColMajor) ? src.lhs().rowStride() : src.lhs().colStride();
++    const int dstMajorStride = (dstMajor == ColMajor) ? dst.rowStride() : dst.colStride();
 +
-+  if (srcMajor == dstMajor && lhsRows == dstRows && lhsCols == dstCols &&
-+      lhsMajorStride == dstMajorStride && dstMajorStride == 1) {
-+        vsmul(dst.size(), (float*)src.lhs().data(), (float*)src.rhs().data(), (float*)dst.data());
-+  } else {
-+    typedef evaluator<Eigen::Matrix<float, DstRows, DstCols, DstOptions, DstMaxRows, DstMaxCols> > DstEvaluatorType;
-+    typedef evaluator<Eigen::CwiseBinaryOp<Eigen::internal::scalar_product_op<float, float>,
-+                      Eigen::Matrix<float, SrcRows1, SrcCols1, SrcOptions1, SrcMaxRows1, SrcMaxCols1> const,
-+                      Eigen::Matrix<float, SrcRows2, SrcCols2, SrcOptions2, SrcMaxRows2, SrcMaxCols2> const> > SrcEvaluatorType;
++    if (srcMajor == dstMajor && lhsRows == dstRows && lhsCols == dstCols && lhsMajorStride == dstMajorStride &&
++        dstMajorStride == 1) {
++        CBLAS_ORDER order = (srcMajor == ColMajor) ? CblasColMajor : CblasRowMajor;
++        cblas_somatsub(order, CblasNoTrans, CblasNoTrans, lhsRows, lhsCols, 1.0f, (float *)src.lhs().data(), lhsRows,
++                       1.0f, (float *)src.rhs().data(), lhsRows, (float *)dst.data(), dstRows);
++    } else {
++        typedef evaluator<Eigen::Matrix<float, DstRows, DstCols, DstOptions, DstMaxRows, DstMaxCols> > DstEvaluatorType;
++        typedef evaluator<Eigen::CwiseBinaryOp<Eigen::internal::scalar_difference_op<float, float>,
++            Eigen::Matrix<float, SrcRows1, SrcCols1, SrcOptions1, SrcMaxRows1, SrcMaxCols1> const,
++            Eigen::Matrix<float, SrcRows2, SrcCols2, SrcOptions2, SrcMaxRows2, SrcMaxCols2> const> >
++            SrcEvaluatorType;
 +
-+    SrcEvaluatorType srcEvaluator(src);
-+    DstEvaluatorType dstEvaluator(dst);
++        SrcEvaluatorType srcEvaluator(src);
++        DstEvaluatorType dstEvaluator(dst);
 +
-+    typedef generic_dense_assignment_kernel<DstEvaluatorType,SrcEvaluatorType,Eigen::internal::assign_op<float, float> > Kernel;
-+    Kernel kernel(dstEvaluator, srcEvaluator, func, dst.const_cast_derived());
++        typedef generic_dense_assignment_kernel<DstEvaluatorType, SrcEvaluatorType,
++            Eigen::internal::assign_op<float, float> >
++            Kernel;
++        Kernel kernel(dstEvaluator, srcEvaluator, func, dst.const_cast_derived());
 +
-+    dense_assignment_loop<Kernel>::run(kernel);
-+  }
++        dense_assignment_loop<Kernel>::run(kernel);
++    }
 +}
 +
-+template<int DstRows, int DstCols, int DstOptions, int DstMaxRows, int DstMaxCols,
-+         int SrcRows1, int SrcCols1, int SrcOptions1, int SrcMaxRows1, int SrcMaxCols1,
-+         int SrcRows2, int SrcCols2, int SrcOptions2, int SrcMaxRows2, int SrcMaxCols2>
-+EIGEN_DEVICE_FUNC EIGEN_STRONG_INLINE void call_dense_assignment_loop(Eigen::Matrix<double, DstRows, DstCols, DstOptions, DstMaxRows, DstMaxCols> & dst,
-+  const Eigen::CwiseBinaryOp<Eigen::internal::scalar_product_op<double, double>,
-+                             Eigen::Matrix<double, SrcRows1, SrcCols1, SrcOptions1, SrcMaxRows1, SrcMaxCols1> const,
-+                             Eigen::Matrix<double, SrcRows2, SrcCols2, SrcOptions2, SrcMaxRows2, SrcMaxCols2> const> &src,
-+  const Eigen::internal::assign_op<double, double> &func)
++template <int DstRows, int DstCols, int DstOptions, int DstMaxRows, int DstMaxCols, int SrcRows1, int SrcCols1,
++    int SrcOptions1, int SrcMaxRows1, int SrcMaxCols1, int SrcRows2, int SrcCols2, int SrcOptions2, int SrcMaxRows2,
++    int SrcMaxCols2>
++EIGEN_DEVICE_FUNC EIGEN_STRONG_INLINE void call_dense_assignment_loop(
++    Eigen::Matrix<double, DstRows, DstCols, DstOptions, DstMaxRows, DstMaxCols> &dst,
++    const Eigen::CwiseBinaryOp<Eigen::internal::scalar_difference_op<double, double>,
++    Eigen::Matrix<double, SrcRows1, SrcCols1, SrcOptions1, SrcMaxRows1, SrcMaxCols1> const,
++    Eigen::Matrix<double, SrcRows2, SrcCols2, SrcOptions2, SrcMaxRows2, SrcMaxCols2> const> &src,
++    const Eigen::internal::assign_op<double, double> &func)
 +{
-+  resize_if_allowed(dst, src, func);
-+  StorageOptions srcMajor = (int(SrcOptions1)&RowMajorBit) ? RowMajor : ColMajor;
-+  StorageOptions dstMajor = (int(DstOptions)&RowMajorBit) ? RowMajor : ColMajor;
-+  const int lhsRows = (srcMajor==ColMajor) ? src.lhs().rows() : src.lhs().cols();
-+  const int lhsCols = (srcMajor==ColMajor) ? src.lhs().cols() : src.lhs().rows();
-+  const int dstRows = (dstMajor==ColMajor) ? dst.rows() : dst.cols();
-+  const int dstCols = (dstMajor==ColMajor) ? dst.cols() : dst.rows();
-+  const int lhsMajorStride = (srcMajor==ColMajor) ? src.lhs().rowStride() : src.lhs().colStride();
-+  const int dstMajorStride = (dstMajor==ColMajor) ? dst.rowStride() : dst.colStride();
++    resize_if_allowed(dst, src, func);
++    StorageOptions srcMajor = (int(SrcOptions1) & RowMajorBit) ? RowMajor : ColMajor;
++    StorageOptions dstMajor = (int(DstOptions) & RowMajorBit) ? RowMajor : ColMajor;
++    const int lhsRows = (srcMajor == ColMajor) ? src.lhs().rows() : src.lhs().cols();
++    const int lhsCols = (srcMajor == ColMajor) ? src.lhs().cols() : src.lhs().rows();
++    const int dstRows = (dstMajor == ColMajor) ? dst.rows() : dst.cols();
++    const int dstCols = (dstMajor == ColMajor) ? dst.cols() : dst.rows();
++    const int lhsMajorStride = (srcMajor == ColMajor) ? src.lhs().rowStride() : src.lhs().colStride();
++    const int dstMajorStride = (dstMajor == ColMajor) ? dst.rowStride() : dst.colStride();
 +
-+  if (srcMajor == dstMajor && lhsRows == dstRows && lhsCols == dstCols &&
-+      lhsMajorStride == dstMajorStride && dstMajorStride == 1) {
-+        vdmul(dst.size(), (double*)src.lhs().data(), (double*)src.rhs().data(), (double*)dst.data());
-+  } else {
-+    typedef evaluator<Eigen::Matrix<double, DstRows, DstCols, DstOptions, DstMaxRows, DstMaxCols> > DstEvaluatorType;
-+    typedef evaluator<Eigen::CwiseBinaryOp<Eigen::internal::scalar_product_op<double, double>,
-+                      Eigen::Matrix<double, SrcRows1, SrcCols1, SrcOptions1, SrcMaxRows1, SrcMaxCols1> const,
-+                      Eigen::Matrix<double, SrcRows2, SrcCols2, SrcOptions2, SrcMaxRows2, SrcMaxCols2> const> > SrcEvaluatorType;
++    if (srcMajor == dstMajor && lhsRows == dstRows && lhsCols == dstCols && lhsMajorStride == dstMajorStride &&
++        dstMajorStride == 1) {
++        CBLAS_ORDER order = (srcMajor == ColMajor) ? CblasColMajor : CblasRowMajor;
++        cblas_domatsub(order, CblasNoTrans, CblasNoTrans, lhsRows, lhsCols, 1.0, (double *)src.lhs().data(), lhsRows,
++                       1.0, (double *)src.rhs().data(), lhsRows, (double *)dst.data(), dstRows);
++    } else {
++        typedef evaluator<Eigen::Matrix<double, DstRows, DstCols, DstOptions, DstMaxRows, DstMaxCols> >
++            DstEvaluatorType;
++        typedef evaluator<Eigen::CwiseBinaryOp<Eigen::internal::scalar_difference_op<double, double>,
++            Eigen::Matrix<double, SrcRows1, SrcCols1, SrcOptions1, SrcMaxRows1, SrcMaxCols1> const,
++            Eigen::Matrix<double, SrcRows2, SrcCols2, SrcOptions2, SrcMaxRows2, SrcMaxCols2> const> >
++            SrcEvaluatorType;
 +
-+    SrcEvaluatorType srcEvaluator(src);
-+    DstEvaluatorType dstEvaluator(dst);
++        SrcEvaluatorType srcEvaluator(src);
++        DstEvaluatorType dstEvaluator(dst);
 +
-+    typedef generic_dense_assignment_kernel<DstEvaluatorType,SrcEvaluatorType,Eigen::internal::assign_op<double, double> > Kernel;
-+    Kernel kernel(dstEvaluator, srcEvaluator, func, dst.const_cast_derived());
++        typedef generic_dense_assignment_kernel<DstEvaluatorType, SrcEvaluatorType,
++            Eigen::internal::assign_op<double, double> >
++            Kernel;
++        Kernel kernel(dstEvaluator, srcEvaluator, func, dst.const_cast_derived());
 +
-+    dense_assignment_loop<Kernel>::run(kernel);
-+  }
++        dense_assignment_loop<Kernel>::run(kernel);
++    }
 +}
 +
-+template<int DstRows, int DstCols, int DstOptions, int DstMaxRows, int DstMaxCols,
-+         int SrcRows1, int SrcCols1, int SrcOptions1, int SrcMaxRows1, int SrcMaxCols1,
-+         int SrcRows2, int SrcCols2, int SrcOptions2, int SrcMaxRows2, int SrcMaxCols2>
-+EIGEN_DEVICE_FUNC EIGEN_STRONG_INLINE void call_dense_assignment_loop(Eigen::Matrix<std::complex<float>, DstRows, DstCols, DstOptions, DstMaxRows, DstMaxCols> & dst,
-+  const Eigen::CwiseBinaryOp<Eigen::internal::scalar_product_op<std::complex<float>, std::complex<float> >,
-+                             Eigen::Matrix<std::complex<float>, SrcRows1, SrcCols1, SrcOptions1, SrcMaxRows1, SrcMaxCols1> const,
-+                             Eigen::Matrix<std::complex<float>, SrcRows2, SrcCols2, SrcOptions2, SrcMaxRows2, SrcMaxCols2> const> &src,
-+  const Eigen::internal::assign_op<std::complex<float>, std::complex<float> > &func)
++template <int DstRows, int DstCols, int DstOptions, int DstMaxRows, int DstMaxCols, int SrcRows1, int SrcCols1,
++    int SrcOptions1, int SrcMaxRows1, int SrcMaxCols1, int SrcRows2, int SrcCols2, int SrcOptions2, int SrcMaxRows2,
++    int SrcMaxCols2>
++EIGEN_DEVICE_FUNC EIGEN_STRONG_INLINE void call_dense_assignment_loop(
++    Eigen::Matrix<std::complex<float>, DstRows, DstCols, DstOptions, DstMaxRows, DstMaxCols> &dst,
++    const Eigen::CwiseBinaryOp<Eigen::internal::scalar_difference_op<std::complex<float>, std::complex<float> >,
++    Eigen::Matrix<std::complex<float>, SrcRows1, SrcCols1, SrcOptions1, SrcMaxRows1, SrcMaxCols1> const,
++    Eigen::Matrix<std::complex<float>, SrcRows2, SrcCols2, SrcOptions2, SrcMaxRows2, SrcMaxCols2> const> &src,
++    const Eigen::internal::assign_op<std::complex<float>, std::complex<float> > &func)
 +{
-+  resize_if_allowed(dst, src, func);
-+  StorageOptions srcMajor = (int(SrcOptions1)&RowMajorBit) ? RowMajor : ColMajor;
-+  StorageOptions dstMajor = (int(DstOptions)&RowMajorBit) ? RowMajor : ColMajor;
-+  const int lhsRows = (srcMajor==ColMajor) ? src.lhs().rows() : src.lhs().cols();
-+  const int lhsCols = (srcMajor==ColMajor) ? src.lhs().cols() : src.lhs().rows();
-+  const int dstRows = (dstMajor==ColMajor) ? dst.rows() : dst.cols();
-+  const int dstCols = (dstMajor==ColMajor) ? dst.cols() : dst.rows();
-+  const int lhsMajorStride = (srcMajor==ColMajor) ? src.lhs().rowStride() : src.lhs().colStride();
-+  const int dstMajorStride = (dstMajor==ColMajor) ? dst.rowStride() : dst.colStride();
++    resize_if_allowed(dst, src, func);
++    StorageOptions srcMajor = (int(SrcOptions1) & RowMajorBit) ? RowMajor : ColMajor;
++    StorageOptions dstMajor = (int(DstOptions) & RowMajorBit) ? RowMajor : ColMajor;
++    const int lhsRows = (srcMajor == ColMajor) ? src.lhs().rows() : src.lhs().cols();
++    const int lhsCols = (srcMajor == ColMajor) ? src.lhs().cols() : src.lhs().rows();
++    const int dstRows = (dstMajor == ColMajor) ? dst.rows() : dst.cols();
++    const int dstCols = (dstMajor == ColMajor) ? dst.cols() : dst.rows();
++    const int lhsMajorStride = (srcMajor == ColMajor) ? src.lhs().rowStride() : src.lhs().colStride();
++    const int dstMajorStride = (dstMajor == ColMajor) ? dst.rowStride() : dst.colStride();
++    const float alpha[2] = {1.0f};
++    const float beta[2] = {1.0f};
 +
-+  if (srcMajor == dstMajor && lhsRows == dstRows && lhsCols == dstCols &&
-+      lhsMajorStride == dstMajorStride && dstMajorStride == 1) {
-+        vcmul(dst.size(), (const __complex__ float*)src.lhs().data(), (const __complex__ float*)src.rhs().data(), (__complex__ float*)dst.data());
-+  } else {
-+    typedef evaluator<Eigen::Matrix<std::complex<float>, DstRows, DstCols, DstOptions, DstMaxRows, DstMaxCols> > DstEvaluatorType;
-+    typedef evaluator<Eigen::CwiseBinaryOp<Eigen::internal::scalar_product_op<std::complex<float>, std::complex<float> >,
-+                      Eigen::Matrix<std::complex<float>, SrcRows1, SrcCols1, SrcOptions1, SrcMaxRows1, SrcMaxCols1> const,
-+                      Eigen::Matrix<std::complex<float>, SrcRows2, SrcCols2, SrcOptions2, SrcMaxRows2, SrcMaxCols2> const> > SrcEvaluatorType;
++    if (srcMajor == dstMajor && lhsRows == dstRows && lhsCols == dstCols && lhsMajorStride == dstMajorStride &&
++        dstMajorStride == 1) {
++        CBLAS_ORDER order = (srcMajor == ColMajor) ? CblasColMajor : CblasRowMajor;
++        cblas_comatsub(order, CblasNoTrans, CblasNoTrans, lhsRows, lhsCols, alpha, (float *)src.lhs().data(), lhsRows,
++                       beta, (float *)src.rhs().data(), lhsRows, (float *)dst.data(), dstRows);
++    } else {
++        typedef evaluator<Eigen::Matrix<std::complex<float>, DstRows, DstCols, DstOptions, DstMaxRows, DstMaxCols> >
++            DstEvaluatorType;
++        typedef evaluator<
++            Eigen::CwiseBinaryOp<Eigen::internal::scalar_difference_op<std::complex<float>, std::complex<float> >,
++            Eigen::Matrix<std::complex<float>, SrcRows1, SrcCols1, SrcOptions1, SrcMaxRows1, SrcMaxCols1> const,
++            Eigen::Matrix<std::complex<float>, SrcRows2, SrcCols2, SrcOptions2, SrcMaxRows2, SrcMaxCols2> const> >
++            SrcEvaluatorType;
 +
-+    SrcEvaluatorType srcEvaluator(src);
-+    DstEvaluatorType dstEvaluator(dst);
++        SrcEvaluatorType srcEvaluator(src);
++        DstEvaluatorType dstEvaluator(dst);
 +
-+    typedef generic_dense_assignment_kernel<DstEvaluatorType,SrcEvaluatorType,Eigen::internal::assign_op<std::complex<float>, std::complex<float> > > Kernel;
-+    Kernel kernel(dstEvaluator, srcEvaluator, func, dst.const_cast_derived());
++        typedef generic_dense_assignment_kernel<DstEvaluatorType, SrcEvaluatorType,
++            Eigen::internal::assign_op<std::complex<float>, std::complex<float> > >
++            Kernel;
++        Kernel kernel(dstEvaluator, srcEvaluator, func, dst.const_cast_derived());
 +
-+    dense_assignment_loop<Kernel>::run(kernel);
-+  }
++        dense_assignment_loop<Kernel>::run(kernel);
++    }
 +}
 +
-+template<int DstRows, int DstCols, int DstOptions, int DstMaxRows, int DstMaxCols,
-+         int SrcRows1, int SrcCols1, int SrcOptions1, int SrcMaxRows1, int SrcMaxCols1,
-+         int SrcRows2, int SrcCols2, int SrcOptions2, int SrcMaxRows2, int SrcMaxCols2>
-+EIGEN_DEVICE_FUNC EIGEN_STRONG_INLINE void call_dense_assignment_loop(Eigen::Matrix<std::complex<double>, DstRows, DstCols, DstOptions, DstMaxRows, DstMaxCols> & dst,
-+  const Eigen::CwiseBinaryOp<Eigen::internal::scalar_product_op<std::complex<double>, std::complex<double> >,
-+                             Eigen::Matrix<std::complex<double>, SrcRows1, SrcCols1, SrcOptions1, SrcMaxRows1, SrcMaxCols1> const,
-+                             Eigen::Matrix<std::complex<double>, SrcRows2, SrcCols2, SrcOptions2, SrcMaxRows2, SrcMaxCols2> const> &src,
-+  const Eigen::internal::assign_op<std::complex<double>, std::complex<double> > &func)
++template <int DstRows, int DstCols, int DstOptions, int DstMaxRows, int DstMaxCols, int SrcRows1, int SrcCols1,
++    int SrcOptions1, int SrcMaxRows1, int SrcMaxCols1, int SrcRows2, int SrcCols2, int SrcOptions2, int SrcMaxRows2,
++    int SrcMaxCols2>
++EIGEN_DEVICE_FUNC EIGEN_STRONG_INLINE void call_dense_assignment_loop(
++    Eigen::Matrix<std::complex<double>, DstRows, DstCols, DstOptions, DstMaxRows, DstMaxCols> &dst,
++    const Eigen::CwiseBinaryOp<Eigen::internal::scalar_difference_op<std::complex<double>, std::complex<double> >,
++    Eigen::Matrix<std::complex<double>, SrcRows1, SrcCols1, SrcOptions1, SrcMaxRows1, SrcMaxCols1> const,
++    Eigen::Matrix<std::complex<double>, SrcRows2, SrcCols2, SrcOptions2, SrcMaxRows2, SrcMaxCols2> const> &src,
++    const Eigen::internal::assign_op<std::complex<double>, std::complex<double> > &func)
 +{
-+  resize_if_allowed(dst, src, func);
-+  StorageOptions srcMajor = (int(SrcOptions1)&RowMajorBit) ? RowMajor : ColMajor;
-+  StorageOptions dstMajor = (int(DstOptions)&RowMajorBit) ? RowMajor : ColMajor;
-+  const int lhsRows = (srcMajor==ColMajor) ? src.lhs().rows() : src.lhs().cols();
-+  const int lhsCols = (srcMajor==ColMajor) ? src.lhs().cols() : src.lhs().rows();
-+  const int dstRows = (dstMajor==ColMajor) ? dst.rows() : dst.cols();
-+  const int dstCols = (dstMajor==ColMajor) ? dst.cols() : dst.rows();
-+  const int lhsMajorStride = (srcMajor==ColMajor) ? src.lhs().rowStride() : src.lhs().colStride();
-+  const int dstMajorStride = (dstMajor==ColMajor) ? dst.rowStride() : dst.colStride();
++    resize_if_allowed(dst, src, func);
++    StorageOptions srcMajor = (int(SrcOptions1) & RowMajorBit) ? RowMajor : ColMajor;
++    StorageOptions dstMajor = (int(DstOptions) & RowMajorBit) ? RowMajor : ColMajor;
++    const int lhsRows = (srcMajor == ColMajor) ? src.lhs().rows() : src.lhs().cols();
++    const int lhsCols = (srcMajor == ColMajor) ? src.lhs().cols() : src.lhs().rows();
++    const int dstRows = (dstMajor == ColMajor) ? dst.rows() : dst.cols();
++    const int dstCols = (dstMajor == ColMajor) ? dst.cols() : dst.rows();
++    const int lhsMajorStride = (srcMajor == ColMajor) ? src.lhs().rowStride() : src.lhs().colStride();
++    const int dstMajorStride = (dstMajor == ColMajor) ? dst.rowStride() : dst.colStride();
++    const double alpha[2] = {1.0};
++    const double beta[2] = {1.0};
 +
-+  if (srcMajor == dstMajor && lhsRows == dstRows && lhsCols == dstCols &&
-+      lhsMajorStride == dstMajorStride && dstMajorStride == 1) {
-+        vzmul(dst.size(), (const __complex__ double*)src.lhs().data(), (const __complex__ double*)src.rhs().data(), (__complex__ double*)dst.data());
-+  } else {
-+    typedef evaluator<Eigen::Matrix<std::complex<double>, DstRows, DstCols, DstOptions, DstMaxRows, DstMaxCols> > DstEvaluatorType;
-+    typedef evaluator<Eigen::CwiseBinaryOp<Eigen::internal::scalar_product_op<std::complex<double>, std::complex<double> >,
-+                      Eigen::Matrix<std::complex<double>, SrcRows1, SrcCols1, SrcOptions1, SrcMaxRows1, SrcMaxCols1> const,
-+                      Eigen::Matrix<std::complex<double>, SrcRows2, SrcCols2, SrcOptions2, SrcMaxRows2, SrcMaxCols2> const> > SrcEvaluatorType;
++    if (srcMajor == dstMajor && lhsRows == dstRows && lhsCols == dstCols && lhsMajorStride == dstMajorStride &&
++        dstMajorStride == 1) {
++        CBLAS_ORDER order = (srcMajor == ColMajor) ? CblasColMajor : CblasRowMajor;
++        cblas_zomatsub(order, CblasNoTrans, CblasNoTrans, lhsRows, lhsCols, alpha, (double *)src.lhs().data(), lhsRows,
++                       beta, (double *)src.rhs().data(), lhsRows, (double *)dst.data(), dstRows);
++    } else {
++        typedef evaluator<Eigen::Matrix<std::complex<double>, DstRows, DstCols, DstOptions, DstMaxRows, DstMaxCols> >
++            DstEvaluatorType;
++        typedef evaluator<
++            Eigen::CwiseBinaryOp<Eigen::internal::scalar_difference_op<std::complex<double>, std::complex<double> >,
++            Eigen::Matrix<std::complex<double>, SrcRows1, SrcCols1, SrcOptions1, SrcMaxRows1, SrcMaxCols1> const,
++            Eigen::Matrix<std::complex<double>, SrcRows2, SrcCols2, SrcOptions2, SrcMaxRows2, SrcMaxCols2> const> >
++            SrcEvaluatorType;
 +
-+    SrcEvaluatorType srcEvaluator(src);
-+    DstEvaluatorType dstEvaluator(dst);
++        SrcEvaluatorType srcEvaluator(src);
++        DstEvaluatorType dstEvaluator(dst);
 +
-+    typedef generic_dense_assignment_kernel<DstEvaluatorType,SrcEvaluatorType,Eigen::internal::assign_op<std::complex<double>, std::complex<double> > > Kernel;
-+    Kernel kernel(dstEvaluator, srcEvaluator, func, dst.const_cast_derived());
++        typedef generic_dense_assignment_kernel<DstEvaluatorType, SrcEvaluatorType,
++            Eigen::internal::assign_op<std::complex<double>, std::complex<double> > >
++            Kernel;
++        Kernel kernel(dstEvaluator, srcEvaluator, func, dst.const_cast_derived());
 +
-+    dense_assignment_loop<Kernel>::run(kernel);
-+  }
++        dense_assignment_loop<Kernel>::run(kernel);
++    }
 +}
 +
-+template<int DstRows, int DstCols, int DstOptions, int DstMaxRows, int DstMaxCols,
-+         int SrcRows, int SrcCols, int SrcOptions, int SrcMaxRows, int SrcMaxCols>
-+EIGEN_DEVICE_FUNC EIGEN_STRONG_INLINE void call_dense_assignment_loop(Eigen::Matrix<float, DstRows, DstCols, DstOptions, DstMaxRows, DstMaxCols> &dst,
-+  const Eigen::PartialReduxExpr<Eigen::Matrix<float, SrcRows, SrcCols, SrcOptions, SrcMaxRows, SrcMaxCols>,
-+                                Eigen::internal::member_sum<float, float>, 1> &src,
-+  const Eigen::internal::assign_op<float, float> &func)
++template <int DstRows, int DstCols, int DstOptions, int DstMaxRows, int DstMaxCols, int SrcRows, int SrcCols,
++    int SrcOptions, int SrcMaxRows, int SrcMaxCols>
++EIGEN_DEVICE_FUNC EIGEN_STRONG_INLINE void call_dense_assignment_loop(
++    Eigen::Matrix<float, DstRows, DstCols, DstOptions, DstMaxRows, DstMaxCols> &dst,
++    const Eigen::Matrix<float, SrcRows, SrcCols, SrcOptions, SrcMaxRows, SrcMaxCols> &src,
++    const Eigen::internal::sub_assign_op<float, float> &func)
 +{
-+  resize_if_allowed(dst, src, func);
-+  const int one = 1;
-+  const float alpha = 1.0f;
-+  const float beta = 0.0f;
++    resize_if_allowed(dst, src, func);
++    StorageOptions srcMajor = (int(SrcOptions) & RowMajorBit) ? RowMajor : ColMajor;
++    StorageOptions dstMajor = (int(DstOptions) & RowMajorBit) ? RowMajor : ColMajor;
++    const int lhsRows = (srcMajor == ColMajor) ? src.rows() : src.cols();
++    const int lhsCols = (srcMajor == ColMajor) ? src.cols() : src.rows();
++    const int dstRows = (dstMajor == ColMajor) ? dst.rows() : dst.cols();
++    const int dstCols = (dstMajor == ColMajor) ? dst.cols() : dst.rows();
++    const int srcMajorStride = (srcMajor == ColMajor) ? src.rowStride() : src.colStride();
++    const int dstMajorStride = (dstMajor == ColMajor) ? dst.rowStride() : dst.colStride();
 +
-+  StorageOptions SrcMajor = (int(SrcOptions)&RowMajorBit) ? RowMajor : ColMajor;
-+  StorageOptions DstMajor = (int(DstOptions)&RowMajorBit) ? ColMajor : RowMajor;
-+  const int rows = (SrcMajor==ColMajor) ? src.nestedExpression().rows(): src.nestedExpression().cols();
-+  const int cols = (SrcMajor==ColMajor) ? src.nestedExpression().cols(): src.nestedExpression().rows();
-+  const int srcMajorStride = (SrcMajor==ColMajor) ? src.nestedExpression().rowStride() : src.nestedExpression().colStride();
-+  const int dstMajorStride = (DstMajor==RowMajor) ? dst.rowStride() : dst.colStride();
++    if (srcMajor == dstMajor && lhsRows == dstRows && lhsCols == dstCols && srcMajorStride == dstMajorStride &&
++        dstMajorStride == 1) {
++        CBLAS_ORDER order = (srcMajor == ColMajor) ? CblasColMajor : CblasRowMajor;
++        cblas_simatsub(order, CblasNoTrans, lhsRows, lhsCols, 1.0f, (float *)src.data(), lhsRows,
++                       (float *)dst.data(), dstRows);
++    } else {
++        typedef evaluator<Eigen::Matrix<float, DstRows, DstCols, DstOptions, DstMaxRows, DstMaxCols> > DstEvaluatorType;
++        typedef evaluator<Eigen::Matrix<float, SrcRows, SrcCols, SrcOptions, SrcMaxRows, SrcMaxCols> > SrcEvaluatorType;
 +
-+  if (srcMajorStride == 1 && dstMajorStride == 1 && rows != 1 && cols != 1) {
-+    CBLAS_ORDER order = (SrcMajor==ColMajor) ? CblasColMajor : CblasRowMajor;
-+    const int mSize = (SrcMajor==ColMajor) ? cols : rows;
-+    MatrixXf v = MatrixXf::Ones(1, mSize);
-+    cblas_sgemv(order, CblasNoTrans, rows, cols, alpha, (const float*)src.nestedExpression().data(), rows, (const float*)v.data(), one, beta, dst.data(), one);
-+  } else {
-+    typedef evaluator<Eigen::Matrix<float, DstRows, DstCols, DstOptions, DstMaxRows, DstMaxCols> > DstEvaluatorType;
-+    typedef evaluator<Eigen::PartialReduxExpr<Eigen::Matrix<float, SrcRows, SrcCols, SrcOptions, SrcMaxRows, SrcMaxCols>,
-+                      Eigen::internal::member_sum<float, float>, 1> > SrcEvaluatorType;
++        SrcEvaluatorType srcEvaluator(src);
++        DstEvaluatorType dstEvaluator(dst);
 +
-+    SrcEvaluatorType srcEvaluator(src);
-+    DstEvaluatorType dstEvaluator(dst);
++        typedef generic_dense_assignment_kernel<DstEvaluatorType, SrcEvaluatorType,
++            Eigen::internal::sub_assign_op<float, float> >
++            Kernel;
++        Kernel kernel(dstEvaluator, srcEvaluator, func, dst.const_cast_derived());
 +
-+    typedef generic_dense_assignment_kernel<DstEvaluatorType,SrcEvaluatorType,Eigen::internal::assign_op<float, float> > Kernel;
-+    Kernel kernel(dstEvaluator, srcEvaluator, func, dst.const_cast_derived());
-+
-+    dense_assignment_loop<Kernel>::run(kernel);
-+  }
++        dense_assignment_loop<Kernel>::run(kernel);
++    }
 +}
 +
-+template<int DstRows, int DstCols, int DstOptions, int DstMaxRows, int DstMaxCols,
-+         int SrcRows, int SrcCols, int SrcOptions, int SrcMaxRows, int SrcMaxCols>
-+EIGEN_DEVICE_FUNC EIGEN_STRONG_INLINE void call_dense_assignment_loop(Eigen::Matrix<double, DstRows, DstCols, DstOptions, DstMaxRows, DstMaxCols> &dst,
-+  const Eigen::PartialReduxExpr<Eigen::Matrix<double, SrcRows, SrcCols, SrcOptions, SrcMaxRows, SrcMaxCols>,
-+                                Eigen::internal::member_sum<double, double>, 1> &src,
-+  const Eigen::internal::assign_op<double, double> &func)
++template <int DstRows, int DstCols, int DstOptions, int DstMaxRows, int DstMaxCols, int SrcRows, int SrcCols,
++    int SrcOptions, int SrcMaxRows, int SrcMaxCols>
++EIGEN_DEVICE_FUNC EIGEN_STRONG_INLINE void call_dense_assignment_loop(
++    Eigen::Matrix<double, DstRows, DstCols, DstOptions, DstMaxRows, DstMaxCols> &dst,
++    const Eigen::Matrix<double, SrcRows, SrcCols, SrcOptions, SrcMaxRows, SrcMaxCols> &src,
++    const Eigen::internal::sub_assign_op<double, double> &func)
 +{
-+  resize_if_allowed(dst, src, func);
-+  const int one = 1;
-+  const double alpha = 1.0;
-+  const double beta = 0.0;
++    resize_if_allowed(dst, src, func);
++    StorageOptions srcMajor = (int(SrcOptions) & RowMajorBit) ? RowMajor : ColMajor;
++    StorageOptions dstMajor = (int(DstOptions) & RowMajorBit) ? RowMajor : ColMajor;
++    const int lhsRows = (srcMajor == ColMajor) ? src.rows() : src.cols();
++    const int lhsCols = (srcMajor == ColMajor) ? src.cols() : src.rows();
++    const int dstRows = (dstMajor == ColMajor) ? dst.rows() : dst.cols();
++    const int dstCols = (dstMajor == ColMajor) ? dst.cols() : dst.rows();
++    const int srcMajorStride = (srcMajor == ColMajor) ? src.rowStride() : src.colStride();
++    const int dstMajorStride = (dstMajor == ColMajor) ? dst.rowStride() : dst.colStride();
 +
-+  StorageOptions SrcMajor = (int(SrcOptions)&RowMajorBit) ? RowMajor : ColMajor;
-+  StorageOptions DstMajor = (int(DstOptions)&RowMajorBit) ? ColMajor : RowMajor;
-+  const int rows = (SrcMajor==ColMajor) ? src.nestedExpression().rows(): src.nestedExpression().cols();
-+  const int cols = (SrcMajor==ColMajor) ? src.nestedExpression().cols(): src.nestedExpression().rows();
-+  const int srcMajorStride = (SrcMajor==ColMajor) ? src.nestedExpression().rowStride() : src.nestedExpression().colStride();
-+  const int dstMajorStride = (DstMajor==RowMajor) ? dst.rowStride() : dst.colStride();
++    if (srcMajor == dstMajor && lhsRows == dstRows && lhsCols == dstCols && srcMajorStride == dstMajorStride &&
++        dstMajorStride == 1) {
++        CBLAS_ORDER order = (srcMajor == ColMajor) ? CblasColMajor : CblasRowMajor;
++        cblas_dimatsub(order, CblasNoTrans, lhsRows, lhsCols, 1.0, (double *)src.data(), lhsRows,
++                       (double *)dst.data(), dstRows);
++    } else {
++        typedef evaluator<Eigen::Matrix<double, DstRows, DstCols, DstOptions, DstMaxRows, DstMaxCols> >
++            DstEvaluatorType;
++        typedef evaluator<Eigen::Matrix<double, SrcRows, SrcCols, SrcOptions, SrcMaxRows, SrcMaxCols> >
++            SrcEvaluatorType;
 +
-+  if (srcMajorStride == 1 && dstMajorStride == 1 && rows != 1 && cols != 1) {
-+    CBLAS_ORDER order = (SrcMajor==ColMajor) ? CblasColMajor : CblasRowMajor;
-+    const int mSize = (SrcMajor==ColMajor) ? cols : rows;
-+    MatrixXd v = MatrixXd::Ones(1, mSize);
-+    cblas_dgemv(order, CblasNoTrans, rows, cols, alpha, (const double*)src.nestedExpression().data(), rows, (const double*)v.data(), one, beta, dst.data(), one);
-+  } else {
-+    typedef evaluator<Eigen::Matrix<double, DstRows, DstCols, DstOptions, DstMaxRows, DstMaxCols> > DstEvaluatorType;
-+    typedef evaluator<Eigen::PartialReduxExpr<Eigen::Matrix<double, SrcRows, SrcCols, SrcOptions, SrcMaxRows, SrcMaxCols>,
-+                      Eigen::internal::member_sum<double, double>, 1> > SrcEvaluatorType;
++        SrcEvaluatorType srcEvaluator(src);
++        DstEvaluatorType dstEvaluator(dst);
 +
-+    SrcEvaluatorType srcEvaluator(src);
-+    DstEvaluatorType dstEvaluator(dst);
++        typedef generic_dense_assignment_kernel<DstEvaluatorType, SrcEvaluatorType,
++            Eigen::internal::sub_assign_op<double, double> >
++            Kernel;
++        Kernel kernel(dstEvaluator, srcEvaluator, func, dst.const_cast_derived());
 +
-+    typedef generic_dense_assignment_kernel<DstEvaluatorType,SrcEvaluatorType,Eigen::internal::assign_op<double, double> > Kernel;
-+    Kernel kernel(dstEvaluator, srcEvaluator, func, dst.const_cast_derived());
++        dense_assignment_loop<Kernel>::run(kernel);
++    }
++}
 +
-+    dense_assignment_loop<Kernel>::run(kernel);
-+  }
++template <int DstRows, int DstCols, int DstOptions, int DstMaxRows, int DstMaxCols, int SrcRows, int SrcCols,
++    int SrcOptions, int SrcMaxRows, int SrcMaxCols>
++EIGEN_DEVICE_FUNC EIGEN_STRONG_INLINE void call_dense_assignment_loop(
++    Eigen::Matrix<std::complex<float>, DstRows, DstCols, DstOptions, DstMaxRows, DstMaxCols> &dst,
++    const Eigen::Matrix<std::complex<float>, SrcRows, SrcCols, SrcOptions, SrcMaxRows, SrcMaxCols> &src,
++    const Eigen::internal::sub_assign_op<std::complex<float>, std::complex<float> > &func)
++{
++    resize_if_allowed(dst, src, func);
++    StorageOptions srcMajor = (int(SrcOptions) & RowMajorBit) ? RowMajor : ColMajor;
++    StorageOptions dstMajor = (int(DstOptions) & RowMajorBit) ? RowMajor : ColMajor;
++    const int lhsRows = (srcMajor == ColMajor) ? src.rows() : src.cols();
++    const int lhsCols = (srcMajor == ColMajor) ? src.cols() : src.rows();
++    const int dstRows = (dstMajor == ColMajor) ? dst.rows() : dst.cols();
++    const int dstCols = (dstMajor == ColMajor) ? dst.cols() : dst.rows();
++    const int srcMajorStride = (srcMajor == ColMajor) ? src.rowStride() : src.colStride();
++    const int dstMajorStride = (dstMajor == ColMajor) ? dst.rowStride() : dst.colStride();
++    const float alpha[2] = {1.0f};
++    const float beta[2] = {1.0f};
++
++    if (srcMajor == dstMajor && lhsRows == dstRows && lhsCols == dstCols && srcMajorStride == dstMajorStride &&
++        dstMajorStride == 1) {
++        CBLAS_ORDER order = (srcMajor == ColMajor) ? CblasColMajor : CblasRowMajor;
++        cblas_cimatsub(order, CblasNoTrans, lhsRows, lhsCols, alpha, (float *)src.data(), lhsRows,
++                       (float *)dst.data(), dstRows);
++    } else {
++        typedef evaluator<Eigen::Matrix<std::complex<float>, DstRows, DstCols, DstOptions, DstMaxRows, DstMaxCols> >
++            DstEvaluatorType;
++        typedef evaluator<Eigen::Matrix<std::complex<float>, SrcRows, SrcCols, SrcOptions, SrcMaxRows, SrcMaxCols> >
++            SrcEvaluatorType;
++
++        SrcEvaluatorType srcEvaluator(src);
++        DstEvaluatorType dstEvaluator(dst);
++
++        typedef generic_dense_assignment_kernel<DstEvaluatorType, SrcEvaluatorType,
++            Eigen::internal::sub_assign_op<std::complex<float>, std::complex<float> > >
++            Kernel;
++        Kernel kernel(dstEvaluator, srcEvaluator, func, dst.const_cast_derived());
++
++        dense_assignment_loop<Kernel>::run(kernel);
++    }
++}
++
++template <int DstRows, int DstCols, int DstOptions, int DstMaxRows, int DstMaxCols, int SrcRows, int SrcCols,
++    int SrcOptions, int SrcMaxRows, int SrcMaxCols>
++EIGEN_DEVICE_FUNC EIGEN_STRONG_INLINE void call_dense_assignment_loop(
++    Eigen::Matrix<std::complex<double>, DstRows, DstCols, DstOptions, DstMaxRows, DstMaxCols> &dst,
++    const Eigen::Matrix<std::complex<double>, SrcRows, SrcCols, SrcOptions, SrcMaxRows, SrcMaxCols> &src,
++    const Eigen::internal::sub_assign_op<std::complex<double>, std::complex<double> > &func)
++{
++    resize_if_allowed(dst, src, func);
++    StorageOptions srcMajor = (int(SrcOptions) & RowMajorBit) ? RowMajor : ColMajor;
++    StorageOptions dstMajor = (int(DstOptions) & RowMajorBit) ? RowMajor : ColMajor;
++    const int lhsRows = (srcMajor == ColMajor) ? src.rows() : src.cols();
++    const int lhsCols = (srcMajor == ColMajor) ? src.cols() : src.rows();
++    const int dstRows = (dstMajor == ColMajor) ? dst.rows() : dst.cols();
++    const int dstCols = (dstMajor == ColMajor) ? dst.cols() : dst.rows();
++    const int srcMajorStride = (srcMajor == ColMajor) ? src.rowStride() : src.colStride();
++    const int dstMajorStride = (dstMajor == ColMajor) ? dst.rowStride() : dst.colStride();
++    const double alpha[2] = {1.0};
++    const double beta[2] = {1.0};
++
++    if (srcMajor == dstMajor && lhsRows == dstRows && lhsCols == dstCols && srcMajorStride == dstMajorStride &&
++        dstMajorStride == 1) {
++        CBLAS_ORDER order = (srcMajor == ColMajor) ? CblasColMajor : CblasRowMajor;
++        cblas_zimatsub(order, CblasNoTrans, lhsRows, lhsCols, alpha, (double *)src.data(), lhsRows,
++                       (double *)dst.data(), dstRows);
++    } else {
++        typedef evaluator<Eigen::Matrix<std::complex<double>, DstRows, DstCols, DstOptions, DstMaxRows, DstMaxCols> >
++            DstEvaluatorType;
++        typedef evaluator<Eigen::Matrix<std::complex<double>, SrcRows, SrcCols, SrcOptions, SrcMaxRows, SrcMaxCols> >
++            SrcEvaluatorType;
++
++        SrcEvaluatorType srcEvaluator(src);
++        DstEvaluatorType dstEvaluator(dst);
++
++        typedef generic_dense_assignment_kernel<DstEvaluatorType, SrcEvaluatorType,
++            Eigen::internal::sub_assign_op<std::complex<double>, std::complex<double> > >
++            Kernel;
++        Kernel kernel(dstEvaluator, srcEvaluator, func, dst.const_cast_derived());
++
++        dense_assignment_loop<Kernel>::run(kernel);
++    }
++}
++
++template <int DstRows, int DstCols, int DstOptions, int DstMaxRows, int DstMaxCols, int SrcRows1, int SrcCols1,
++    int SrcOptions1, int SrcMaxRows1, int SrcMaxCols1, int SrcRows2, int SrcCols2, int SrcOptions2, int SrcMaxRows2,
++    int SrcMaxCols2>
++EIGEN_DEVICE_FUNC EIGEN_STRONG_INLINE void call_dense_assignment_loop(
++    Eigen::Matrix<float, DstRows, DstCols, DstOptions, DstMaxRows, DstMaxCols> &dst,
++    const Eigen::CwiseBinaryOp<Eigen::internal::scalar_product_op<float, float>,
++    Eigen::Matrix<float, SrcRows1, SrcCols1, SrcOptions1, SrcMaxRows1, SrcMaxCols1> const,
++    Eigen::Matrix<float, SrcRows2, SrcCols2, SrcOptions2, SrcMaxRows2, SrcMaxCols2> const> &src,
++    const Eigen::internal::assign_op<float, float> &func)
++{
++    resize_if_allowed(dst, src, func);
++    StorageOptions srcMajor = (int(SrcOptions1) & RowMajorBit) ? RowMajor : ColMajor;
++    StorageOptions dstMajor = (int(DstOptions) & RowMajorBit) ? RowMajor : ColMajor;
++    const int lhsRows = (srcMajor == ColMajor) ? src.lhs().rows() : src.lhs().cols();
++    const int lhsCols = (srcMajor == ColMajor) ? src.lhs().cols() : src.lhs().rows();
++    const int dstRows = (dstMajor == ColMajor) ? dst.rows() : dst.cols();
++    const int dstCols = (dstMajor == ColMajor) ? dst.cols() : dst.rows();
++    const int lhsMajorStride = (srcMajor == ColMajor) ? src.lhs().rowStride() : src.lhs().colStride();
++    const int dstMajorStride = (dstMajor == ColMajor) ? dst.rowStride() : dst.colStride();
++
++    if (srcMajor == dstMajor && lhsRows == dstRows && lhsCols == dstCols && lhsMajorStride == dstMajorStride &&
++        dstMajorStride == 1) {
++        CBLAS_ORDER order = (srcMajor == ColMajor) ? CblasColMajor : CblasRowMajor;
++        cblas_somatmul(order, CblasNoTrans, CblasNoTrans, lhsRows, lhsCols, 1.0f, (float *)src.lhs().data(), lhsRows,
++                       (float *)src.rhs().data(), lhsRows, (float *)dst.data(), dstRows);
++    } else {
++        typedef evaluator<Eigen::Matrix<float, DstRows, DstCols, DstOptions, DstMaxRows, DstMaxCols> > DstEvaluatorType;
++        typedef evaluator<Eigen::CwiseBinaryOp<Eigen::internal::scalar_product_op<float, float>,
++            Eigen::Matrix<float, SrcRows1, SrcCols1, SrcOptions1, SrcMaxRows1, SrcMaxCols1> const,
++            Eigen::Matrix<float, SrcRows2, SrcCols2, SrcOptions2, SrcMaxRows2, SrcMaxCols2> const> >
++            SrcEvaluatorType;
++
++        SrcEvaluatorType srcEvaluator(src);
++        DstEvaluatorType dstEvaluator(dst);
++
++        typedef generic_dense_assignment_kernel<DstEvaluatorType, SrcEvaluatorType,
++            Eigen::internal::assign_op<float, float> >
++            Kernel;
++        Kernel kernel(dstEvaluator, srcEvaluator, func, dst.const_cast_derived());
++
++        dense_assignment_loop<Kernel>::run(kernel);
++    }
++}
++
++template <int DstRows, int DstCols, int DstOptions, int DstMaxRows, int DstMaxCols, int SrcRows1, int SrcCols1,
++    int SrcOptions1, int SrcMaxRows1, int SrcMaxCols1, int SrcRows2, int SrcCols2, int SrcOptions2, int SrcMaxRows2,
++    int SrcMaxCols2>
++EIGEN_DEVICE_FUNC EIGEN_STRONG_INLINE void call_dense_assignment_loop(
++    Eigen::Matrix<double, DstRows, DstCols, DstOptions, DstMaxRows, DstMaxCols> &dst,
++    const Eigen::CwiseBinaryOp<Eigen::internal::scalar_product_op<double, double>,
++    Eigen::Matrix<double, SrcRows1, SrcCols1, SrcOptions1, SrcMaxRows1, SrcMaxCols1> const,
++    Eigen::Matrix<double, SrcRows2, SrcCols2, SrcOptions2, SrcMaxRows2, SrcMaxCols2> const> &src,
++    const Eigen::internal::assign_op<double, double> &func)
++{
++    resize_if_allowed(dst, src, func);
++    StorageOptions srcMajor = (int(SrcOptions1) & RowMajorBit) ? RowMajor : ColMajor;
++    StorageOptions dstMajor = (int(DstOptions) & RowMajorBit) ? RowMajor : ColMajor;
++    const int lhsRows = (srcMajor == ColMajor) ? src.lhs().rows() : src.lhs().cols();
++    const int lhsCols = (srcMajor == ColMajor) ? src.lhs().cols() : src.lhs().rows();
++    const int dstRows = (dstMajor == ColMajor) ? dst.rows() : dst.cols();
++    const int dstCols = (dstMajor == ColMajor) ? dst.cols() : dst.rows();
++    const int lhsMajorStride = (srcMajor == ColMajor) ? src.lhs().rowStride() : src.lhs().colStride();
++    const int dstMajorStride = (dstMajor == ColMajor) ? dst.rowStride() : dst.colStride();
++
++    if (srcMajor == dstMajor && lhsRows == dstRows && lhsCols == dstCols && lhsMajorStride == dstMajorStride &&
++        dstMajorStride == 1) {
++        CBLAS_ORDER order = (srcMajor == ColMajor) ? CblasColMajor : CblasRowMajor;
++        cblas_domatmul(order, CblasNoTrans, CblasNoTrans, lhsRows, lhsCols, 1.0, (double *)src.lhs().data(), lhsRows,
++                       (double *)src.rhs().data(), lhsRows, (double *)dst.data(), dstRows);
++    } else {
++        typedef evaluator<Eigen::Matrix<double, DstRows, DstCols, DstOptions, DstMaxRows, DstMaxCols> >
++            DstEvaluatorType;
++        typedef evaluator<Eigen::CwiseBinaryOp<Eigen::internal::scalar_product_op<double, double>,
++            Eigen::Matrix<double, SrcRows1, SrcCols1, SrcOptions1, SrcMaxRows1, SrcMaxCols1> const,
++            Eigen::Matrix<double, SrcRows2, SrcCols2, SrcOptions2, SrcMaxRows2, SrcMaxCols2> const> >
++            SrcEvaluatorType;
++
++        SrcEvaluatorType srcEvaluator(src);
++        DstEvaluatorType dstEvaluator(dst);
++
++        typedef generic_dense_assignment_kernel<DstEvaluatorType, SrcEvaluatorType,
++            Eigen::internal::assign_op<double, double> >
++            Kernel;
++        Kernel kernel(dstEvaluator, srcEvaluator, func, dst.const_cast_derived());
++
++        dense_assignment_loop<Kernel>::run(kernel);
++    }
++}
++
++template <int DstRows, int DstCols, int DstOptions, int DstMaxRows, int DstMaxCols, int SrcRows1, int SrcCols1,
++    int SrcOptions1, int SrcMaxRows1, int SrcMaxCols1, int SrcRows2, int SrcCols2, int SrcOptions2, int SrcMaxRows2,
++    int SrcMaxCols2>
++EIGEN_DEVICE_FUNC EIGEN_STRONG_INLINE void call_dense_assignment_loop(
++    Eigen::Matrix<std::complex<float>, DstRows, DstCols, DstOptions, DstMaxRows, DstMaxCols> &dst,
++    const Eigen::CwiseBinaryOp<Eigen::internal::scalar_product_op<std::complex<float>, std::complex<float> >,
++    Eigen::Matrix<std::complex<float>, SrcRows1, SrcCols1, SrcOptions1, SrcMaxRows1, SrcMaxCols1> const,
++    Eigen::Matrix<std::complex<float>, SrcRows2, SrcCols2, SrcOptions2, SrcMaxRows2, SrcMaxCols2> const> &src,
++    const Eigen::internal::assign_op<std::complex<float>, std::complex<float> > &func)
++{
++    resize_if_allowed(dst, src, func);
++    StorageOptions srcMajor = (int(SrcOptions1) & RowMajorBit) ? RowMajor : ColMajor;
++    StorageOptions dstMajor = (int(DstOptions) & RowMajorBit) ? RowMajor : ColMajor;
++    const int lhsRows = (srcMajor == ColMajor) ? src.lhs().rows() : src.lhs().cols();
++    const int lhsCols = (srcMajor == ColMajor) ? src.lhs().cols() : src.lhs().rows();
++    const int dstRows = (dstMajor == ColMajor) ? dst.rows() : dst.cols();
++    const int dstCols = (dstMajor == ColMajor) ? dst.cols() : dst.rows();
++    const int lhsMajorStride = (srcMajor == ColMajor) ? src.lhs().rowStride() : src.lhs().colStride();
++    const int dstMajorStride = (dstMajor == ColMajor) ? dst.rowStride() : dst.colStride();
++    const float alpha[2] = {1.0f};
++
++    if (srcMajor == dstMajor && lhsRows == dstRows && lhsCols == dstCols && lhsMajorStride == dstMajorStride &&
++        dstMajorStride == 1) {
++        CBLAS_ORDER order = (srcMajor == ColMajor) ? CblasColMajor : CblasRowMajor;
++        cblas_comatmul(order, CblasNoTrans, CblasNoTrans, lhsRows, lhsCols, alpha, (float *)src.lhs().data(), lhsRows,
++                       (float *)src.rhs().data(), lhsRows, (float *)dst.data(), dstRows);
++    } else {
++        typedef evaluator<Eigen::Matrix<std::complex<float>, DstRows, DstCols, DstOptions, DstMaxRows, DstMaxCols> >
++            DstEvaluatorType;
++        typedef evaluator<
++            Eigen::CwiseBinaryOp<Eigen::internal::scalar_product_op<std::complex<float>, std::complex<float> >,
++            Eigen::Matrix<std::complex<float>, SrcRows1, SrcCols1, SrcOptions1, SrcMaxRows1, SrcMaxCols1> const,
++            Eigen::Matrix<std::complex<float>, SrcRows2, SrcCols2, SrcOptions2, SrcMaxRows2, SrcMaxCols2> const> >
++            SrcEvaluatorType;
++
++        SrcEvaluatorType srcEvaluator(src);
++        DstEvaluatorType dstEvaluator(dst);
++
++        typedef generic_dense_assignment_kernel<DstEvaluatorType, SrcEvaluatorType,
++            Eigen::internal::assign_op<std::complex<float>, std::complex<float> > >
++            Kernel;
++        Kernel kernel(dstEvaluator, srcEvaluator, func, dst.const_cast_derived());
++
++        dense_assignment_loop<Kernel>::run(kernel);
++    }
++}
++
++template <int DstRows, int DstCols, int DstOptions, int DstMaxRows, int DstMaxCols, int SrcRows1, int SrcCols1,
++    int SrcOptions1, int SrcMaxRows1, int SrcMaxCols1, int SrcRows2, int SrcCols2, int SrcOptions2, int SrcMaxRows2,
++    int SrcMaxCols2>
++EIGEN_DEVICE_FUNC EIGEN_STRONG_INLINE void call_dense_assignment_loop(
++    Eigen::Matrix<std::complex<double>, DstRows, DstCols, DstOptions, DstMaxRows, DstMaxCols> &dst,
++    const Eigen::CwiseBinaryOp<Eigen::internal::scalar_product_op<std::complex<double>, std::complex<double> >,
++    Eigen::Matrix<std::complex<double>, SrcRows1, SrcCols1, SrcOptions1, SrcMaxRows1, SrcMaxCols1> const,
++    Eigen::Matrix<std::complex<double>, SrcRows2, SrcCols2, SrcOptions2, SrcMaxRows2, SrcMaxCols2> const> &src,
++    const Eigen::internal::assign_op<std::complex<double>, std::complex<double> > &func)
++{
++    resize_if_allowed(dst, src, func);
++    StorageOptions srcMajor = (int(SrcOptions1) & RowMajorBit) ? RowMajor : ColMajor;
++    StorageOptions dstMajor = (int(DstOptions) & RowMajorBit) ? RowMajor : ColMajor;
++    const int lhsRows = (srcMajor == ColMajor) ? src.lhs().rows() : src.lhs().cols();
++    const int lhsCols = (srcMajor == ColMajor) ? src.lhs().cols() : src.lhs().rows();
++    const int dstRows = (dstMajor == ColMajor) ? dst.rows() : dst.cols();
++    const int dstCols = (dstMajor == ColMajor) ? dst.cols() : dst.rows();
++    const int lhsMajorStride = (srcMajor == ColMajor) ? src.lhs().rowStride() : src.lhs().colStride();
++    const int dstMajorStride = (dstMajor == ColMajor) ? dst.rowStride() : dst.colStride();
++    const double alpha[2] = {1.0};
++
++    if (srcMajor == dstMajor && lhsRows == dstRows && lhsCols == dstCols && lhsMajorStride == dstMajorStride &&
++        dstMajorStride == 1) {
++        CBLAS_ORDER order = (srcMajor == ColMajor) ? CblasColMajor : CblasRowMajor;
++        cblas_zomatmul(order, CblasNoTrans, CblasNoTrans, lhsRows, lhsCols, alpha, (double *)src.lhs().data(), lhsRows,
++                       (double *)src.rhs().data(), lhsRows, (double *)dst.data(), dstRows);
++    } else {
++        typedef evaluator<Eigen::Matrix<std::complex<double>, DstRows, DstCols, DstOptions, DstMaxRows, DstMaxCols> >
++            DstEvaluatorType;
++        typedef evaluator<
++            Eigen::CwiseBinaryOp<Eigen::internal::scalar_product_op<std::complex<double>, std::complex<double> >,
++            Eigen::Matrix<std::complex<double>, SrcRows1, SrcCols1, SrcOptions1, SrcMaxRows1, SrcMaxCols1> const,
++            Eigen::Matrix<std::complex<double>, SrcRows2, SrcCols2, SrcOptions2, SrcMaxRows2, SrcMaxCols2> const> >
++            SrcEvaluatorType;
++
++        SrcEvaluatorType srcEvaluator(src);
++        DstEvaluatorType dstEvaluator(dst);
++
++        typedef generic_dense_assignment_kernel<DstEvaluatorType, SrcEvaluatorType,
++            Eigen::internal::assign_op<std::complex<double>, std::complex<double> > >
++            Kernel;
++        Kernel kernel(dstEvaluator, srcEvaluator, func, dst.const_cast_derived());
++
++        dense_assignment_loop<Kernel>::run(kernel);
++    }
++}
++
++template <int DstRows, int DstCols, int DstOptions, int DstMaxRows, int DstMaxCols, int SrcRows, int SrcCols,
++    int SrcOptions, int SrcMaxRows, int SrcMaxCols>
++EIGEN_DEVICE_FUNC EIGEN_STRONG_INLINE void call_dense_assignment_loop(
++    Eigen::Matrix<float, DstRows, DstCols, DstOptions, DstMaxRows, DstMaxCols> &dst,
++    const Eigen::PartialReduxExpr<Eigen::Matrix<float, SrcRows, SrcCols, SrcOptions, SrcMaxRows, SrcMaxCols>,
++    Eigen::internal::member_sum<float, float>, 1> &src,
++    const Eigen::internal::assign_op<float, float> &func)
++{
++    resize_if_allowed(dst, src, func);
++    const int one = 1;
++    const float alpha = 1.0f;
++    const float beta = 0.0f;
++
++    StorageOptions SrcMajor = (int(SrcOptions) & RowMajorBit) ? RowMajor : ColMajor;
++    StorageOptions DstMajor = (int(DstOptions) & RowMajorBit) ? ColMajor : RowMajor;
++    const int rows = (SrcMajor == ColMajor) ? src.nestedExpression().rows() : src.nestedExpression().cols();
++    const int cols = (SrcMajor == ColMajor) ? src.nestedExpression().cols() : src.nestedExpression().rows();
++    const int srcMajorStride =
++        (SrcMajor == ColMajor) ? src.nestedExpression().rowStride() : src.nestedExpression().colStride();
++    const int dstMajorStride = (DstMajor == RowMajor) ? dst.rowStride() : dst.colStride();
++
++    if (srcMajorStride == 1 && dstMajorStride == 1 && rows != 1 && cols != 1) {
++        CBLAS_ORDER order = (SrcMajor == ColMajor) ? CblasColMajor : CblasRowMajor;
++        const int mSize = (SrcMajor == ColMajor) ? cols : rows;
++        MatrixXf v = MatrixXf::Ones(1, mSize);
++        cblas_sgemv(order, CblasNoTrans, rows, cols, alpha, (const float *)src.nestedExpression().data(), rows,
++            (const float *)v.data(), one, beta, dst.data(), one);
++    } else {
++        typedef evaluator<Eigen::Matrix<float, DstRows, DstCols, DstOptions, DstMaxRows, DstMaxCols> > DstEvaluatorType;
++        typedef evaluator<
++            Eigen::PartialReduxExpr<Eigen::Matrix<float, SrcRows, SrcCols, SrcOptions, SrcMaxRows, SrcMaxCols>,
++            Eigen::internal::member_sum<float, float>, 1> >
++            SrcEvaluatorType;
++
++        SrcEvaluatorType srcEvaluator(src);
++        DstEvaluatorType dstEvaluator(dst);
++
++        typedef generic_dense_assignment_kernel<DstEvaluatorType, SrcEvaluatorType,
++            Eigen::internal::assign_op<float, float> >
++            Kernel;
++        Kernel kernel(dstEvaluator, srcEvaluator, func, dst.const_cast_derived());
++
++        dense_assignment_loop<Kernel>::run(kernel);
++    }
++}
++
++template <int DstRows, int DstCols, int DstOptions, int DstMaxRows, int DstMaxCols, int SrcRows, int SrcCols,
++    int SrcOptions, int SrcMaxRows, int SrcMaxCols>
++EIGEN_DEVICE_FUNC EIGEN_STRONG_INLINE void call_dense_assignment_loop(
++    Eigen::Matrix<double, DstRows, DstCols, DstOptions, DstMaxRows, DstMaxCols> &dst,
++    const Eigen::PartialReduxExpr<Eigen::Matrix<double, SrcRows, SrcCols, SrcOptions, SrcMaxRows, SrcMaxCols>,
++    Eigen::internal::member_sum<double, double>, 1> &src,
++    const Eigen::internal::assign_op<double, double> &func)
++{
++    resize_if_allowed(dst, src, func);
++    const int one = 1;
++    const double alpha = 1.0;
++    const double beta = 0.0;
++
++    StorageOptions SrcMajor = (int(SrcOptions) & RowMajorBit) ? RowMajor : ColMajor;
++    StorageOptions DstMajor = (int(DstOptions) & RowMajorBit) ? ColMajor : RowMajor;
++    const int rows = (SrcMajor == ColMajor) ? src.nestedExpression().rows() : src.nestedExpression().cols();
++    const int cols = (SrcMajor == ColMajor) ? src.nestedExpression().cols() : src.nestedExpression().rows();
++    const int srcMajorStride =
++        (SrcMajor == ColMajor) ? src.nestedExpression().rowStride() : src.nestedExpression().colStride();
++    const int dstMajorStride = (DstMajor == RowMajor) ? dst.rowStride() : dst.colStride();
++
++    if (srcMajorStride == 1 && dstMajorStride == 1 && rows != 1 && cols != 1) {
++        CBLAS_ORDER order = (SrcMajor == ColMajor) ? CblasColMajor : CblasRowMajor;
++        const int mSize = (SrcMajor == ColMajor) ? cols : rows;
++        MatrixXd v = MatrixXd::Ones(1, mSize);
++        cblas_dgemv(order, CblasNoTrans, rows, cols, alpha, (const double *)src.nestedExpression().data(), rows,
++            (const double *)v.data(), one, beta, dst.data(), one);
++    } else {
++        typedef evaluator<Eigen::Matrix<double, DstRows, DstCols, DstOptions, DstMaxRows, DstMaxCols> >
++            DstEvaluatorType;
++        typedef evaluator<
++            Eigen::PartialReduxExpr<Eigen::Matrix<double, SrcRows, SrcCols, SrcOptions, SrcMaxRows, SrcMaxCols>,
++            Eigen::internal::member_sum<double, double>, 1> >
++            SrcEvaluatorType;
++
++        SrcEvaluatorType srcEvaluator(src);
++        DstEvaluatorType dstEvaluator(dst);
++
++        typedef generic_dense_assignment_kernel<DstEvaluatorType, SrcEvaluatorType,
++            Eigen::internal::assign_op<double, double> >
++            Kernel;
++        Kernel kernel(dstEvaluator, srcEvaluator, func, dst.const_cast_derived());
++
++        dense_assignment_loop<Kernel>::run(kernel);
++    }
 +}
 +
 +
-+template<int DstRows, int DstCols, int DstOptions, int DstMaxRows, int DstMaxCols,
-+         int SrcRows, int SrcCols, int SrcOptions, int SrcMaxRows, int SrcMaxCols>
-+EIGEN_DEVICE_FUNC EIGEN_STRONG_INLINE void call_dense_assignment_loop(Eigen::Matrix<std::complex<float>, DstRows, DstCols, DstOptions, DstMaxRows, DstMaxCols> &dst,
-+  const Eigen::PartialReduxExpr<Eigen::Matrix<std::complex<float>, SrcRows, SrcCols, SrcOptions, SrcMaxRows, SrcMaxCols>,
-+                                Eigen::internal::member_sum<std::complex<float>, std::complex<float> >, 1> &src,
-+  const Eigen::internal::assign_op<std::complex<float>, std::complex<float> > &func)
++template <int DstRows, int DstCols, int DstOptions, int DstMaxRows, int DstMaxCols, int SrcRows, int SrcCols,
++    int SrcOptions, int SrcMaxRows, int SrcMaxCols>
++EIGEN_DEVICE_FUNC EIGEN_STRONG_INLINE void call_dense_assignment_loop(
++    Eigen::Matrix<std::complex<float>, DstRows, DstCols, DstOptions, DstMaxRows, DstMaxCols> &dst,
++    const Eigen::PartialReduxExpr<
++    Eigen::Matrix<std::complex<float>, SrcRows, SrcCols, SrcOptions, SrcMaxRows, SrcMaxCols>,
++    Eigen::internal::member_sum<std::complex<float>, std::complex<float> >, 1> &src,
++    const Eigen::internal::assign_op<std::complex<float>, std::complex<float> > &func)
 +{
-+  resize_if_allowed(dst, src, func);
-+  const int one = 1;
-+  const float alpha[2] = {1.0f};
-+  const float beta[2] = {0.0f};
++    resize_if_allowed(dst, src, func);
++    const int one = 1;
++    const float alpha[2] = {1.0f};
++    const float beta[2] = {0.0f};
 +
-+  StorageOptions SrcMajor = (int(SrcOptions)&RowMajorBit) ? RowMajor : ColMajor;
-+  StorageOptions DstMajor = (int(DstOptions)&RowMajorBit) ? ColMajor : RowMajor;
-+  const int rows = (SrcMajor==ColMajor) ? src.nestedExpression().rows(): src.nestedExpression().cols();
-+  const int cols = (SrcMajor==ColMajor) ? src.nestedExpression().cols(): src.nestedExpression().rows();
-+  const int srcMajorStride = (SrcMajor==ColMajor) ? src.nestedExpression().rowStride() : src.nestedExpression().colStride();
-+  const int dstMajorStride = (DstMajor==RowMajor) ? dst.rowStride() : dst.colStride();
++    StorageOptions SrcMajor = (int(SrcOptions) & RowMajorBit) ? RowMajor : ColMajor;
++    StorageOptions DstMajor = (int(DstOptions) & RowMajorBit) ? ColMajor : RowMajor;
++    const int rows = (SrcMajor == ColMajor) ? src.nestedExpression().rows() : src.nestedExpression().cols();
++    const int cols = (SrcMajor == ColMajor) ? src.nestedExpression().cols() : src.nestedExpression().rows();
++    const int srcMajorStride =
++        (SrcMajor == ColMajor) ? src.nestedExpression().rowStride() : src.nestedExpression().colStride();
++    const int dstMajorStride = (DstMajor == RowMajor) ? dst.rowStride() : dst.colStride();
 +
-+  if (srcMajorStride == 1 && dstMajorStride == 1 && rows != 1 && cols != 1) {
-+    CBLAS_ORDER order = (SrcMajor==ColMajor) ? CblasColMajor : CblasRowMajor;
-+    const int mSize = (SrcMajor==ColMajor) ? cols : rows;
-+    MatrixXcf v = MatrixXcf::Ones(1, mSize);
-+    cblas_cgemv(order, CblasNoTrans, rows, cols, alpha, (const void*)src.nestedExpression().data(), rows, (const void*)v.data(), one, beta, dst.data(), one);
-+  } else {
-+    typedef evaluator<Eigen::Matrix<std::complex<float>, DstRows, DstCols, DstOptions, DstMaxRows, DstMaxCols> > DstEvaluatorType;
-+    typedef evaluator<Eigen::PartialReduxExpr<Eigen::Matrix<std::complex<float>, SrcRows, SrcCols, SrcOptions, SrcMaxRows, SrcMaxCols>,
-+                      Eigen::internal::member_sum<std::complex<float>, std::complex<float> >, 1> > SrcEvaluatorType;
++    if (srcMajorStride == 1 && dstMajorStride == 1 && rows != 1 && cols != 1) {
++        CBLAS_ORDER order = (SrcMajor == ColMajor) ? CblasColMajor : CblasRowMajor;
++        const int mSize = (SrcMajor == ColMajor) ? cols : rows;
++        MatrixXcf v = MatrixXcf::Ones(1, mSize);
++        cblas_cgemv(order, CblasNoTrans, rows, cols, alpha, (const void *)src.nestedExpression().data(), rows,
++            (const void *)v.data(), one, beta, dst.data(), one);
++    } else {
++        typedef evaluator<Eigen::Matrix<std::complex<float>, DstRows, DstCols, DstOptions, DstMaxRows, DstMaxCols> >
++            DstEvaluatorType;
++        typedef evaluator<Eigen::PartialReduxExpr<
++            Eigen::Matrix<std::complex<float>, SrcRows, SrcCols, SrcOptions, SrcMaxRows, SrcMaxCols>,
++            Eigen::internal::member_sum<std::complex<float>, std::complex<float> >, 1> >
++            SrcEvaluatorType;
 +
-+    SrcEvaluatorType srcEvaluator(src);
-+    DstEvaluatorType dstEvaluator(dst);
++        SrcEvaluatorType srcEvaluator(src);
++        DstEvaluatorType dstEvaluator(dst);
 +
-+    typedef generic_dense_assignment_kernel<DstEvaluatorType,SrcEvaluatorType,Eigen::internal::assign_op<std::complex<float>, std::complex<float> > > Kernel;
-+    Kernel kernel(dstEvaluator, srcEvaluator, func, dst.const_cast_derived());
++        typedef generic_dense_assignment_kernel<DstEvaluatorType, SrcEvaluatorType,
++            Eigen::internal::assign_op<std::complex<float>, std::complex<float> > >
++            Kernel;
++        Kernel kernel(dstEvaluator, srcEvaluator, func, dst.const_cast_derived());
 +
-+    dense_assignment_loop<Kernel>::run(kernel);
-+  }
++        dense_assignment_loop<Kernel>::run(kernel);
++    }
 +}
 +
-+template<int DstRows, int DstCols, int DstOptions, int DstMaxRows, int DstMaxCols,
-+         int SrcRows, int SrcCols, int SrcOptions, int SrcMaxRows, int SrcMaxCols>
-+EIGEN_DEVICE_FUNC EIGEN_STRONG_INLINE void call_dense_assignment_loop(Eigen::Matrix<std::complex<double>, DstRows, DstCols, DstOptions, DstMaxRows, DstMaxCols> &dst,
-+  const Eigen::PartialReduxExpr<Eigen::Matrix<std::complex<double>, SrcRows, SrcCols, SrcOptions, SrcMaxRows, SrcMaxCols>,
-+                                Eigen::internal::member_sum<std::complex<double>, std::complex<double> >, 1> &src,
-+  const Eigen::internal::assign_op<std::complex<double>, std::complex<double> > &func)
++template <int DstRows, int DstCols, int DstOptions, int DstMaxRows, int DstMaxCols, int SrcRows, int SrcCols,
++    int SrcOptions, int SrcMaxRows, int SrcMaxCols>
++EIGEN_DEVICE_FUNC EIGEN_STRONG_INLINE void call_dense_assignment_loop(
++    Eigen::Matrix<std::complex<double>, DstRows, DstCols, DstOptions, DstMaxRows, DstMaxCols> &dst,
++    const Eigen::PartialReduxExpr<
++    Eigen::Matrix<std::complex<double>, SrcRows, SrcCols, SrcOptions, SrcMaxRows, SrcMaxCols>,
++    Eigen::internal::member_sum<std::complex<double>, std::complex<double> >, 1> &src,
++    const Eigen::internal::assign_op<std::complex<double>, std::complex<double> > &func)
 +{
-+  resize_if_allowed(dst, src, func);
-+  const int one = 1;
-+  const double alpha[2] = {1.0};
-+  const double beta[2] = {0.0};
++    resize_if_allowed(dst, src, func);
++    const int one = 1;
++    const double alpha[2] = {1.0};
++    const double beta[2] = {0.0};
 +
-+  StorageOptions SrcMajor = (int(SrcOptions)&RowMajorBit) ? RowMajor : ColMajor;
-+  StorageOptions DstMajor = (int(DstOptions)&RowMajorBit) ? ColMajor : RowMajor;
-+  const int rows = (SrcMajor==ColMajor) ? src.nestedExpression().rows(): src.nestedExpression().cols();
-+  const int cols = (SrcMajor==ColMajor) ? src.nestedExpression().cols(): src.nestedExpression().rows();
-+  const int srcMajorStride = (SrcMajor==ColMajor) ? src.nestedExpression().rowStride() : src.nestedExpression().colStride();
-+  const int dstMajorStride = (DstMajor==RowMajor) ? dst.rowStride() : dst.colStride();
++    StorageOptions SrcMajor = (int(SrcOptions) & RowMajorBit) ? RowMajor : ColMajor;
++    StorageOptions DstMajor = (int(DstOptions) & RowMajorBit) ? ColMajor : RowMajor;
++    const int rows = (SrcMajor == ColMajor) ? src.nestedExpression().rows() : src.nestedExpression().cols();
++    const int cols = (SrcMajor == ColMajor) ? src.nestedExpression().cols() : src.nestedExpression().rows();
++    const int srcMajorStride =
++        (SrcMajor == ColMajor) ? src.nestedExpression().rowStride() : src.nestedExpression().colStride();
++    const int dstMajorStride = (DstMajor == RowMajor) ? dst.rowStride() : dst.colStride();
 +
-+  if (srcMajorStride == 1 && dstMajorStride == 1 && rows != 1 && cols != 1) {
-+    CBLAS_ORDER order = (SrcMajor==ColMajor) ? CblasColMajor : CblasRowMajor;
-+    const int mSize = (SrcMajor==ColMajor) ? cols : rows;
-+    MatrixXcd v = MatrixXcd::Ones(1, mSize);
-+    cblas_zgemv(order, CblasNoTrans, rows, cols, alpha, (const void*)src.nestedExpression().data(), rows, (const void*)v.data(), one, beta, dst.data(), one);
-+  } else {
-+    typedef evaluator<Eigen::Matrix<std::complex<double>, DstRows, DstCols, DstOptions, DstMaxRows, DstMaxCols> > DstEvaluatorType;
-+    typedef evaluator<Eigen::PartialReduxExpr<Eigen::Matrix<std::complex<double>, SrcRows, SrcCols, SrcOptions, SrcMaxRows, SrcMaxCols>,
-+                      Eigen::internal::member_sum<std::complex<double>, std::complex<double> >, 1> > SrcEvaluatorType;
++    if (srcMajorStride == 1 && dstMajorStride == 1 && rows != 1 && cols != 1) {
++        CBLAS_ORDER order = (SrcMajor == ColMajor) ? CblasColMajor : CblasRowMajor;
++        const int mSize = (SrcMajor == ColMajor) ? cols : rows;
++        MatrixXcd v = MatrixXcd::Ones(1, mSize);
++        cblas_zgemv(order, CblasNoTrans, rows, cols, alpha, (const void *)src.nestedExpression().data(), rows,
++            (const void *)v.data(), one, beta, dst.data(), one);
++    } else {
++        typedef evaluator<Eigen::Matrix<std::complex<double>, DstRows, DstCols, DstOptions, DstMaxRows, DstMaxCols> >
++            DstEvaluatorType;
++        typedef evaluator<Eigen::PartialReduxExpr<
++            Eigen::Matrix<std::complex<double>, SrcRows, SrcCols, SrcOptions, SrcMaxRows, SrcMaxCols>,
++            Eigen::internal::member_sum<std::complex<double>, std::complex<double> >, 1> >
++            SrcEvaluatorType;
 +
-+    SrcEvaluatorType srcEvaluator(src);
-+    DstEvaluatorType dstEvaluator(dst);
++        SrcEvaluatorType srcEvaluator(src);
++        DstEvaluatorType dstEvaluator(dst);
 +
-+    typedef generic_dense_assignment_kernel<DstEvaluatorType,SrcEvaluatorType,Eigen::internal::assign_op<std::complex<double>, std::complex<double> > > Kernel;
-+    Kernel kernel(dstEvaluator, srcEvaluator, func, dst.const_cast_derived());
++        typedef generic_dense_assignment_kernel<DstEvaluatorType, SrcEvaluatorType,
++            Eigen::internal::assign_op<std::complex<double>, std::complex<double> > >
++            Kernel;
++        Kernel kernel(dstEvaluator, srcEvaluator, func, dst.const_cast_derived());
 +
-+    dense_assignment_loop<Kernel>::run(kernel);
-+  }
++        dense_assignment_loop<Kernel>::run(kernel);
++    }
 +}
 +
++template <int DstRows, int DstCols, int DstOptions, int DstMaxRows, int DstMaxCols, int SrcRows, int SrcCols,
++    int SrcOptions, int SrcMaxRows, int SrcMaxCols, int BlockRows, int BlockCols, bool InnerPanel>
++EIGEN_DEVICE_FUNC EIGEN_STRONG_INLINE void call_dense_assignment_loop(
++    Eigen::Matrix<float, DstRows, DstCols, DstOptions, DstMaxRows, DstMaxCols> &dst,
++    const Eigen::Block<Eigen::Matrix<float, SrcRows, SrcCols, SrcOptions, SrcMaxRows, SrcMaxCols>, BlockRows, BlockCols,
++    InnerPanel> &src,
++    const Eigen::internal::assign_op<float, float> &func)
++{
++    resize_if_allowed(dst, src, func);
++
++    StorageOptions SrcMajor = (int(SrcOptions) & RowMajorBit) ? ColMajor : RowMajor;
++    StorageOptions DstMajor = (int(DstOptions) & RowMajorBit) ? ColMajor : RowMajor;
++    const int rows = (SrcMajor == RowMajor) ? src.nestedExpression().rows() : src.nestedExpression().cols();
++    const int dstRows = (DstMajor == RowMajor) ? dst.rows() : dst.cols();
++    const int dstCols = (DstMajor == RowMajor) ? dst.cols() : dst.rows();
++    const int startRow = (SrcMajor == RowMajor) ? src.startRow() : src.startCol();
++    const int startCol = (SrcMajor == RowMajor) ? src.startCol() : src.startRow();
++    const int srcMajorStride =
++        (SrcMajor == RowMajor) ? src.nestedExpression().rowStride() : src.nestedExpression().colStride();
++    const int dstMajorStride = (DstMajor == RowMajor) ? dst.rowStride() : dst.colStride();
++
++    if (srcMajorStride == 1 && dstMajorStride == 1 && SrcMajor == DstMajor) {
++        const float *srcPtr = (const float *)src.nestedExpression().data() + startCol * rows + startRow;
++        float *dstPtr = dst.data();
++        for (int i = 0; i < dstCols; ++i) {
++            cblas_scopy(dstRows, srcPtr, 1, dstPtr, 1);
++            srcPtr += rows;
++            dstPtr += dstRows;
++        }
++    } else {
++        typedef evaluator<Eigen::Matrix<float, DstRows, DstCols, DstOptions, DstMaxRows, DstMaxCols> > DstEvaluatorType;
++        typedef evaluator<Eigen::Block<Eigen::Matrix<float, SrcRows, SrcCols, SrcOptions, SrcMaxRows, SrcMaxCols>,
++            BlockRows, BlockCols, InnerPanel> >
++            SrcEvaluatorType;
++
++        SrcEvaluatorType srcEvaluator(src);
++        DstEvaluatorType dstEvaluator(dst);
++
++        typedef generic_dense_assignment_kernel<DstEvaluatorType, SrcEvaluatorType,
++            Eigen::internal::assign_op<float, float> >
++            Kernel;
++        Kernel kernel(dstEvaluator, srcEvaluator, func, dst.const_cast_derived());
++
++        dense_assignment_loop<Kernel>::run(kernel);
++    }
++}
++
++template <int DstRows, int DstCols, int DstOptions, int DstMaxRows, int DstMaxCols, int SrcRows, int SrcCols,
++    int SrcOptions, int SrcMaxRows, int SrcMaxCols, int BlockRows, int BlockCols, bool InnerPanel>
++EIGEN_DEVICE_FUNC EIGEN_STRONG_INLINE void call_dense_assignment_loop(
++    Eigen::Matrix<double, DstRows, DstCols, DstOptions, DstMaxRows, DstMaxCols> &dst,
++    const Eigen::Block<Eigen::Matrix<double, SrcRows, SrcCols, SrcOptions, SrcMaxRows, SrcMaxCols>, BlockRows,
++    BlockCols, InnerPanel> &src,
++    const Eigen::internal::assign_op<double, double> &func)
++{
++    resize_if_allowed(dst, src, func);
++
++    StorageOptions SrcMajor = (int(SrcOptions) & RowMajorBit) ? ColMajor : RowMajor;
++    StorageOptions DstMajor = (int(DstOptions) & RowMajorBit) ? ColMajor : RowMajor;
++    const int rows = (SrcMajor == RowMajor) ? src.nestedExpression().rows() : src.nestedExpression().cols();
++    const int dstRows = (DstMajor == RowMajor) ? dst.rows() : dst.cols();
++    const int dstCols = (DstMajor == RowMajor) ? dst.cols() : dst.rows();
++    const int startRow = (SrcMajor == RowMajor) ? src.startRow() : src.startCol();
++    const int startCol = (SrcMajor == RowMajor) ? src.startCol() : src.startRow();
++    const int srcMajorStride =
++        (SrcMajor == RowMajor) ? src.nestedExpression().rowStride() : src.nestedExpression().colStride();
++    const int dstMajorStride = (DstMajor == RowMajor) ? dst.rowStride() : dst.colStride();
++
++    if (srcMajorStride == 1 && dstMajorStride == 1 && SrcMajor == DstMajor) {
++        const double *srcPtr = (const double *)src.nestedExpression().data() + startCol * rows + startRow;
++        double *dstPtr = dst.data();
++        for (int i = 0; i < dstCols; ++i) {
++            cblas_dcopy(dstRows, srcPtr, 1, dstPtr, 1);
++            srcPtr += rows;
++            dstPtr += dstRows;
++        }
++    } else {
++        typedef evaluator<Eigen::Matrix<double, DstRows, DstCols, DstOptions, DstMaxRows, DstMaxCols> >
++            DstEvaluatorType;
++        typedef evaluator<Eigen::Block<Eigen::Matrix<double, SrcRows, SrcCols, SrcOptions, SrcMaxRows, SrcMaxCols>,
++            BlockRows, BlockCols, InnerPanel> >
++            SrcEvaluatorType;
++
++        SrcEvaluatorType srcEvaluator(src);
++        DstEvaluatorType dstEvaluator(dst);
++
++        typedef generic_dense_assignment_kernel<DstEvaluatorType, SrcEvaluatorType,
++            Eigen::internal::assign_op<double, double> >
++            Kernel;
++        Kernel kernel(dstEvaluator, srcEvaluator, func, dst.const_cast_derived());
++
++        dense_assignment_loop<Kernel>::run(kernel);
++    }
++}
++
++template <int DstRows, int DstCols, int DstOptions, int DstMaxRows, int DstMaxCols, int SrcRows, int SrcCols,
++    int SrcOptions, int SrcMaxRows, int SrcMaxCols, int BlockRows, int BlockCols, bool InnerPanel>
++EIGEN_DEVICE_FUNC EIGEN_STRONG_INLINE void call_dense_assignment_loop(
++    Eigen::Matrix<std::complex<float>, DstRows, DstCols, DstOptions, DstMaxRows, DstMaxCols> &dst,
++    const Eigen::Block<Eigen::Matrix<std::complex<float>, SrcRows, SrcCols, SrcOptions, SrcMaxRows, SrcMaxCols>,
++    BlockRows, BlockCols, InnerPanel> &src,
++    const Eigen::internal::assign_op<std::complex<float>, std::complex<float> > &func)
++{
++    resize_if_allowed(dst, src, func);
++
++    StorageOptions SrcMajor = (int(SrcOptions) & RowMajorBit) ? ColMajor : RowMajor;
++    StorageOptions DstMajor = (int(DstOptions) & RowMajorBit) ? ColMajor : RowMajor;
++    const int rows = (SrcMajor == RowMajor) ? src.nestedExpression().rows() : src.nestedExpression().cols();
++    const int dstRows = (DstMajor == RowMajor) ? dst.rows() : dst.cols();
++    const int dstCols = (DstMajor == RowMajor) ? dst.cols() : dst.rows();
++    const int startRow = (SrcMajor == RowMajor) ? src.startRow() : src.startCol();
++    const int startCol = (SrcMajor == RowMajor) ? src.startCol() : src.startRow();
++    const int srcMajorStride =
++        (SrcMajor == RowMajor) ? src.nestedExpression().rowStride() : src.nestedExpression().colStride();
++    const int dstMajorStride = (DstMajor == RowMajor) ? dst.rowStride() : dst.colStride();
++
++    if (srcMajorStride == 1 && dstMajorStride == 1 && SrcMajor == DstMajor) {
++        const __complex__ float *srcPtr =
++            (const __complex__ float *)src.nestedExpression().data() + startCol * rows + startRow;
++        __complex__ float *dstPtr = (__complex__ float *)dst.data();
++        for (int i = 0; i < dstCols; ++i) {
++            cblas_ccopy(dstRows, srcPtr, 1, dstPtr, 1);
++            srcPtr += rows;
++            dstPtr += dstRows;
++        }
++    } else {
++        typedef evaluator<Eigen::Matrix<std::complex<float>, DstRows, DstCols, DstOptions, DstMaxRows, DstMaxCols> >
++            DstEvaluatorType;
++        typedef evaluator<
++            Eigen::Block<Eigen::Matrix<std::complex<float>, SrcRows, SrcCols, SrcOptions, SrcMaxRows, SrcMaxCols>,
++            BlockRows, BlockCols, InnerPanel> >
++            SrcEvaluatorType;
++
++        SrcEvaluatorType srcEvaluator(src);
++        DstEvaluatorType dstEvaluator(dst);
++
++        typedef generic_dense_assignment_kernel<DstEvaluatorType, SrcEvaluatorType,
++            Eigen::internal::assign_op<std::complex<float>, std::complex<float> > >
++            Kernel;
++        Kernel kernel(dstEvaluator, srcEvaluator, func, dst.const_cast_derived());
++
++        dense_assignment_loop<Kernel>::run(kernel);
++    }
++}
++
++template <int DstRows, int DstCols, int DstOptions, int DstMaxRows, int DstMaxCols, int SrcRows, int SrcCols,
++    int SrcOptions, int SrcMaxRows, int SrcMaxCols, int BlockRows, int BlockCols, bool InnerPanel>
++EIGEN_DEVICE_FUNC EIGEN_STRONG_INLINE void call_dense_assignment_loop(
++    Eigen::Matrix<std::complex<double>, DstRows, DstCols, DstOptions, DstMaxRows, DstMaxCols> &dst,
++    const Eigen::Block<Eigen::Matrix<std::complex<double>, SrcRows, SrcCols, SrcOptions, SrcMaxRows, SrcMaxCols>,
++    BlockRows, BlockCols, InnerPanel> &src,
++    const Eigen::internal::assign_op<std::complex<double>, std::complex<double> > &func)
++{
++    resize_if_allowed(dst, src, func);
++
++    StorageOptions SrcMajor = (int(SrcOptions) & RowMajorBit) ? ColMajor : RowMajor;
++    StorageOptions DstMajor = (int(DstOptions) & RowMajorBit) ? ColMajor : RowMajor;
++    const int rows = (SrcMajor == RowMajor) ? src.nestedExpression().rows() : src.nestedExpression().cols();
++    const int dstRows = (DstMajor == RowMajor) ? dst.rows() : dst.cols();
++    const int dstCols = (DstMajor == RowMajor) ? dst.cols() : dst.rows();
++    const int startRow = (SrcMajor == RowMajor) ? src.startRow() : src.startCol();
++    const int startCol = (SrcMajor == RowMajor) ? src.startCol() : src.startRow();
++    const int srcMajorStride =
++        (SrcMajor == RowMajor) ? src.nestedExpression().rowStride() : src.nestedExpression().colStride();
++    const int dstMajorStride = (DstMajor == RowMajor) ? dst.rowStride() : dst.colStride();
++
++    if (srcMajorStride == 1 && dstMajorStride == 1 && SrcMajor == DstMajor) {
++        const __complex__ double *srcPtr =
++            (const __complex__ double *)src.nestedExpression().data() + startCol * rows + startRow;
++        __complex__ double *dstPtr = (__complex__ double *)dst.data();
++        for (int i = 0; i < dstCols; ++i) {
++            cblas_zcopy(dstRows, srcPtr, 1, dstPtr, 1);
++            srcPtr += rows;
++            dstPtr += dstRows;
++        }
++    } else {
++        typedef evaluator<Eigen::Matrix<std::complex<double>, DstRows, DstCols, DstOptions, DstMaxRows, DstMaxCols> >
++            DstEvaluatorType;
++        typedef evaluator<
++            Eigen::Block<Eigen::Matrix<std::complex<double>, SrcRows, SrcCols, SrcOptions, SrcMaxRows, SrcMaxCols>,
++            BlockRows, BlockCols, InnerPanel> >
++            SrcEvaluatorType;
++
++        SrcEvaluatorType srcEvaluator(src);
++        DstEvaluatorType dstEvaluator(dst);
++
++        typedef generic_dense_assignment_kernel<DstEvaluatorType, SrcEvaluatorType,
++            Eigen::internal::assign_op<std::complex<double>, std::complex<double> > >
++            Kernel;
++        Kernel kernel(dstEvaluator, srcEvaluator, func, dst.const_cast_derived());
++
++        dense_assignment_loop<Kernel>::run(kernel);
++    }
++}
++
++template <int DstRows, int DstCols, int DstOptions, int DstMaxRows, int DstMaxCols, int SrcRows, int SrcCols,
++    int SrcOptions, int SrcMaxRows, int SrcMaxCols>
++EIGEN_DEVICE_FUNC EIGEN_STRONG_INLINE void call_dense_assignment_loop(
++    Eigen::Array<float, DstRows, DstCols, DstOptions, DstMaxRows, DstMaxCols> &dst,
++    const Eigen::ArrayWrapper<Eigen::Matrix<float, SrcRows, SrcCols, SrcOptions, SrcMaxRows, SrcMaxCols> > &src,
++    const Eigen::internal::assign_op<float, float> &func)
++{
++    resize_if_allowed(dst, src, func);
++
++    StorageOptions SrcMajor = (int(SrcOptions) & RowMajorBit) ? ColMajor : RowMajor;
++    StorageOptions DstMajor = (int(DstOptions) & RowMajorBit) ? ColMajor : RowMajor;
++    const int srcMajorStride =
++        (SrcMajor == RowMajor) ? src.nestedExpression().rowStride() : src.nestedExpression().colStride();
++    const int dstMajorStride = (DstMajor == RowMajor) ? dst.rowStride() : dst.colStride();
++
++    if (srcMajorStride == 1 && dstMajorStride == 1 && SrcMajor == DstMajor) {
++        cblas_scopy(dst.size(), (const float *)src.nestedExpression().data(), 1, dst.data(), 1);
++    } else {
++        typedef evaluator<Eigen::Array<float, DstRows, DstCols, DstOptions, DstMaxRows, DstMaxCols> > DstEvaluatorType;
++        typedef evaluator<
++            Eigen::ArrayWrapper<Eigen::Matrix<float, SrcRows, SrcCols, SrcOptions, SrcMaxRows, SrcMaxCols> > >
++            SrcEvaluatorType;
++
++        SrcEvaluatorType srcEvaluator(src);
++        DstEvaluatorType dstEvaluator(dst);
++
++        typedef generic_dense_assignment_kernel<DstEvaluatorType, SrcEvaluatorType,
++            Eigen::internal::assign_op<float, float> >
++            Kernel;
++        Kernel kernel(dstEvaluator, srcEvaluator, func, dst.const_cast_derived());
++
++        dense_assignment_loop<Kernel>::run(kernel);
++    }
++}
++
++template <int DstRows, int DstCols, int DstOptions, int DstMaxRows, int DstMaxCols, int SrcRows, int SrcCols,
++    int SrcOptions, int SrcMaxRows, int SrcMaxCols>
++EIGEN_DEVICE_FUNC EIGEN_STRONG_INLINE void call_dense_assignment_loop(
++    Eigen::Array<double, DstRows, DstCols, DstOptions, DstMaxRows, DstMaxCols> &dst,
++    const Eigen::ArrayWrapper<Eigen::Matrix<double, SrcRows, SrcCols, SrcOptions, SrcMaxRows, SrcMaxCols> > &src,
++    const Eigen::internal::assign_op<double, double> &func)
++{
++    resize_if_allowed(dst, src, func);
++
++    StorageOptions SrcMajor = (int(SrcOptions) & RowMajorBit) ? ColMajor : RowMajor;
++    StorageOptions DstMajor = (int(DstOptions) & RowMajorBit) ? ColMajor : RowMajor;
++    const int srcMajorStride =
++        (SrcMajor == RowMajor) ? src.nestedExpression().rowStride() : src.nestedExpression().colStride();
++    const int dstMajorStride = (DstMajor == RowMajor) ? dst.rowStride() : dst.colStride();
++
++    if (srcMajorStride == 1 && dstMajorStride == 1 && SrcMajor == DstMajor) {
++        cblas_dcopy(dst.size(), (const double *)src.nestedExpression().data(), 1, dst.data(), 1);
++    } else {
++        typedef evaluator<Eigen::Array<double, DstRows, DstCols, DstOptions, DstMaxRows, DstMaxCols> > DstEvaluatorType;
++        typedef evaluator<
++            Eigen::ArrayWrapper<Eigen::Matrix<double, SrcRows, SrcCols, SrcOptions, SrcMaxRows, SrcMaxCols> > >
++            SrcEvaluatorType;
++
++        SrcEvaluatorType srcEvaluator(src);
++        DstEvaluatorType dstEvaluator(dst);
++
++        typedef generic_dense_assignment_kernel<DstEvaluatorType, SrcEvaluatorType,
++            Eigen::internal::assign_op<double, double> >
++            Kernel;
++        Kernel kernel(dstEvaluator, srcEvaluator, func, dst.const_cast_derived());
++
++        dense_assignment_loop<Kernel>::run(kernel);
++    }
++}
++
++template <int DstRows, int DstCols, int DstOptions, int DstMaxRows, int DstMaxCols, int SrcRows, int SrcCols,
++    int SrcOptions, int SrcMaxRows, int SrcMaxCols>
++EIGEN_DEVICE_FUNC EIGEN_STRONG_INLINE void call_dense_assignment_loop(
++    Eigen::Array<std::complex<float>, DstRows, DstCols, DstOptions, DstMaxRows, DstMaxCols> &dst,
++    const Eigen::ArrayWrapper<Eigen::Matrix<std::complex<float>, SrcRows, SrcCols, SrcOptions, SrcMaxRows, SrcMaxCols> >
++        &src,
++    const Eigen::internal::assign_op<std::complex<float>, std::complex<float> > &func)
++{
++    resize_if_allowed(dst, src, func);
++
++    StorageOptions SrcMajor = (int(SrcOptions) & RowMajorBit) ? ColMajor : RowMajor;
++    StorageOptions DstMajor = (int(DstOptions) & RowMajorBit) ? ColMajor : RowMajor;
++    const int srcMajorStride =
++        (SrcMajor == RowMajor) ? src.nestedExpression().rowStride() : src.nestedExpression().colStride();
++    const int dstMajorStride = (DstMajor == RowMajor) ? dst.rowStride() : dst.colStride();
++
++    if (srcMajorStride == 1 && dstMajorStride == 1 && SrcMajor == DstMajor) {
++        cblas_ccopy(dst.size(), (const __complex__ float *)src.nestedExpression().data(), 1,
++            (__complex__ float *)dst.data(), 1);
++    } else {
++        typedef evaluator<Eigen::Array<std::complex<float>, DstRows, DstCols, DstOptions, DstMaxRows, DstMaxCols> >
++            DstEvaluatorType;
++        typedef evaluator<Eigen::ArrayWrapper<
++            Eigen::Matrix<std::complex<float>, SrcRows, SrcCols, SrcOptions, SrcMaxRows, SrcMaxCols> > >
++            SrcEvaluatorType;
++
++        SrcEvaluatorType srcEvaluator(src);
++        DstEvaluatorType dstEvaluator(dst);
++
++        typedef generic_dense_assignment_kernel<DstEvaluatorType, SrcEvaluatorType,
++            Eigen::internal::assign_op<std::complex<float>, std::complex<float> > >
++            Kernel;
++        Kernel kernel(dstEvaluator, srcEvaluator, func, dst.const_cast_derived());
++
++        dense_assignment_loop<Kernel>::run(kernel);
++    }
++}
++
++template <int DstRows, int DstCols, int DstOptions, int DstMaxRows, int DstMaxCols, int SrcRows, int SrcCols,
++    int SrcOptions, int SrcMaxRows, int SrcMaxCols>
++EIGEN_DEVICE_FUNC EIGEN_STRONG_INLINE void call_assignment_no_alias(
++    Eigen::Array<std::complex<double>, DstRows, DstCols, DstOptions, DstMaxRows, DstMaxCols> &dst,
++    const Eigen::ArrayWrapper<
++    Eigen::Matrix<std::complex<double>, SrcRows, SrcCols, SrcOptions, SrcMaxRows, SrcMaxCols> > &src,
++    const Eigen::internal::assign_op<std::complex<double>, std::complex<double> > &func)
++{
++    resize_if_allowed(dst, src, func);
++
++    StorageOptions SrcMajor = (int(SrcOptions) & RowMajorBit) ? ColMajor : RowMajor;
++    StorageOptions DstMajor = (int(DstOptions) & RowMajorBit) ? ColMajor : RowMajor;
++    const int srcMajorStride =
++        (SrcMajor == RowMajor) ? src.nestedExpression().rowStride() : src.nestedExpression().colStride();
++    const int dstMajorStride = (DstMajor == RowMajor) ? dst.rowStride() : dst.colStride();
++
++    if (srcMajorStride == 1 && dstMajorStride == 1 && SrcMajor == DstMajor) {
++        cblas_zcopy(dst.size(), (const __complex__ double *)src.nestedExpression().data(), 1,
++            (__complex__ double *)dst.data(), 1);
++    } else {
++        typedef evaluator<Eigen::Array<std::complex<double>, DstRows, DstCols, DstOptions, DstMaxRows, DstMaxCols> >
++            DstEvaluatorType;
++        typedef evaluator<Eigen::ArrayWrapper<
++            Eigen::Matrix<std::complex<double>, SrcRows, SrcCols, SrcOptions, SrcMaxRows, SrcMaxCols> > >
++            SrcEvaluatorType;
++
++        SrcEvaluatorType srcEvaluator(src);
++        DstEvaluatorType dstEvaluator(dst);
++
++        typedef generic_dense_assignment_kernel<DstEvaluatorType, SrcEvaluatorType,
++            Eigen::internal::assign_op<std::complex<double>, std::complex<double> > >
++            Kernel;
++        Kernel kernel(dstEvaluator, srcEvaluator, func, dst.const_cast_derived());
++
++        dense_assignment_loop<Kernel>::run(kernel);
++    }
++}
 +
 +} // namespace internal
-+
 +} // end namespace Eigen
 +
 +#endif // EIGEN_ASSIGN_EVALUATOR_KUNPENG_H
 diff --git a/README.md b/README.md
-index 9b40e9e..1617e25 100644
+index 9b40e9e..888a1d7 100644
 --- a/README.md
 +++ b/README.md
-@@ -3,3 +3,17 @@
+@@ -3,3 +3,19 @@
  For more information go to http://eigen.tuxfamily.org/.
  
  For ***pull request***, ***bug reports***, and ***feature requests***, go to https://gitlab.com/libeigen/eigen.
@@ -725,33 +1718,33 @@ index 9b40e9e..1617e25 100644
 +======================
 +
 +## How to Use
-+The compilation option **KUNPENG_USE** is used to control whether to use kunpeng optimization,the optimization depends on **kblas** and **kvml** in the Kunpeng math library.
++The compilation option **KUNPENG_USE** is used to control whether to use kunpeng optimization,the optimization depends on **kblas** in the Kunpeng math library.
 +
-+If you want to use this optimization, you first need to install the kunpeng math library.
++If you want to use this optimization, you need to install the kunpeng math library first, and the minimum version is 2.1.0.
++
++And now the optimization is applicable only to **Kunpeng920 sve** instruction.
 +
 +For example enable kunpeng optimization:
 +
 +```shell
-+g++ -I./ kpperf_add.cpp -O2 -o kpperf_add -L/usr/local/kml/lib/kblas/nolocking/ -lkblas -L/usr/local/kml/lib/kvml/single/ -lkvml -L/usr/local/kml/lib/ -lkm -fopenmp -DKUNPENG_USE
++g++ -I./ your_app.cpp -O2 -o your_app -L/usr/local/kml/lib/kblas/nolocking/ -lkblas -fopenmp -DKUNPENG_USE
 +```
 diff --git a/test/CMakeLists.txt b/test/CMakeLists.txt
-index 5136f82..1d21dab 100644
+index 5136f82..c6576a0 100644
 --- a/test/CMakeLists.txt
 +++ b/test/CMakeLists.txt
-@@ -25,6 +25,12 @@ if(EIGEN_TEST_EXTERNAL_BLAS)
+@@ -25,6 +25,10 @@ if(EIGEN_TEST_EXTERNAL_BLAS)
    list(APPEND EXTERNAL_LIBS "${BLAS_LIBRARIES}")
  endif()
  
 +add_definitions("-DKUNPENG_USE")
 +set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -L/usr/local/kml/lib/kblas/nolocking/ -lkblas")
-+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -L/usr/local/kml/lib/kvml/single/ -lkvml")
-+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -L/usr/local/kml/lib/ -lkm -fopenmp")
 +message(STATUS "CXX_FLAGS:     ${CXX_FLAGS}")
 +
  # configure blas/lapack (use Eigen's ones)
  set(EIGEN_BLAS_LIBRARIES eigen_blas)
  set(EIGEN_LAPACK_LIBRARIES eigen_lapack)
-@@ -387,15 +393,15 @@ if(EIGEN_TEST_CUDA)
+@@ -387,15 +391,15 @@ if(EIGEN_TEST_CUDA)
  
  find_package(CUDA 5.0)
  if(CUDA_FOUND)
@@ -771,7 +1764,7 @@ index 5136f82..1d21dab 100644
      set(CUDA_NVCC_FLAGS "-ccbin ${CMAKE_C_COMPILER}" CACHE STRING "nvcc flags" FORCE)
    endif()
    if(EIGEN_TEST_CUDA_CLANG)
-@@ -411,9 +417,9 @@ if(CUDA_FOUND)
+@@ -411,9 +415,9 @@ if(CUDA_FOUND)
    endif()
    string(APPEND CUDA_NVCC_FLAGS " ${EIGEN_CUDA_RELAXED_CONSTEXPR}")
    set(EIGEN_ADD_TEST_FILENAME_EXTENSION  "cu")
@@ -783,7 +1776,7 @@ index 5136f82..1d21dab 100644
    unset(EIGEN_ADD_TEST_FILENAME_EXTENSION)
  
  endif()
-@@ -428,8 +434,8 @@ if (EIGEN_TEST_HIP)
+@@ -428,8 +432,8 @@ if (EIGEN_TEST_HIP)
    set(HIP_PATH "/opt/rocm/hip" CACHE STRING "Path to the HIP installation.")
  
    if (EXISTS ${HIP_PATH})
@@ -794,7 +1787,7 @@ index 5136f82..1d21dab 100644
  
      find_package(HIP REQUIRED)
      if (HIP_FOUND)
-@@ -443,12 +449,12 @@ if (EIGEN_TEST_HIP)
+@@ -443,12 +447,12 @@ if (EIGEN_TEST_HIP)
  	set(EIGEN_ADD_TEST_FILENAME_EXTENSION  "cu")
  	ei_add_test(gpu_basic)
  	unset(EIGEN_ADD_TEST_FILENAME_EXTENSION)
