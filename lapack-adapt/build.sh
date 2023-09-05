@@ -48,9 +48,9 @@ esac
 
 # adapted lapack
 liblapack_a=${tmp_build_dir}/lib/liblapack.a
-liblapack1_a=${tmp_build_dir}/lib/liblapack1.a # complement libklapack.so
+liblapack1_a=${tmp_build_dir}/lib/liblapack1.a # complement libklapack.a
 liblapack1_so=${tmp_build_dir}/lib/liblapack1.so # complement libklapack.so
-
+liblapacke_a=${tmp_build_dir}/lib/liblapacke.a #component of liblapacke.a
 # klapack
 libklapack_a=${KML_ROOT}/lib/libklapack.a
 libklapack_so=${KML_ROOT}/lib/libklapack.so
@@ -142,6 +142,7 @@ cmake_flags=(
     -DBLAS_LIBRARIES="${libkblas_so}"
     -DCMAKE_INSTALL_PREFIX=/dev/null
     -DCMAKE_RULE_MESSAGES=OFF
+    -DLAPACKE=ON
 )
 
 mkdir -p ${tmp_build_dir}
@@ -161,6 +162,7 @@ ld_group=(
     -Wl,--whole-archive
     -Wl,--start-group
     ${liblapack1_a}
+    ${liblapacke_a}
     -Wl,--end-group
     -Wl,--no-whole-archive
 )
@@ -192,7 +194,7 @@ function tests {
 #-------------------------------------------------------------------------------
 ANNOUNCE "Run tests with libklapack + liblapack1"
 
-if [ $1 == "test" ]; then
+if [[ $1 == "test" ]]; then
 tests tmp-1 "${libklapack_so};${liblapack1_a};${libkservice_so};${libkblas_so};-fopenmp"
 tests tmp-2 "${libklapack_so};${liblapack1_so};${libkservice_so};${libkblas_so};-fopenmp"
 fi
@@ -208,6 +210,7 @@ ld_group=(
     -Wl,--start-group
     ${libklapack_a}
     ${liblapack1_a}
+    ${liblapacke_a}
     ${libkservice1_a}
     -Wl,--end-group
     -Wl,--no-whole-archive
