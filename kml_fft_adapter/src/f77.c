@@ -102,12 +102,12 @@ FFT_API FFTW_VOIDFUNC F77(destroy_plan, DESTROY_PLAN)(FFTW(plan) * p)
     FFTW(destroy_plan)(*p);
 }
 
-FFT_API int F77(import_wisdom, DESTROY_PLAN)()
+FFT_API int F77(import_wisdom, IMPORT_WISDOM)()
 {
 	return 0;
 }
 
-FFT_API FFTW_VOIDFUNC F77(export_wisdom, DESTROY_PLAN)()
+FFT_API FFTW_VOIDFUNC F77(export_wisdom, EXPORT_WISDOM)()
 {
 }
 FFT_API FFTW_VOIDFUNC F77(cleanup_threads, CLEANUP_THREADS)(void)
@@ -117,4 +117,8 @@ FFT_API FFTW_VOIDFUNC F77(cleanup_threads, CLEANUP_THREADS)(void)
 FFT_API FFTW_VOIDFUNC F77(plan_with_nthreads, PLAN_WITH_NTHREADS)(int nthreads)
 {
     FFTW(plan_with_nthreads)(nthreads);
+}
+FFT_API int F77(init_threads, INIT_THREADS)()
+{
+	return 1;
 }
