@@ -1,6 +1,6 @@
-diff -ru lz4-1.9.3-old/lib/lz4.c lz4-1.9.3/lib/lz4.c
---- lz4-1.9.3-old/lib/lz4.c	2023-04-24 10:29:33.976541810 +0800
-+++ lz4-1.9.3/lib/lz4.c	2023-04-24 10:38:48.756541810 +0800
+diff -uprN lz4-1.9.3-old/lib/lz4.c lz4-1.9.3/lib/lz4.c
+--- lz4-1.9.3-old/lib/lz4.c	2020-11-16 12:59:35.000000000 +0800
++++ lz4-1.9.3/lib/lz4.c	2023-11-29 11:15:41.170712500 +0800
 @@ -56,6 +56,7 @@
   */
  #define LZ4_ACCELERATION_MAX 65537
@@ -9,7 +9,7 @@ diff -ru lz4-1.9.3-old/lib/lz4.c lz4-1.9.3/lib/lz4.c
  
  /*-************************************
  *  CPU Feature Detection
-@@ -246,8 +247,6 @@
+@@ -246,8 +247,6 @@ static const int LZ4_minLength = (MFLIMI
  #  endif
  #endif
  
@@ -18,7 +18,7 @@ diff -ru lz4-1.9.3-old/lib/lz4.c lz4-1.9.3/lib/lz4.c
  #if defined(LZ4_DEBUG) && (LZ4_DEBUG>=2)
  #  include <stdio.h>
     static int g_debuglog_enable = 1;
-@@ -257,8 +256,11 @@
+@@ -257,8 +256,11 @@ static const int LZ4_minLength = (MFLIMI
              fprintf(stderr, __VA_ARGS__);             \
              fprintf(stderr, " \n");                   \
      }   }
@@ -30,7 +30,7 @@ diff -ru lz4-1.9.3-old/lib/lz4.c lz4-1.9.3/lib/lz4.c
  #endif
  
  static int LZ4_isAligned(const void* ptr, size_t alignment)
-@@ -316,12 +318,21 @@
+@@ -316,12 +318,21 @@ typedef enum {
   * memcpy() as if it were standard compliant, so it can inline it in freestanding
   * environments. This is needed when decompressing the Linux Kernel, for example.
   */
@@ -53,7 +53,7 @@ diff -ru lz4-1.9.3-old/lib/lz4.c lz4-1.9.3/lib/lz4.c
  static unsigned LZ4_isLittleEndian(void)
  {
      const union { U32 u; BYTE c[4]; } one = { 1 };   /* don't use static : performance detrimental */
-@@ -384,16 +395,21 @@
+@@ -384,16 +395,21 @@ static void LZ4_write32(void* memPtr, U3
  
  static U16 LZ4_readLE16(const void* memPtr)
  {
@@ -75,7 +75,7 @@ diff -ru lz4-1.9.3-old/lib/lz4.c lz4-1.9.3/lib/lz4.c
      if (LZ4_isLittleEndian()) {
          LZ4_write16(memPtr, value);
      } else {
-@@ -401,6 +417,9 @@
+@@ -401,6 +417,9 @@ static void LZ4_writeLE16(void* memPtr,
          p[0] = (BYTE) value;
          p[1] = (BYTE)(value>>8);
      }
@@ -85,7 +85,7 @@ diff -ru lz4-1.9.3-old/lib/lz4.c lz4-1.9.3/lib/lz4.c
  }
  
  /* customized variant of memcpy, which can overwrite up to 8 bytes beyond dstEnd */
-@@ -411,7 +430,7 @@
+@@ -411,7 +430,7 @@ void LZ4_wildCopy8(void* dstPtr, const v
      const BYTE* s = (const BYTE*)srcPtr;
      BYTE* const e = (BYTE*)dstEnd;
  
@@ -94,7 +94,7 @@ diff -ru lz4-1.9.3-old/lib/lz4.c lz4-1.9.3/lib/lz4.c
  }
  
  static const unsigned inc32table[8] = {0, 1, 2,  1,  0,  4, 4, 4};
-@@ -444,11 +463,11 @@
+@@ -444,11 +463,11 @@ LZ4_memcpy_using_offset_base(BYTE* dstPt
          dstPtr[2] = srcPtr[2];
          dstPtr[3] = srcPtr[3];
          srcPtr += inc32table[offset];
@@ -108,7 +108,7 @@ diff -ru lz4-1.9.3-old/lib/lz4.c lz4-1.9.3/lib/lz4.c
          dstPtr += 8;
          srcPtr += 8;
      }
-@@ -466,7 +485,7 @@
+@@ -466,7 +485,7 @@ LZ4_wildCopy32(void* dstPtr, const void*
      const BYTE* s = (const BYTE*)srcPtr;
      BYTE* const e = (BYTE*)dstEnd;
  
@@ -117,7 +117,7 @@ diff -ru lz4-1.9.3-old/lib/lz4.c lz4-1.9.3/lib/lz4.c
  }
  
  /* LZ4_memcpy_using_offset()  presumes :
-@@ -484,23 +503,23 @@
+@@ -484,23 +503,23 @@ LZ4_memcpy_using_offset(BYTE* dstPtr, co
          MEM_INIT(v, *srcPtr, 8);
          break;
      case 2:
@@ -148,7 +148,7 @@ diff -ru lz4-1.9.3-old/lib/lz4.c lz4-1.9.3/lib/lz4.c
          dstPtr += 8;
      }
  }
-@@ -512,6 +531,7 @@
+@@ -512,6 +531,7 @@ LZ4_memcpy_using_offset(BYTE* dstPtr, co
  **************************************/
  static unsigned LZ4_NbCommonBytes (reg_t val)
  {
@@ -156,7 +156,7 @@ diff -ru lz4-1.9.3-old/lib/lz4.c lz4-1.9.3/lib/lz4.c
      assert(val != 0);
      if (LZ4_isLittleEndian()) {
          if (sizeof(val) == 8) {
-@@ -595,6 +615,13 @@
+@@ -595,6 +615,13 @@ static unsigned LZ4_NbCommonBytes (reg_t
  #       endif
          }
      }
@@ -170,7 +170,7 @@ diff -ru lz4-1.9.3-old/lib/lz4.c lz4-1.9.3/lib/lz4.c
  }
  
  
-@@ -695,6 +722,8 @@
+@@ -695,6 +722,8 @@ int LZ4_decompress_safe_forceExtDict(con
  /*-******************************
  *  Compression functions
  ********************************/
@@ -179,7 +179,7 @@ diff -ru lz4-1.9.3-old/lib/lz4.c lz4-1.9.3/lib/lz4.c
  LZ4_FORCE_INLINE U32 LZ4_hash4(U32 sequence, tableType_t const tableType)
  {
      if (tableType == byU16)
-@@ -706,12 +735,10 @@
+@@ -706,12 +735,10 @@ LZ4_FORCE_INLINE U32 LZ4_hash4(U32 seque
  LZ4_FORCE_INLINE U32 LZ4_hash5(U64 sequence, tableType_t const tableType)
  {
      const U32 hashLog = (tableType == byU16) ? LZ4_HASHLOG+1 : LZ4_HASHLOG;
@@ -195,7 +195,7 @@ diff -ru lz4-1.9.3-old/lib/lz4.c lz4-1.9.3/lib/lz4.c
      }
  }
  
-@@ -721,15 +748,20 @@
+@@ -721,15 +748,20 @@ LZ4_FORCE_INLINE U32 LZ4_hashPosition(co
      return LZ4_hash4(LZ4_read32(p), tableType);
  }
  
@@ -221,7 +221,7 @@ diff -ru lz4-1.9.3-old/lib/lz4.c lz4-1.9.3/lib/lz4.c
      }
  }
  
-@@ -737,11 +769,11 @@
+@@ -737,11 +769,11 @@ LZ4_FORCE_INLINE void LZ4_putIndexOnHash
  {
      switch (tableType)
      {
@@ -238,7 +238,7 @@ diff -ru lz4-1.9.3-old/lib/lz4.c lz4-1.9.3/lib/lz4.c
      }
  }
  
-@@ -751,16 +783,16 @@
+@@ -751,16 +783,16 @@ LZ4_FORCE_INLINE void LZ4_putPositionOnH
  {
      switch (tableType)
      {
@@ -260,7 +260,7 @@ diff -ru lz4-1.9.3-old/lib/lz4.c lz4-1.9.3/lib/lz4.c
      LZ4_putPositionOnHash(p, h, tableBase, tableType, srcBase);
  }
  
-@@ -788,7 +820,7 @@
+@@ -788,7 +820,7 @@ LZ4_FORCE_INLINE U32 LZ4_getIndexOnHash(
  
  static const BYTE* LZ4_getPositionOnHash(U32 h, const void* tableBase, tableType_t tableType, const BYTE* srcBase)
  {
@@ -269,7 +269,7 @@ diff -ru lz4-1.9.3-old/lib/lz4.c lz4-1.9.3/lib/lz4.c
      if (tableType == byU32) { const U32* const hashTable = (const U32*) tableBase; return hashTable[h] + srcBase; }
      { const U16* const hashTable = (const U16*) tableBase; return hashTable[h] + srcBase; }   /* default, to ensure a return */
  }
-@@ -798,7 +830,7 @@
+@@ -798,7 +830,7 @@ LZ4_getPosition(const BYTE* p,
                  const void* tableBase, tableType_t tableType,
                  const BYTE* srcBase)
  {
@@ -278,7 +278,7 @@ diff -ru lz4-1.9.3-old/lib/lz4.c lz4-1.9.3/lib/lz4.c
      return LZ4_getPositionOnHash(h, tableBase, tableType, srcBase);
  }
  
-@@ -842,6 +874,216 @@
+@@ -842,6 +874,216 @@ LZ4_prepareTable(LZ4_stream_t_internal*
      cctx->dictSize = 0;
  }
  
@@ -495,7 +495,7 @@ diff -ru lz4-1.9.3-old/lib/lz4.c lz4-1.9.3/lib/lz4.c
  /** LZ4_compress_generic() :
   *  inlined, to ensure branches are decided at compilation time.
   *  Presumed already validated at this stage:
-@@ -921,8 +1163,11 @@
+@@ -921,8 +1163,11 @@ LZ4_FORCE_INLINE int LZ4_compress_generi
      if (inputSize<LZ4_minLength) goto _last_literals;        /* Input too small, no compression (all literals) */
  
      /* First Byte */
@@ -508,7 +508,7 @@ diff -ru lz4-1.9.3-old/lib/lz4.c lz4-1.9.3/lib/lz4.c
  
      /* Main Loop */
      for ( ; ; ) {
-@@ -931,21 +1176,21 @@
+@@ -931,21 +1176,21 @@ LZ4_FORCE_INLINE int LZ4_compress_generi
          const BYTE* filledIp;
  
          /* Find a match */
@@ -534,7 +534,7 @@ diff -ru lz4-1.9.3-old/lib/lz4.c lz4-1.9.3/lib/lz4.c
                  LZ4_putPositionOnHash(ip, h, cctx->hashTable, tableType, base);
  
              } while ( (match+LZ4_DISTANCE_MAX < ip)
-@@ -955,7 +1200,7 @@
+@@ -955,7 +1200,7 @@ LZ4_FORCE_INLINE int LZ4_compress_generi
  
              const BYTE* forwardIp = ip;
              int step = 1;
@@ -543,7 +543,7 @@ diff -ru lz4-1.9.3-old/lib/lz4.c lz4-1.9.3/lib/lz4.c
              do {
                  U32 const h = forwardH;
                  U32 const current = (U32)(forwardIp - base);
-@@ -964,12 +1209,12 @@
+@@ -964,12 +1209,12 @@ LZ4_FORCE_INLINE int LZ4_compress_generi
                  assert(forwardIp - base < (ptrdiff_t)(2 GB - 1));
                  ip = forwardIp;
                  forwardIp += step;
@@ -558,7 +558,7 @@ diff -ru lz4-1.9.3-old/lib/lz4.c lz4-1.9.3/lib/lz4.c
                      if (matchIndex < startIndex) {
                          /* there was no match, try the dictionary */
                          assert(tableType == byU32);
-@@ -981,7 +1226,7 @@
+@@ -981,7 +1226,7 @@ LZ4_FORCE_INLINE int LZ4_compress_generi
                          match = base + matchIndex;
                          lowLimit = (const BYTE*)source;
                      }
@@ -567,7 +567,7 @@ diff -ru lz4-1.9.3-old/lib/lz4.c lz4-1.9.3/lib/lz4.c
                      if (matchIndex < startIndex) {
                          DEBUGLOG(7, "extDict candidate: matchIndex=%5u  <  startIndex=%5u", matchIndex, startIndex);
                          assert(startIndex - matchIndex >= MINMATCH);
-@@ -994,11 +1239,11 @@
+@@ -994,11 +1239,11 @@ LZ4_FORCE_INLINE int LZ4_compress_generi
                  } else {   /* single continuous memory segment */
                      match = base + matchIndex;
                  }
@@ -581,7 +581,7 @@ diff -ru lz4-1.9.3-old/lib/lz4.c lz4-1.9.3/lib/lz4.c
                  assert(matchIndex < current);
                  if ( ((tableType != byU16) || (LZ4_DISTANCE_MAX < LZ4_DISTANCE_ABSOLUTE_MAX))
                    && (matchIndex+LZ4_DISTANCE_MAX < current)) {
-@@ -1021,11 +1266,11 @@
+@@ -1021,11 +1266,11 @@ LZ4_FORCE_INLINE int LZ4_compress_generi
          /* Encode Literals */
          {   unsigned const litLength = (unsigned)(ip - anchor);
              token = op++;
@@ -595,7 +595,7 @@ diff -ru lz4-1.9.3-old/lib/lz4.c lz4-1.9.3/lib/lz4.c
                  (unlikely(op + (litLength+240)/255 /* litlen */ + litLength /* literals */ + 2 /* offset */ + 1 /* token */ + MFLIMIT - MINMATCH /* min last literals so last match is <= end - MFLIMIT */ > olimit))) {
                  op--;
                  goto _last_literals;
-@@ -1075,7 +1320,7 @@
+@@ -1075,7 +1320,7 @@ _next_match:
          /* Encode MatchLength */
          {   unsigned matchCode;
  
@@ -604,7 +604,7 @@ diff -ru lz4-1.9.3-old/lib/lz4.c lz4-1.9.3/lib/lz4.c
                && (lowLimit==dictionary) /* match within extDict */ ) {
                  const BYTE* limit = ip + (dictEnd-match);
                  assert(dictEnd > match);
-@@ -1111,7 +1356,7 @@
+@@ -1111,7 +1356,7 @@ _next_match:
                          const BYTE* ptr;
                          DEBUGLOG(5, "Clearing %u positions", (U32)(filledIp - ip));
                          for (ptr = ip; ptr <= filledIp; ++ptr) {
@@ -613,7 +613,7 @@ diff -ru lz4-1.9.3-old/lib/lz4.c lz4-1.9.3/lib/lz4.c
                              LZ4_clearHash(h, cctx->hashTable, tableType);
                          }
                      }
-@@ -1156,11 +1401,11 @@
+@@ -1156,11 +1401,11 @@ _next_match:
  
          } else {   /* byU32, byU16 */
  
@@ -627,7 +627,7 @@ diff -ru lz4-1.9.3-old/lib/lz4.c lz4-1.9.3/lib/lz4.c
                  if (matchIndex < startIndex) {
                      /* there was no match, try the dictionary */
                      matchIndex = LZ4_getIndexOnHash(h, dictCtx->hashTable, byU32);
-@@ -1171,7 +1416,7 @@
+@@ -1171,7 +1416,7 @@ _next_match:
                      match = base + matchIndex;
                      lowLimit = (const BYTE*)source;  /* required for match length counter */
                  }
@@ -636,7 +636,7 @@ diff -ru lz4-1.9.3-old/lib/lz4.c lz4-1.9.3/lib/lz4.c
                  if (matchIndex < startIndex) {
                      match = dictBase + matchIndex;
                      lowLimit = dictionary;   /* required for match length counter */
-@@ -1184,7 +1429,7 @@
+@@ -1184,7 +1429,7 @@ _next_match:
              }
              LZ4_putIndexOnHash(current, h, cctx->hashTable, tableType);
              assert(matchIndex < current);
@@ -645,7 +645,7 @@ diff -ru lz4-1.9.3-old/lib/lz4.c lz4-1.9.3/lib/lz4.c
                && (((tableType==byU16) && (LZ4_DISTANCE_MAX == LZ4_DISTANCE_ABSOLUTE_MAX)) ? 1 : (matchIndex+LZ4_DISTANCE_MAX >= current))
                && (LZ4_read32(match) == LZ4_read32(ip)) ) {
                  token=op++;
-@@ -1197,7 +1442,7 @@
+@@ -1197,7 +1442,7 @@ _next_match:
          }
  
          /* Prepare next loop */
@@ -654,7 +654,7 @@ diff -ru lz4-1.9.3-old/lib/lz4.c lz4-1.9.3/lib/lz4.c
  
      }
  
-@@ -1256,6 +1501,11 @@
+@@ -1256,6 +1501,11 @@ LZ4_FORCE_INLINE int LZ4_compress_generi
                   const dictIssue_directive dictIssue,
                   const int acceleration)
  {
@@ -666,7 +666,7 @@ diff -ru lz4-1.9.3-old/lib/lz4.c lz4-1.9.3/lib/lz4.c
      DEBUGLOG(5, "LZ4_compress_generic: srcSize=%i, dstCapacity=%i",
                  srcSize, dstCapacity);
  
-@@ -1274,15 +1524,24 @@
+@@ -1274,15 +1524,24 @@ LZ4_FORCE_INLINE int LZ4_compress_generi
      }
      assert(src != NULL);
  
@@ -692,7 +692,7 @@ diff -ru lz4-1.9.3-old/lib/lz4.c lz4-1.9.3/lib/lz4.c
      LZ4_stream_t_internal* const ctx = & LZ4_initStream(state, sizeof(LZ4_stream_t)) -> internal_donotuse;
      assert(ctx != NULL);
      if (acceleration < 1) acceleration = LZ4_ACCELERATION_DEFAULT;
-@@ -1369,10 +1628,11 @@
+@@ -1369,10 +1628,11 @@ int LZ4_compress_fast(const char* source
      return result;
  }
  
@@ -706,7 +706,7 @@ diff -ru lz4-1.9.3-old/lib/lz4.c lz4-1.9.3/lib/lz4.c
  }
  
  
-@@ -1675,7 +1935,7 @@
+@@ -1675,7 +1935,7 @@ int LZ4_saveDict (LZ4_stream_t* LZ4_dict
  
      if (safeBuffer == NULL) assert(dictSize == 0);
      if (dictSize > 0)
@@ -715,7 +715,7 @@ diff -ru lz4-1.9.3-old/lib/lz4.c lz4-1.9.3/lib/lz4.c
  
      dict->dictionary = (const BYTE*)safeBuffer;
      dict->dictSize = (U32)dictSize;
-@@ -1830,12 +2090,12 @@
+@@ -1830,12 +2090,12 @@ LZ4_decompress_generic(
                      /* We don't need to check oend, since we check it once for each loop below */
                      if (ip > iend-(16 + 1/*max lit + offset + nextToken*/)) { goto safe_literal_copy; }
                      /* Literals can only be 14, but hope compilers optimize if we copy by a register size */
@@ -731,7 +731,7 @@ diff -ru lz4-1.9.3-old/lib/lz4.c lz4-1.9.3/lib/lz4.c
                  }
                  ip += length; op = cpy;
              }
-@@ -1871,9 +2131,9 @@
+@@ -1871,9 +2131,9 @@ LZ4_decompress_generic(
                          assert(match <= op);
                          assert(op + 18 <= oend);
  
@@ -744,7 +744,7 @@ diff -ru lz4-1.9.3-old/lib/lz4.c lz4-1.9.3/lib/lz4.c
                          op += length;
                          continue;
              }   }   }
-@@ -1891,7 +2151,7 @@
+@@ -1891,7 +2151,7 @@ LZ4_decompress_generic(
  
                  if (length <= (size_t)(lowPrefix-match)) {
                      /* match fits entirely within external dictionary : just copy */
@@ -753,7 +753,7 @@ diff -ru lz4-1.9.3-old/lib/lz4.c lz4-1.9.3/lib/lz4.c
                      op += length;
                  } else {
                      /* match stretches into both external dictionary and current block */
-@@ -1945,7 +2205,7 @@
+@@ -1945,7 +2205,7 @@ LZ4_decompress_generic(
                  /* strictly "less than" on input, to re-enter the loop with at least one byte */
                && likely((endOnInput ? ip < shortiend : 1) & (op <= shortoend)) ) {
                  /* Copy the literals */
@@ -762,7 +762,7 @@ diff -ru lz4-1.9.3-old/lib/lz4.c lz4-1.9.3/lib/lz4.c
                  op += length; ip += length;
  
                  /* The second stage: prepare for match copying, decode full info.
-@@ -1960,9 +2220,9 @@
+@@ -1960,9 +2220,9 @@ LZ4_decompress_generic(
                    && (offset >= 8)
                    && (dict==withPrefix64k || match >= lowPrefix) ) {
                      /* Copy the match. */
@@ -775,7 +775,7 @@ diff -ru lz4-1.9.3-old/lib/lz4.c lz4-1.9.3/lib/lz4.c
                      op += length + MINMATCH;
                      /* Both stages worked, load the next token. */
                      continue;
-@@ -2035,7 +2295,7 @@
+@@ -2035,7 +2295,7 @@ LZ4_decompress_generic(
                          goto _output_error;
                      }
                  }
@@ -784,7 +784,7 @@ diff -ru lz4-1.9.3-old/lib/lz4.c lz4-1.9.3/lib/lz4.c
                  ip += length;
                  op += length;
                  /* Necessarily EOF when !partialDecoding.
-@@ -2080,7 +2340,7 @@
+@@ -2080,7 +2340,7 @@ LZ4_decompress_generic(
  
                  if (length <= (size_t)(lowPrefix-match)) {
                      /* match fits entirely within external dictionary : just copy */
@@ -793,7 +793,7 @@ diff -ru lz4-1.9.3-old/lib/lz4.c lz4-1.9.3/lib/lz4.c
                      op += length;
                  } else {
                      /* match stretches into both external dictionary and current block */
-@@ -2126,10 +2386,10 @@
+@@ -2126,10 +2386,10 @@ LZ4_decompress_generic(
                  op[2] = match[2];
                  op[3] = match[3];
                  match += inc32table[offset];
@@ -806,7 +806,7 @@ diff -ru lz4-1.9.3-old/lib/lz4.c lz4-1.9.3/lib/lz4.c
                  match += 8;
              }
              op += 8;
-@@ -2144,7 +2404,7 @@
+@@ -2144,7 +2404,7 @@ LZ4_decompress_generic(
                  }
                  while (op < cpy) { *op++ = *match++; }
              } else {
@@ -815,10 +815,30 @@ diff -ru lz4-1.9.3-old/lib/lz4.c lz4-1.9.3/lib/lz4.c
                  if (length > 16)  { LZ4_wildCopy8(op+8, match+8, cpy); }
              }
              op = cpy;   /* wildcopy correction */
-diff -ru lz4-1.9.3-old/programs/Makefile lz4-1.9.3/programs/Makefile
---- lz4-1.9.3-old/programs/Makefile	2023-04-24 10:29:33.980541810 +0800
-+++ lz4-1.9.3/programs/Makefile	2023-04-24 11:45:15.496541810 +0800
-@@ -43,7 +43,7 @@
+diff -uprN lz4-1.9.3-old/lib/Makefile lz4-1.9.3/lib/Makefile
+--- lz4-1.9.3-old/lib/Makefile	2020-11-16 12:59:35.000000000 +0800
++++ lz4-1.9.3/lib/Makefile	2023-11-29 11:56:31.689697300 +0800
+@@ -54,6 +54,7 @@ CFLAGS  += $(DEBUGFLAGS) $(MOREFLAGS)
+ FLAGS    = $(CPPFLAGS) $(CFLAGS) $(LDFLAGS)
+ 
+ SRCFILES := $(sort $(wildcard *.c))
++OBJFILES = lz4_accelerater.o lz4_cpu_checker.o
+ 
+ include ../Makefile.inc
+ 
+@@ -112,7 +113,7 @@ ifeq ($(BUILD_SHARED),yes)  # can be dis
+   ifeq ($(WINBASED),yes)
+ 	$(Q)$(CC) $(FLAGS) -DLZ4_DLL_EXPORT=1 -shared $^ -o dll/$@.dll -Wl,--out-implib,dll/$(LIBLZ4_EXP)
+   else
+-	$(Q)$(CC) $(FLAGS) -shared $^ -fPIC -fvisibility=hidden $(SONAME_FLAGS) -o $@
++	$(Q)$(CC) $(FLAGS) -shared $^ -fPIC -fvisibility=hidden $(SONAME_FLAGS) $(OBJFILES) -o $@
+ 	@echo creating versioned links
+ 	$(Q)$(LN_SF) $@ liblz4.$(SHARED_EXT_MAJOR)
+ 	$(Q)$(LN_SF) $@ liblz4.$(SHARED_EXT)
+diff -uprN lz4-1.9.3-old/programs/Makefile lz4-1.9.3/programs/Makefile
+--- lz4-1.9.3-old/programs/Makefile	2020-11-16 12:59:35.000000000 +0800
++++ lz4-1.9.3/programs/Makefile	2023-11-29 11:55:09.932011000 +0800
+@@ -43,7 +43,7 @@ LIBVER   := $(shell echo $(LIBVER_SCRIPT
  
  LIBFILES  = $(wildcard $(LZ4DIR)/*.c)
  SRCFILES  = $(sort $(LIBFILES) $(wildcard *.c))
@@ -827,10 +847,10 @@ diff -ru lz4-1.9.3-old/programs/Makefile lz4-1.9.3/programs/Makefile
  
  CPPFLAGS += -I$(LZ4DIR) -DXXH_NAMESPACE=LZ4_
  CFLAGS   ?= -O3
-diff -ru lz4-1.9.3-old/tests/Makefile lz4-1.9.3/tests/Makefile
---- lz4-1.9.3-old/tests/Makefile	2023-04-24 10:29:33.980541810 +0800
-+++ lz4-1.9.3/tests/Makefile	2023-04-24 11:45:25.500541810 +0800
-@@ -32,6 +32,7 @@
+diff -uprN lz4-1.9.3-old/tests/Makefile lz4-1.9.3/tests/Makefile
+--- lz4-1.9.3-old/tests/Makefile	2020-11-16 12:59:35.000000000 +0800
++++ lz4-1.9.3/tests/Makefile	2023-11-29 11:15:41.223571800 +0800
+@@ -32,6 +32,7 @@ LZ4DIR  := ../lib
  PRGDIR  := ../programs
  TESTDIR := versionsTest
  PYTHON  ?= python3
@@ -838,7 +858,7 @@ diff -ru lz4-1.9.3-old/tests/Makefile lz4-1.9.3/tests/Makefile
  
  DEBUGLEVEL?= 1
  DEBUGFLAGS = -g -DLZ4_DEBUG=$(DEBUGLEVEL)
-@@ -78,39 +79,39 @@
+@@ -78,39 +79,39 @@ lz4c32:   # create a 32-bits version for
  
  fullbench : DEBUGLEVEL=0
  fullbench : lz4.o lz4hc.o lz4frame.o xxhash.o fullbench.c
