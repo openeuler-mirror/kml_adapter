@@ -822,7 +822,7 @@ diff -uprN lz4-1.9.3-old/lib/Makefile lz4-1.9.3/lib/Makefile
  FLAGS    = $(CPPFLAGS) $(CFLAGS) $(LDFLAGS)
  
  SRCFILES := $(sort $(wildcard *.c))
-+OBJFILES = lz4_accelerater.o lz4_cpu_checker.o kunpeng_memcmp.o kunpeng_memcpy.o kunpeng_memset.o
++OBJFILES = lz4_accelerater.o lz4_cpu_checker.o
  
  include ../Makefile.inc
  
@@ -843,7 +843,7 @@ diff -uprN lz4-1.9.3-old/programs/Makefile lz4-1.9.3/programs/Makefile
  LIBFILES  = $(wildcard $(LZ4DIR)/*.c)
  SRCFILES  = $(sort $(LIBFILES) $(wildcard *.c))
 -OBJFILES  = $(SRCFILES:.c=.o)
-+OBJFILES  = $(SRCFILES:.c=.o) $(LZ4DIR)/lz4_accelerater.o $(LZ4DIR)/lz4_cpu_checker.o $(LZ4DIR)/kunpeng_memcmp.o $(LZ4DIR)/kunpeng_memcpy.o $(LZ4DIR)/kunpeng_memset.o
++OBJFILES  = $(SRCFILES:.c=.o) $(LZ4DIR)/lz4_accelerater.o $(LZ4DIR)/lz4_cpu_checker.o
  
  CPPFLAGS += -I$(LZ4DIR) -DXXH_NAMESPACE=LZ4_
  CFLAGS   ?= -O3
@@ -854,7 +854,7 @@ diff -uprN lz4-1.9.3-old/tests/Makefile lz4-1.9.3/tests/Makefile
  PRGDIR  := ../programs
  TESTDIR := versionsTest
  PYTHON  ?= python3
-+KZL_EXTRA := ../lib/lz4_accelerater.o ../lib/lz4_cpu_checker.o ../lib/kunpeng_memcmp.o ../lib/kunpeng_memcpy.o ../lib/kunpeng_memset.o
++KZL_EXTRA := ../lib/lz4_accelerater.o ../lib/lz4_cpu_checker.o
  
  DEBUGLEVEL?= 1
  DEBUGFLAGS = -g -DLZ4_DEBUG=$(DEBUGLEVEL)
