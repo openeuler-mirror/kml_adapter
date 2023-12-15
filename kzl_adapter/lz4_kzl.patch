@@ -1,6 +1,6 @@
-diff -uprN lz4-1.9.3-old/lib/lz4.c lz4-1.9.3/lib/lz4.c
---- lz4-1.9.3-old/lib/lz4.c	2020-11-16 12:59:35.000000000 +0800
-+++ lz4-1.9.3/lib/lz4.c	2023-11-29 11:15:41.170712500 +0800
+diff -uprN lz4-1.9.3/lib/lz4.c lz4-1.9.3-xqm/lib/lz4.c
+--- lz4-1.9.3/lib/lz4.c	2020-11-16 12:59:35.000000000 +0800
++++ lz4-1.9.3-xqm/lib/lz4.c	2023-12-08 16:48:39.107169310 +0800
 @@ -56,6 +56,7 @@
   */
  #define LZ4_ACCELERATION_MAX 65537
@@ -815,9 +815,21 @@ diff -uprN lz4-1.9.3-old/lib/lz4.c lz4-1.9.3/lib/lz4.c
                  if (length > 16)  { LZ4_wildCopy8(op+8, match+8, cpy); }
              }
              op = cpy;   /* wildcopy correction */
-diff -uprN lz4-1.9.3-old/lib/Makefile lz4-1.9.3/lib/Makefile
---- lz4-1.9.3-old/lib/Makefile	2020-11-16 12:59:35.000000000 +0800
-+++ lz4-1.9.3/lib/Makefile	2023-11-29 11:56:31.689697300 +0800
+diff -uprN lz4-1.9.3/lib/lz4.h lz4-1.9.3-xqm/lib/lz4.h
+--- lz4-1.9.3/lib/lz4.h	2020-11-16 12:59:35.000000000 +0800
++++ lz4-1.9.3-xqm/lib/lz4.h	2023-12-08 17:28:24.347169310 +0800
+@@ -124,7 +124,7 @@ LZ4LIB_API const char* LZ4_versionString
+  * Default value is 14, for 16KB, which nicely fits into Intel x86 L1 cache
+  */
+ #ifndef LZ4_MEMORY_USAGE
+-# define LZ4_MEMORY_USAGE 14
++# define LZ4_MEMORY_USAGE 9
+ #endif
+ 
+ 
+diff -uprN lz4-1.9.3/lib/Makefile lz4-1.9.3-xqm/lib/Makefile
+--- lz4-1.9.3/lib/Makefile	2020-11-16 12:59:35.000000000 +0800
++++ lz4-1.9.3-xqm/lib/Makefile	2023-12-09 14:05:03.207169310 +0800
 @@ -54,6 +54,7 @@ CFLAGS  += $(DEBUGFLAGS) $(MOREFLAGS)
  FLAGS    = $(CPPFLAGS) $(CFLAGS) $(LDFLAGS)
  
@@ -835,9 +847,9 @@ diff -uprN lz4-1.9.3-old/lib/Makefile lz4-1.9.3/lib/Makefile
  	@echo creating versioned links
  	$(Q)$(LN_SF) $@ liblz4.$(SHARED_EXT_MAJOR)
  	$(Q)$(LN_SF) $@ liblz4.$(SHARED_EXT)
-diff -uprN lz4-1.9.3-old/programs/Makefile lz4-1.9.3/programs/Makefile
---- lz4-1.9.3-old/programs/Makefile	2020-11-16 12:59:35.000000000 +0800
-+++ lz4-1.9.3/programs/Makefile	2023-11-29 11:55:09.932011000 +0800
+diff -uprN lz4-1.9.3/programs/Makefile lz4-1.9.3-xqm/programs/Makefile
+--- lz4-1.9.3/programs/Makefile	2020-11-16 12:59:35.000000000 +0800
++++ lz4-1.9.3-xqm/programs/Makefile	2023-12-09 14:06:08.057169310 +0800
 @@ -43,7 +43,7 @@ LIBVER   := $(shell echo $(LIBVER_SCRIPT
  
  LIBFILES  = $(wildcard $(LZ4DIR)/*.c)
@@ -847,9 +859,9 @@ diff -uprN lz4-1.9.3-old/programs/Makefile lz4-1.9.3/programs/Makefile
  
  CPPFLAGS += -I$(LZ4DIR) -DXXH_NAMESPACE=LZ4_
  CFLAGS   ?= -O3
-diff -uprN lz4-1.9.3-old/tests/Makefile lz4-1.9.3/tests/Makefile
---- lz4-1.9.3-old/tests/Makefile	2020-11-16 12:59:35.000000000 +0800
-+++ lz4-1.9.3/tests/Makefile	2023-11-29 11:15:41.223571800 +0800
+diff -uprN lz4-1.9.3/tests/Makefile lz4-1.9.3-xqm/tests/Makefile
+--- lz4-1.9.3/tests/Makefile	2020-11-16 12:59:35.000000000 +0800
++++ lz4-1.9.3-xqm/tests/Makefile	2023-12-09 14:05:41.427169310 +0800
 @@ -32,6 +32,7 @@ LZ4DIR  := ../lib
  PRGDIR  := ../programs
  TESTDIR := versionsTest
