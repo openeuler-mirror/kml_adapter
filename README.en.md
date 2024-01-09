@@ -12,11 +12,7 @@ Subdirectories contain:
   library
 
 - [lapack-adapt](lapack-adapt/README.md) - instructions and scripts to build
-  adapted `liblapack.so` library which is required for linking with KML LAPACK
-
-- [lapack-release](lapack-release/README.md) - verbatim copy of
-  [Reference LAPACK](https://github.com/Reference-LAPACK/lapack-release)
-  version 3.10.0, for use by `lapack-adapt`
+  `libklapack_full.so` and `libkscalapack_full.so` libraries
 
 ## How to contribute
 
