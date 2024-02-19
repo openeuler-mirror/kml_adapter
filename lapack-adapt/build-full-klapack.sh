@@ -52,14 +52,14 @@ function check_compiler {
 case ${kmlver} in
 *COMPILER:GNU*)
     export CC=${CC:-gcc} FC=${FC:-gfortran}
-    check_compiler CC 'GCC'
+    check_compiler CC 'gcc'
     check_compiler FC 'GNU Fortran'
     ;;
 
 *COMPILER:Clang*)
     export CC=${CC:-clang} FC=${FC:-flang}
     check_compiler CC 'clang'
-    check_compiler FC 'clang'
+    check_compiler FC '?lang'
     ;;
 
 *)
@@ -71,7 +71,7 @@ esac
 INFORM "Configure BUILD_DIR for building STATIC liblapack.a and liblapacke.a"
 
 cmake_flags=(
-    -DBLAS_LIBRARIES="${LIBKBLAS_SO}"
+    -DBLAS_LIBRARIES=NO
     -DBLASLIB="${LIBKBLAS_SO}"
     -DBUILD_DEPRECATED=ON
     -DBUILD_SHARED_LIBS=OFF
