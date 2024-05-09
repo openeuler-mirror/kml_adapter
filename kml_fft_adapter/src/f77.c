@@ -114,9 +114,9 @@ FFT_API FFTW_VOIDFUNC F77(cleanup_threads, CLEANUP_THREADS)(void)
 {
     FFTW(cleanup_threads)();
 }
-FFT_API FFTW_VOIDFUNC F77(plan_with_nthreads, PLAN_WITH_NTHREADS)(int nthreads)
+FFT_API FFTW_VOIDFUNC F77(plan_with_nthreads, PLAN_WITH_NTHREADS)(int *nthreads)
 {
-    FFTW(plan_with_nthreads)(nthreads);
+    FFTW(plan_with_nthreads)((* nthreads));
 }
 FFT_API int F77(init_threads, INIT_THREADS)()
 {
