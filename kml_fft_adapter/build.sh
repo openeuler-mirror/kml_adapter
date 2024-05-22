@@ -3,6 +3,10 @@ set -e
 
 LIB_ROOT_PATH=$(pwd)
 
+# clean build cache when it isn't correct
+
+rm -rf ${LIB_ROOT_PATH}/build
+
 # build library of double precision float
 if [ ! -d "${LIB_ROOT_PATH}/build" ];then
     mkdir ${LIB_ROOT_PATH}/build
