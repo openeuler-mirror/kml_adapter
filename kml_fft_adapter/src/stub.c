@@ -104,3 +104,17 @@ void * FFTW(the_planner)(void) {
 void FFTW(make_planner_thread_safe)(void) {
     return;
 }
+
+void FFTW(plan_awake)(void *ego, int wakefulness) 
+{
+    UNUSED(ego);
+    UNUSED(wakefulness);
+    return
+}
+
+void FFTW(assertion_failed)(const char *s, int line, const char *file)
+{
+    fflush(stdout);
+    fprintf(stderr, "fftw: %s:%d: assertion failed: %s\n", file, line, s);
+    exit(1);
+}
