@@ -109,7 +109,7 @@ void FFTW(plan_awake)(void *ego, int wakefulness)
 {
     UNUSED(ego);
     UNUSED(wakefulness);
-    return
+    return;
 }
 
 void FFTW(assertion_failed)(const char *s, int line, const char *file)
