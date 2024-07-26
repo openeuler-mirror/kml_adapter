@@ -3,7 +3,7 @@
 #include <stdlib.h>
 #include "vsl_types.h"
 #include "kvsl.h"
-VslPolicy *policy;
+VslPolicy *policy = NULL;
 #define CONSTRUCTOR __attribute__((constructor))
 #define DESTRUCTOR __attribute__((destructor))
 CONSTRUCTOR void PreInitPolicy(void)
