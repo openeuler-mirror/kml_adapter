@@ -1722,12 +1722,12 @@ index 9b40e9e..888a1d7 100644
 +
 +If you want to use this optimization, you need to install the kunpeng math library first, and the minimum version is 2.1.0.
 +
-+And now the optimization is applicable only to **Kunpeng920 sve** instruction.
++And now the optimization is applicable only to **Kunpeng sve** instruction.
 +
 +For example enable kunpeng optimization:
 +
 +```shell
-+g++ -I./ your_app.cpp -O2 -o your_app -L/usr/local/kml/lib/kblas/nolocking/ -lkblas -fopenmp -DKUNPENG_USE
++g++ -I./ your_app.cpp -O2 -o your_app -L/usr/local/kml/lib/sve/kblas/nolocking/ -lkblas -fopenmp -DKUNPENG_USE
 +```
 diff --git a/test/CMakeLists.txt b/test/CMakeLists.txt
 index 5136f82..c6576a0 100644
@@ -1738,7 +1738,7 @@ index 5136f82..c6576a0 100644
  endif()
  
 +add_definitions("-DKUNPENG_USE")
-+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -L/usr/local/kml/lib/kblas/nolocking/ -lkblas")
++set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -L/usr/local/kml/lib/sve/kblas/nolocking/ -lkblas")
 +message(STATUS "CXX_FLAGS:     ${CXX_FLAGS}")
 +
  # configure blas/lapack (use Eigen's ones)
